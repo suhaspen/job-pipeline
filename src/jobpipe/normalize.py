@@ -281,7 +281,7 @@ _LOCATION_BUCKETS: dict[str, tuple[str, ...]] = {
     # Bare "washington" is deliberately absent: it is a state name, and
     # "Seattle, Washington" would otherwise bucket as DC.
     "dc-metro": (
-        "washington dc", "arlington", "reston", "mclean",
+        "washington dc", "washington d c", "arlington", "reston", "mclean",
         "bethesda", "herndon", "alexandria", "chantilly", "tysons", "vienna va",
         "annapolis junction", "columbia md", "fort meade",
     ),
@@ -331,6 +331,40 @@ _UNKNOWN_LOCATIONS = {
     "worldwide", "global", "unknown",
 }
 
+# Non-geographic placeholders seen in live ATS data: "Flexible - Any SpaceX
+# Site", "In-Office". They name a working arrangement, not a place, and
+# slugifying them invents a metro that unrelated reqs then collide inside.
+_PLACEHOLDER_RE = re.compile(
+    r"\b(?:flexible|in office|any [a-z]* ?site|any of our|tbd|to be determined"
+    r"|unspecified|worldwide|global|various|multiple)\b"
+)
+
+# Trailing country names, stripped so "Connecticut, USA" reaches the state
+# fallback as "connecticut" instead of slugifying to "ct-usa". Bare "ca" is
+# deliberately absent - it is California far more often than Canada.
+_COUNTRY_TAIL = {
+    "usa": "us", "us": "us", "u s a": "us", "u s": "us",
+    "united states": "us", "united states of america": "us",
+    "uk": "uk", "united kingdom": "uk", "great britain": "uk", "england": "uk",
+    "canada": "canada", "can": "canada",
+    "india": "india", "germany": "germany", "france": "france",
+    "ireland": "ireland", "netherlands": "netherlands", "japan": "japan",
+    "australia": "australia", "singapore": "singapore", "israel": "israel",
+    "switzerland": "switzerland", "spain": "spain", "poland": "poland",
+    "mexico": "mexico", "brazil": "brazil", "china": "china", "taiwan": "taiwan",
+}
+_COUNTRY_TAIL_RE = re.compile(
+    r"\s*\b(" + "|".join(sorted((re.escape(c) for c in _COUNTRY_TAIL), key=len, reverse=True)) + r")\s*$"
+)
+
+
+def _strip_country(primary: str) -> tuple[str, str | None]:
+    """Peel a trailing country name off, returning the rest and its code."""
+    match = _COUNTRY_TAIL_RE.search(primary)
+    if not match:
+        return primary, None
+    return primary[: match.start()].strip(), _COUNTRY_TAIL[match.group(1)]
+
 # Two-letter state codes, used to bucket an unrecognized city by state rather
 # than letting every small town become its own key.
 _STATE_RE = re.compile(r"\b([a-z]{2})\b$")
@@ -343,6 +377,38 @@ _US_STATES = {
 }
 
 _MULTI_LOC_SPLIT = re.compile(r"\s*(?:;|\||/| or |,? and |\+)\s*", re.IGNORECASE)
+
+# US states each metro bucket can legitimately sit in. Used to veto a city-name
+# match that contradicts an explicit state code: "Brooklyn, OH" is a Cleveland
+# suburb, not New York, and "Portland, ME" is not Oregon. Buckets outside the
+# US are absent and are never vetoed.
+_BUCKET_STATES: dict[str, frozenset[str]] = {
+    "sf-bay": frozenset({"ca"}),
+    "seattle": frozenset({"wa"}),
+    "nyc": frozenset({"ny", "nj"}),
+    "la": frozenset({"ca"}),
+    "orange-county": frozenset({"ca"}),
+    "san-diego": frozenset({"ca"}),
+    "boston": frozenset({"ma"}),
+    "austin": frozenset({"tx"}),
+    "dallas": frozenset({"tx"}),
+    "houston": frozenset({"tx"}),
+    "chicago": frozenset({"il"}),
+    "denver": frozenset({"co"}),
+    "atlanta": frozenset({"ga"}),
+    "rtp": frozenset({"nc"}),
+    "portland": frozenset({"or"}),
+    "dc-metro": frozenset({"dc", "va", "md"}),
+    "pittsburgh": frozenset({"pa"}),
+    "philadelphia": frozenset({"pa"}),
+    "phoenix": frozenset({"az"}),
+    "salt-lake": frozenset({"ut"}),
+    "minneapolis": frozenset({"mn"}),
+    "detroit": frozenset({"mi"}),
+    "madison": frozenset({"wi"}),
+    "nashville": frozenset({"tn"}),
+    "miami": frozenset({"fl"}),
+}
 
 # Spelled-out states collapse to their code before city matching, so
 # "Santa Clara, California" and "Santa Clara, CA" produce the same key and
@@ -417,19 +483,43 @@ def normalize_location(location: str | None, remote_hint: bool | None = None) ->
     primary = _basic(primary_location(location))
     if not primary or primary in _UNKNOWN_LOCATIONS:
         return "unknown"
-    primary = _STATE_NAME_RE.sub(lambda m: _STATE_NAMES[m.group(1)], primary)
 
-    for alias, canon in _LOCATION_LOOKUP:
-        if re.search(rf"\b{re.escape(alias)}\b", primary):
+    primary = _STATE_NAME_RE.sub(lambda m: _STATE_NAMES[m.group(1)], primary)
+    core, country = _strip_country(primary)
+    if not core:
+        # The string was nothing but a country ("United States").
+        return country or "unknown"
+
+    # An explicit state code vetoes a city match that contradicts it. Without
+    # this, every same-named suburb collapses onto the famous city. It is read
+    # off the country-stripped form so "Brooklyn, OH, USA" still sees "oh".
+    state_match = _STATE_RE.search(core)
+    state = state_match.group(1) if state_match and state_match.group(1) in _US_STATES else None
+
+    # Match against the full string before the stripped one: some aliases carry
+    # their own country to disambiguate ("cambridge uk" is London, plain
+    # "cambridge" is Boston), and stripping first would lose that.
+    for candidate in (primary, core):
+        for alias, canon in _LOCATION_LOOKUP:
+            if not re.search(rf"\b{re.escape(alias)}\b", candidate):
+                continue
+            allowed = _BUCKET_STATES.get(canon)
+            if state and allowed and state not in allowed:
+                continue
             return canon
 
-    if is_remote(location, remote_hint) or any(m in primary for m in _REMOTE_MARKERS):
+    if state:
+        return f"us-{state}"
+
+    if is_remote(location, remote_hint) or any(m in core for m in _REMOTE_MARKERS):
         return "remote"
 
-    m = _STATE_RE.search(primary)
-    if m and m.group(1) in _US_STATES:
-        return f"us-{m.group(1)}"
-    return primary.replace(" ", "-")
+    # No city, no state, no country: if what is left only describes a working
+    # arrangement, it is not a place.
+    if _PLACEHOLDER_RE.search(core):
+        return "unknown"
+
+    return f"{core.replace(' ', '-')}-{country}" if country else core.replace(" ", "-")
 
 
 # --------------------------------------------------------------------------
@@ -452,20 +542,20 @@ _NEW_GRAD_MARKERS = (
 )
 
 
-def infer_term(title: str | None, description: str | None = None, hint: str | None = None) -> Term:
+def infer_term(
+    title: str | None, description: str | None = None, default: str | None = None
+) -> Term:
     """Resolve the hiring cycle, or return UNKNOWN.
 
     Never guesses. A term guessed wrong poisons the dedupe key, so an unlabeled
     "Software Engineer Intern" stays UNKNOWN rather than becoming a plausible
     season. Explicit season+year beats new-grad wording, and the title beats the
     description (job bodies often mention other programs in passing).
-    """
-    if hint:
-        try:
-            return Term(hint.strip().lower())
-        except ValueError:
-            pass
 
+    `default` is a source-level fallback applied only when the text says
+    nothing - a feed that only ever carries new-grad roles can declare that,
+    but an explicit marker in the posting itself always wins.
+    """
     for text in (title or "", description or ""):
         s = _basic(text)
         if not s:
@@ -482,6 +572,11 @@ def infer_term(title: str | None, description: str | None = None, hint: str | No
         if re.search(r"\bclass of (?:'|20)?27\b", s):
             return Term.NEW_GRAD
 
+    if default:
+        try:
+            return Term(default.strip().lower())
+        except ValueError:
+            pass
     return Term.UNKNOWN
 
 
@@ -503,7 +598,7 @@ def normalize_raw(raw: RawPosting) -> Posting:
     company_norm = normalize_company(raw.company)
     title_norm = normalize_title(raw.title)
     location_norm = normalize_location(raw.location, raw.remote_hint)
-    term = infer_term(raw.title, raw.description, raw.term_hint)
+    term = infer_term(raw.title, raw.description, raw.term_default)
 
     key = make_dedupe_key(company_norm, title_norm, location_norm, term)
     now = utcnow()

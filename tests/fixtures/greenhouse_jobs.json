@@ -1,0 +1,356 @@
+{
+  "jobs": [
+    {
+      "absolute_url": "https://boards.greenhouse.io/cloudflare/jobs/7902104?gh_jid=7902104",
+      "data_compliance": [
+        {
+          "type": "gdpr",
+          "requires_consent": false,
+          "requires_processing_consent": false,
+          "requires_retention_consent": false,
+          "retention_period": null,
+          "demographic_data_consent_applies": false
+        }
+      ],
+      "internal_job_id": 3435580,
+      "location": {
+        "name": "In-Office"
+      },
+      "metadata": [
+        {
+          "id": 825338,
+          "name": "Cost Center",
+          "value": "6991 - G&A Interns",
+          "value_type": "single_select"
+        },
+        {
+          "id": 8654220,
+          "name": "Job Posting Location",
+          "value": [
+            "Austin, US"
+          ],
+          "value_type": "multi_select"
+        },
+        {
+          "id": 46546702,
+          "name": "Career Site Department",
+          "value": [
+            "Accounting & Finance",
+            "Early Talent"
+          ],
+          "value_type": "multi_select"
+        }
+      ],
+      "id": 7902104,
+      "updated_at": "2026-08-03T15:33:53-04:00",
+      "requisition_id": "870",
+      "title": "Accounting Intern (Fall 2026)",
+      "company_name": "Cloudflare",
+      "first_published": "2026-08-03T15:33:44-04:00",
+      "language": "en",
+      "application_deadline": null,
+      "content": "&lt;div class=&quot;content-intro&quot;&gt;&lt;div&gt;&lt;strong&gt;About Us&lt;/strong&gt;&lt;/div&gt;\n&lt;div&gt;\n&lt;p&gt;At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world\u2019s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic",
+      "departments": [
+        {
+          "id": 29062,
+          "name": "Accounting and Finance",
+          "child_ids": [],
+          "parent_id": null
+        }
+      ],
+      "offices": [
+        {
+          "id": 19983,
+          "name": "Austin, TX",
+          "location": "Austin, TX, United States",
+          "child_ids": [],
+          "parent_id": 48752
+        }
+      ],
+      "ai_disclaimer": null,
+      "include_ai_disclaimer": null,
+      "ai_opt_out_request_url": null
+    },
+    {
+      "absolute_url": "https://boards.greenhouse.io/cloudflare/jobs/8044395?gh_jid=8044395",
+      "data_compliance": [
+        {
+          "type": "gdpr",
+          "requires_consent": false,
+          "requires_processing_consent": false,
+          "requires_retention_consent": false,
+          "retention_period": null,
+          "demographic_data_consent_applies": false
+        }
+      ],
+      "internal_job_id": 3486626,
+      "location": {
+        "name": "In-Office"
+      },
+      "metadata": [
+        {
+          "id": 825338,
+          "name": "Cost Center",
+          "value": "5991 - S&M Interns",
+          "value_type": "single_select"
+        },
+        {
+          "id": 8654220,
+          "name": "Job Posting Location",
+          "value": [
+            "London, UK"
+          ],
+          "value_type": "multi_select"
+        },
+        {
+          "id": 46546702,
+          "name": "Career Site Department",
+          "value": [
+            "Early Talent"
+          ],
+          "value_type": "multi_select"
+        }
+      ],
+      "id": 8044395,
+      "updated_at": "2026-07-30T11:23:39-04:00",
+      "requisition_id": null,
+      "title": "AI Innovation Intern \u2013 Service Sales (Fall 2026)",
+      "company_name": "Cloudflare",
+      "first_published": "2026-07-06T09:28:11-04:00",
+      "language": "en",
+      "application_deadline": null,
+      "content": "&lt;div class=&quot;content-intro&quot;&gt;&lt;div&gt;&lt;strong&gt;About Us&lt;/strong&gt;&lt;/div&gt;\n&lt;div&gt;\n&lt;p&gt;At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world\u2019s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic",
+      "departments": [
+        {
+          "id": 70480,
+          "name": "University",
+          "child_ids": [],
+          "parent_id": null
+        }
+      ],
+      "offices": [
+        {
+          "id": 19988,
+          "name": "London, United Kingdom",
+          "location": "London, United Kingdom",
+          "child_ids": [],
+          "parent_id": 74843
+        }
+      ],
+      "ai_disclaimer": null,
+      "include_ai_disclaimer": null,
+      "ai_opt_out_request_url": null
+    },
+    {
+      "absolute_url": "https://boards.greenhouse.io/cloudflare/jobs/8054093?gh_jid=8054093",
+      "data_compliance": [
+        {
+          "type": "gdpr",
+          "requires_consent": false,
+          "requires_processing_consent": false,
+          "requires_retention_consent": false,
+          "retention_period": null,
+          "demographic_data_consent_applies": false
+        }
+      ],
+      "internal_job_id": 3490699,
+      "location": {
+        "name": "In-Office"
+      },
+      "metadata": [
+        {
+          "id": 825338,
+          "name": "Cost Center",
+          "value": "5991 - S&M Interns",
+          "value_type": "single_select"
+        },
+        {
+          "id": 8654220,
+          "name": "Job Posting Location",
+          "value": [
+            "San Francisco, US"
+          ],
+          "value_type": "multi_select"
+        },
+        {
+          "id": 46546702,
+          "name": "Career Site Department",
+          "value": [
+            "Early Talent"
+          ],
+          "value_type": "multi_select"
+        }
+      ],
+      "id": 8054093,
+      "updated_at": "2026-08-03T18:52:09-04:00",
+      "requisition_id": null,
+      "title": "Brand Social Media Intern (Fall 2026)",
+      "company_name": "Cloudflare",
+      "first_published": "2026-07-10T11:14:43-04:00",
+      "language": "en",
+      "application_deadline": null,
+      "content": "&lt;div class=&quot;content-intro&quot;&gt;&lt;div&gt;&lt;strong&gt;About Us&lt;/strong&gt;&lt;/div&gt;\n&lt;div&gt;\n&lt;p&gt;At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world\u2019s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic",
+      "departments": [
+        {
+          "id": 70480,
+          "name": "University",
+          "child_ids": [],
+          "parent_id": null
+        }
+      ],
+      "offices": [
+        {
+          "id": 19991,
+          "name": "San Francisco, CA",
+          "location": "San Francisco, CA, United States",
+          "child_ids": [],
+          "parent_id": 48752
+        }
+      ],
+      "ai_disclaimer": null,
+      "include_ai_disclaimer": null,
+      "ai_opt_out_request_url": null
+    },
+    {
+      "absolute_url": "https://boards.greenhouse.io/cloudflare/jobs/7839183?gh_jid=7839183",
+      "data_compliance": [
+        {
+          "type": "gdpr",
+          "requires_consent": false,
+          "requires_processing_consent": false,
+          "requires_retention_consent": false,
+          "retention_period": null,
+          "demographic_data_consent_applies": false
+        }
+      ],
+      "internal_job_id": 3418532,
+      "location": {
+        "name": "Hybrid"
+      },
+      "metadata": [
+        {
+          "id": 825338,
+          "name": "Cost Center",
+          "value": "5150 - Field Sales",
+          "value_type": "single_select"
+        },
+        {
+          "id": 8654220,
+          "name": "Job Posting Location",
+          "value": [
+            "Austin, US",
+            "Miami, US"
+          ],
+          "value_type": "multi_select"
+        },
+        {
+          "id": 46546702,
+          "name": "Career Site Department",
+          "value": [
+            "Sales"
+          ],
+          "value_type": "multi_select"
+        }
+      ],
+      "id": 7839183,
+      "updated_at": "2026-07-06T16:28:57-04:00",
+      "requisition_id": "HM Pedro Suarez AE Q326",
+      "title": "Senior Account Executive, LATAM",
+      "company_name": "Cloudflare",
+      "first_published": "2026-04-22T11:17:35-04:00",
+      "language": "en",
+      "application_deadline": null,
+      "content": "&lt;div class=&quot;content-intro&quot;&gt;&lt;div&gt;&lt;strong&gt;About Us&lt;/strong&gt;&lt;/div&gt;\n&lt;div&gt;\n&lt;p&gt;At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world\u2019s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic",
+      "departments": [
+        {
+          "id": 70660,
+          "name": "Field Sales",
+          "child_ids": [],
+          "parent_id": 29066
+        }
+      ],
+      "offices": [
+        {
+          "id": 48232,
+          "name": "Miami, FL",
+          "location": "Florida, United States",
+          "child_ids": [],
+          "parent_id": 48752
+        }
+      ],
+      "ai_disclaimer": null,
+      "include_ai_disclaimer": null,
+      "ai_opt_out_request_url": null
+    },
+    {
+      "absolute_url": "https://boards.greenhouse.io/cloudflare/jobs/7867139?gh_jid=7867139",
+      "data_compliance": [
+        {
+          "type": "gdpr",
+          "requires_consent": false,
+          "requires_processing_consent": false,
+          "requires_retention_consent": false,
+          "retention_period": null,
+          "demographic_data_consent_applies": false
+        }
+      ],
+      "internal_job_id": 3424813,
+      "location": {
+        "name": "Hybrid"
+      },
+      "metadata": [
+        {
+          "id": 825338,
+          "name": "Cost Center",
+          "value": "5100 - Mid Market",
+          "value_type": "single_select"
+        },
+        {
+          "id": 8654220,
+          "name": "Job Posting Location",
+          "value": [
+            "San Francisco, US"
+          ],
+          "value_type": "multi_select"
+        },
+        {
+          "id": 46546702,
+          "name": "Career Site Department",
+          "value": [
+            "Sales"
+          ],
+          "value_type": "multi_select"
+        }
+      ],
+      "id": 7867139,
+      "updated_at": "2026-07-02T20:08:37-04:00",
+      "requisition_id": "GTM_AMER US DN STARTUP W B#22934",
+      "title": "Senior Account Executive, Startups (Bay Area)",
+      "company_name": "Cloudflare",
+      "first_published": "2026-05-01T15:10:37-04:00",
+      "language": "en",
+      "application_deadline": null,
+      "content": "&lt;div class=&quot;content-intro&quot;&gt;&lt;div&gt;&lt;strong&gt;About Us&lt;/strong&gt;&lt;/div&gt;\n&lt;div&gt;\n&lt;p&gt;At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world\u2019s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic",
+      "departments": [
+        {
+          "id": 70658,
+          "name": "Mid Market",
+          "child_ids": [],
+          "parent_id": 29066
+        }
+      ],
+      "offices": [
+        {
+          "id": 19991,
+          "name": "San Francisco, CA",
+          "location": "San Francisco, CA, United States",
+          "child_ids": [],
+          "parent_id": 48752
+        }
+      ],
+      "ai_disclaimer": null,
+      "include_ai_disclaimer": null,
+      "ai_opt_out_request_url": null
+    }
+  ]
+}

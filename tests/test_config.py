@@ -50,10 +50,27 @@ def test_target_list_is_a_meaningful_subset(companies):
     assert 5 <= len(targets) < len(companies)
 
 
-def test_seeded_tokens_are_marked_unverified():
-    """Phase 1 flips these after probing. Nothing should claim verification yet."""
-    raw = json.loads(DEFAULT_COMPANIES.read_text(encoding="utf-8"))
-    assert all(not c.get("verified", False) for c in raw["companies"])
+def test_most_tokens_are_verified(companies):
+    """Phase 1 probed every board. Unverified entries are reachable-but-empty.
+
+    A regression here means someone hand-added a token without probing it, or
+    a board went dark - either way `jobpipe verify-companies` should be re-run.
+    """
+    verified = [c for c in companies if c.verified]
+    assert len(verified) / len(companies) >= 0.9
+
+
+def test_no_known_dead_tokens_crept_back(companies):
+    """These 404'd on 2026-08-05 and were removed; re-adding them wastes a
+    request every run forever and can never return data."""
+    dead = {
+        ("greenhouse", "snowflake"), ("greenhouse", "notion"),
+        ("greenhouse", "doordash"), ("lever", "netflix"),
+        ("lever", "cohere"), ("ashby", "anysphere"), ("ashby", "wandb"),
+        ("greenhouse", "hashicorp"), ("greenhouse", "twosigma"),
+    }
+    present = {(c.ats, c.token) for c in companies}
+    assert not (present & dead), f"known-dead tokens present: {present & dead}"
 
 
 def test_target_companies_normalize_for_tier1_matching(companies):

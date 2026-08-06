@@ -90,7 +90,11 @@ class RawPosting:
     title: str
     apply_url: str
     location: str | None = None
-    term_hint: str | None = None
+    # Source-level fallback term, used only when the posting's own text carries
+    # no season or new-grad marker. The Simplify feed is a new-grad repo by
+    # construction, but a title reading "Fall 2026" there still means fall-2026,
+    # so text always outranks this.
+    term_default: str | None = None
     posted_at: datetime | None = None
     remote_hint: bool | None = None
     description: str | None = None

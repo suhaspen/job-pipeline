@@ -58,7 +58,7 @@
           "title": "Software Engineer II",
           "location": "San Francisco, CA",
           "apply_url": "https://lever.co/databricks/1",
-          "term_hint": "new-grad"
+          "term_default": "new-grad"
         },
         {
           "source": "lever",
@@ -66,7 +66,7 @@
           "title": "Software Engineer L4",
           "location": "Mountain View, CA",
           "apply_url": "https://lever.co/databricks/2",
-          "term_hint": "new-grad"
+          "term_default": "new-grad"
         },
         {
           "source": "lever",
@@ -74,7 +74,7 @@
           "title": "Software Engineer, Level 4",
           "location": "Bay Area",
           "apply_url": "https://lever.co/databricks/3",
-          "term_hint": "new-grad"
+          "term_default": "new-grad"
         }
       ]
     },

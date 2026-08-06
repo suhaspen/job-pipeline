@@ -212,6 +212,52 @@ class TestLocation:
     def test_ats_prefixed_location(self):
         assert normalize_location("US-CA-San Francisco") == "sf-bay"
 
+    @pytest.mark.parametrize(
+        "raw,expected",
+        [
+            # Regression, found in live Simplify data: same-named suburbs were
+            # collapsing onto the famous city. Brooklyn OH is near Cleveland.
+            ("Brooklyn, OH", "us-oh"),
+            ("Brooklyn, NY", "nyc"),
+            ("Portland, ME", "us-me"),
+            ("Portland, OR", "portland"),
+            ("Arlington, TX", "us-tx"),
+            ("Arlington, VA", "dc-metro"),
+            ("Cambridge, MD", "us-md"),
+            ("Cambridge, MA", "boston"),
+            ("Austin, MN", "us-mn"),
+        ],
+    )
+    def test_state_code_vetoes_contradicting_city_match(self, raw, expected):
+        assert normalize_location(raw) == expected
+
+    def test_veto_does_not_fire_without_a_state(self):
+        assert normalize_location("Brooklyn") == "nyc"
+        assert normalize_location("Bay Area") == "sf-bay"
+
+    @pytest.mark.parametrize(
+        "raw,expected",
+        [
+            # Regression, found in live ATS data: a trailing country name
+            # blocked the state fallback, slugifying to "ct-usa".
+            ("Connecticut, USA", "us-ct"),
+            ("California, USA", "us-ca"),
+            ("Santa Clara, CA, USA", "sf-bay"),
+            ("United States", "us"),
+            ("United Kingdom", "uk"),
+        ],
+    )
+    def test_trailing_country_is_stripped(self, raw, expected):
+        assert normalize_location(raw) == expected
+
+    @pytest.mark.parametrize(
+        "raw", ["In-Office", "Flexible - Any SpaceX Site", "To Be Determined"]
+    )
+    def test_working_arrangement_is_not_a_place(self, raw):
+        # These name an arrangement, not a location. Slugifying them invents a
+        # metro that unrelated reqs then collide inside.
+        assert normalize_location(raw) == "unknown"
+
     def test_primary_location_rejoins_state_code(self):
         assert primary_location("New York, NY; Seattle, WA") == "New York, NY"
 
@@ -282,8 +328,20 @@ class TestTerm:
         )
         assert term == Term.SPRING_2027
 
-    def test_explicit_hint_wins(self):
-        assert infer_term("Software Engineer", hint="new-grad") == Term.NEW_GRAD
+    def test_source_default_fills_a_silent_title(self):
+        assert infer_term("Software Engineer", default="new-grad") == Term.NEW_GRAD
 
-    def test_bad_hint_falls_through(self):
-        assert infer_term("Software Engineer Intern, Fall 2026", hint="nonsense") == Term.FALL_2026
+    def test_text_outranks_source_default(self):
+        """A new-grad feed can still carry an explicitly dated co-op posting.
+
+        Simplify's repo is new-grad by construction, so its module passes
+        `default="new-grad"` — but a title reading "Fall 2026" there means
+        fall-2026, and letting the feed-level default win would file a co-op
+        under the wrong term and split it from the same req seen elsewhere.
+        """
+        assert infer_term("SWE Co-op, Fall 2026", default="new-grad") == Term.FALL_2026
+        assert infer_term("SWE Intern, Spring 2027", default="new-grad") == Term.SPRING_2027
+
+    def test_bad_default_falls_through(self):
+        assert infer_term("Software Engineer Intern, Fall 2026", default="nonsense") == Term.FALL_2026
+        assert infer_term("Software Engineer", default="nonsense") == Term.UNKNOWN

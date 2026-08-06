@@ -3,115 +3,754 @@
     "ATS board tokens for the Tier A public APIs. Edit freely - this file is",
     "the knob you turn to change coverage, and nothing else needs touching.",
     "",
-    "  ats     greenhouse | lever | ashby",
-    "  token   board token / company slug in the ATS URL, NOT the display name",
-    "  target  true = eligible for tier 1 (interrupting push) when score >= 75",
-    "  verified  true only after the token returned a real board in a live run",
+    "  ats       greenhouse | lever | ashby",
+    "  token     board token / company slug in the ATS URL, NOT the display name",
+    "  target    true = eligible for tier 1 (interrupting push) when score >= 75",
+    "  verified  true = this token returned real jobs from a live probe",
     "",
-    "IMPORTANT: every token below is seeded from the company's conventional",
-    "slug and is marked verified:false. Companies move between ATS vendors and",
-    "change slugs, so a fraction of these will 404. Phase 1 probes each one,",
-    "flips `verified`, and reports the dead ones in FEEDBACK.md rather than",
-    "failing the run. Do not treat this list as confirmed until then.",
+    "Verified against live boards on 2026-08-05 via `jobpipe verify-companies`.",
+    "Of 89 seeded tokens, 54 worked as guessed, 14 more were recovered by",
+    "probing slug and vendor variants (Cohere/Snowflake/Notion/Confluent moved",
+    "to Ashby; DoorDash is 'doordashusa'; Cursor is 'cursor', not 'anysphere'),",
+    "and 18 were removed as unreachable - a dead token costs a request every",
+    "run forever and can never return data.",
+    "",
+    "Re-run `jobpipe verify-companies` periodically; companies migrate vendors.",
+    "Entries with verified:false are reachable but currently list no jobs.",
+    "",
+    "Removed as unreachable, worth revisiting by hand if you want coverage:",
+    "  Applied Intuition, Atlassian, Citadel, Cruise, dbt Labs, Grammarly,",
+    "  HashiCorp, Hudson River Trading, Hugging Face, Netflix, Replicate,",
+    "  Retool, Rippling, Rivian, Sourcegraph, Two Sigma, Unity, Weights & Biases",
     "",
     "Endpoints:",
     "  greenhouse  https://boards-api.greenhouse.io/v1/boards/{token}/jobs?content=true",
     "  lever       https://api.lever.co/v0/postings/{token}?mode=json",
     "  ashby       https://api.ashbyhq.com/posting-api/job-board/{token}"
   ],
-
   "companies": [
-    { "name": "Anthropic",        "ats": "greenhouse", "token": "anthropic",        "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "OpenAI",           "ats": "ashby",      "token": "openai",           "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "Scale AI",         "ats": "greenhouse", "token": "scaleai",          "target": true,  "tags": ["ai-infra"],          "verified": false },
-    { "name": "Cohere",           "ats": "lever",      "token": "cohere",           "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "Databricks",       "ats": "greenhouse", "token": "databricks",       "target": true,  "tags": ["data", "ai-infra"],  "verified": false },
-    { "name": "Snowflake",        "ats": "greenhouse", "token": "snowflake",        "target": true,  "tags": ["data"],              "verified": false },
-    { "name": "Figma",            "ats": "greenhouse", "token": "figma",            "target": true,  "tags": ["product"],           "verified": false },
-    { "name": "Stripe",           "ats": "greenhouse", "token": "stripe",           "target": true,  "tags": ["fintech", "backend"],"verified": false },
-    { "name": "Ramp",             "ats": "ashby",      "token": "ramp",             "target": true,  "tags": ["fintech"],           "verified": false },
-    { "name": "Plaid",            "ats": "lever",      "token": "plaid",            "target": true,  "tags": ["fintech"],           "verified": false },
-    { "name": "Notion",           "ats": "greenhouse", "token": "notion",           "target": true,  "tags": ["product"],           "verified": false },
-    { "name": "Linear",           "ats": "ashby",      "token": "linear",           "target": true,  "tags": ["product"],           "verified": false },
-    { "name": "Vercel",           "ats": "ashby",      "token": "vercel",           "target": true,  "tags": ["infra"],             "verified": false },
-    { "name": "Cloudflare",       "ats": "greenhouse", "token": "cloudflare",       "target": true,  "tags": ["infra"],             "verified": false },
-    { "name": "Datadog",          "ats": "greenhouse", "token": "datadog",          "target": true,  "tags": ["infra"],             "verified": false },
-    { "name": "MongoDB",          "ats": "greenhouse", "token": "mongodb",          "target": true,  "tags": ["data"],              "verified": false },
-    { "name": "Confluent",        "ats": "greenhouse", "token": "confluent",        "target": true,  "tags": ["data", "infra"],     "verified": false },
-    { "name": "HashiCorp",        "ats": "greenhouse", "token": "hashicorp",        "target": true,  "tags": ["infra"],             "verified": false },
-    { "name": "Airtable",         "ats": "greenhouse", "token": "airtable",         "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Asana",            "ats": "greenhouse", "token": "asana",            "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Airbnb",           "ats": "greenhouse", "token": "airbnb",           "target": true,  "tags": ["big-tech"],          "verified": false },
-    { "name": "Coinbase",         "ats": "greenhouse", "token": "coinbase",         "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "Robinhood",        "ats": "greenhouse", "token": "robinhood",        "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "Affirm",           "ats": "greenhouse", "token": "affirm",           "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "Brex",             "ats": "greenhouse", "token": "brex",             "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "DoorDash",         "ats": "greenhouse", "token": "doordash",         "target": true,  "tags": ["big-tech"],          "verified": false },
-    { "name": "Instacart",        "ats": "greenhouse", "token": "instacart",        "target": false, "tags": ["big-tech"],          "verified": false },
-    { "name": "Lyft",             "ats": "greenhouse", "token": "lyft",             "target": false, "tags": ["big-tech"],          "verified": false },
-    { "name": "Reddit",           "ats": "greenhouse", "token": "reddit",           "target": true,  "tags": ["big-tech"],          "verified": false },
-    { "name": "Discord",          "ats": "greenhouse", "token": "discord",          "target": true,  "tags": ["product"],           "verified": false },
-    { "name": "Twitch",           "ats": "greenhouse", "token": "twitch",           "target": false, "tags": ["big-tech"],          "verified": false },
-    { "name": "Pinterest",        "ats": "greenhouse", "token": "pinterest",        "target": false, "tags": ["big-tech"],          "verified": false },
-    { "name": "Roblox",           "ats": "greenhouse", "token": "roblox",           "target": false, "tags": ["big-tech"],          "verified": false },
-    { "name": "Unity",            "ats": "greenhouse", "token": "unity",            "target": false, "tags": ["gaming"],            "verified": false },
-    { "name": "Samsara",          "ats": "greenhouse", "token": "samsara",          "target": false, "tags": ["infra"],             "verified": false },
-    { "name": "Rippling",         "ats": "greenhouse", "token": "rippling",         "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Gusto",            "ats": "greenhouse", "token": "gusto",            "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Benchling",        "ats": "greenhouse", "token": "benchling",        "target": false, "tags": ["bio"],               "verified": false },
-    { "name": "Verkada",          "ats": "greenhouse", "token": "verkada",          "target": false, "tags": ["hardware"],          "verified": false },
-    { "name": "Anduril",          "ats": "lever",      "token": "anduril",          "target": false, "tags": ["defense"],           "verified": false, "note": "Most reqs require US citizenship - expect the citizenship disqualifier to fire often." },
-    { "name": "SpaceX",           "ats": "greenhouse", "token": "spacex",           "target": false, "tags": ["aerospace"],         "verified": false, "note": "ITAR: US person requirement on nearly every req." },
-    { "name": "Palantir",         "ats": "lever",      "token": "palantir",         "target": false, "tags": ["defense", "data"],   "verified": false },
-    { "name": "Applied Intuition","ats": "lever",      "token": "applied-intuition","target": false, "tags": ["av", "ai"],          "verified": false },
-    { "name": "Waymo",            "ats": "greenhouse", "token": "waymo",            "target": true,  "tags": ["av", "ai"],          "verified": false },
-    { "name": "Zoox",             "ats": "greenhouse", "token": "zoox",             "target": false, "tags": ["av"],                "verified": false },
-    { "name": "Nuro",            "ats": "lever",      "token": "nuro",             "target": false, "tags": ["av"],                "verified": false },
-    { "name": "Rivian",           "ats": "greenhouse", "token": "rivian",           "target": false, "tags": ["auto"],              "verified": false },
-    { "name": "Lucid Motors",     "ats": "greenhouse", "token": "lucidmotors",      "target": false, "tags": ["auto"],              "verified": false },
-    { "name": "Weights & Biases", "ats": "ashby",      "token": "wandb",            "target": true,  "tags": ["ai-infra"],          "verified": false },
-    { "name": "Hugging Face",     "ats": "lever",      "token": "huggingface",      "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "Runway",           "ats": "ashby",      "token": "runwayml",         "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "Perplexity",       "ats": "ashby",      "token": "perplexity",       "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "Sierra",           "ats": "ashby",      "token": "sierra",           "target": true,  "tags": ["ai-lab"],            "verified": false },
-    { "name": "Together AI",      "ats": "ashby",      "token": "togetherai",       "target": true,  "tags": ["ai-infra"],          "verified": false },
-    { "name": "Modal",            "ats": "ashby",      "token": "modal",            "target": true,  "tags": ["ai-infra"],          "verified": false },
-    { "name": "LangChain",        "ats": "ashby",      "token": "langchain",        "target": false, "tags": ["ai-infra"],          "verified": false },
-    { "name": "Pinecone",         "ats": "ashby",      "token": "pinecone",         "target": false, "tags": ["ai-infra"],          "verified": false },
-    { "name": "Chroma",           "ats": "ashby",      "token": "chroma",           "target": false, "tags": ["ai-infra"],          "verified": false },
-    { "name": "Baseten",          "ats": "ashby",      "token": "baseten",          "target": false, "tags": ["ai-infra"],          "verified": false },
-    { "name": "Replicate",        "ats": "ashby",      "token": "replicate",        "target": false, "tags": ["ai-infra"],          "verified": false },
-    { "name": "Cursor",           "ats": "ashby",      "token": "anysphere",        "target": true,  "tags": ["ai-tools"],          "verified": false, "note": "Legal entity is Anysphere." },
-    { "name": "Replit",           "ats": "ashby",      "token": "replit",           "target": false, "tags": ["ai-tools"],          "verified": false },
-    { "name": "Grammarly",        "ats": "greenhouse", "token": "grammarly",        "target": false, "tags": ["ai-tools"],          "verified": false },
-    { "name": "Duolingo",         "ats": "greenhouse", "token": "duolingo",         "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Two Sigma",        "ats": "greenhouse", "token": "twosigma",         "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Jane Street",      "ats": "greenhouse", "token": "janestreet",       "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Hudson River Trading", "ats": "greenhouse", "token": "wearehrt",     "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Citadel",          "ats": "greenhouse", "token": "citadel",          "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Point72",          "ats": "greenhouse", "token": "point72",          "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "IMC Trading",      "ats": "greenhouse", "token": "imc",              "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Optiver",          "ats": "greenhouse", "token": "optiver",          "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Akuna Capital",    "ats": "greenhouse", "token": "akunacapital",     "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "DRW",              "ats": "greenhouse", "token": "drweng",           "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Jump Trading",     "ats": "greenhouse", "token": "jumptrading",      "target": false, "tags": ["quant"],             "verified": false },
-    { "name": "Squarespace",      "ats": "greenhouse", "token": "squarespace",      "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Wealthfront",      "ats": "greenhouse", "token": "wealthfront",      "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "Chime",            "ats": "greenhouse", "token": "chime",            "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "Nextdoor",         "ats": "greenhouse", "token": "nextdoor",         "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Life360",          "ats": "greenhouse", "token": "life360",          "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Sofi",             "ats": "greenhouse", "token": "sofi",             "target": false, "tags": ["fintech"],           "verified": false },
-    { "name": "Atlassian",        "ats": "lever",      "token": "atlassian",        "target": false, "tags": ["big-tech"],          "verified": false },
-    { "name": "Netflix",          "ats": "lever",      "token": "netflix",          "target": true,  "tags": ["big-tech"],          "verified": false },
-    { "name": "Cruise",           "ats": "greenhouse", "token": "cruise",           "target": false, "tags": ["av"],                "verified": false },
-    { "name": "Attentive",        "ats": "greenhouse", "token": "attentive",        "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Sourcegraph",      "ats": "greenhouse", "token": "sourcegraph",      "target": false, "tags": ["ai-tools"],          "verified": false },
-    { "name": "Retool",           "ats": "greenhouse", "token": "retool",           "target": false, "tags": ["product"],           "verified": false },
-    { "name": "Amplitude",        "ats": "greenhouse", "token": "amplitude",        "target": false, "tags": ["data"],              "verified": false },
-    { "name": "Sigma Computing",  "ats": "greenhouse", "token": "sigmacomputing",   "target": false, "tags": ["data"],              "verified": false },
-    { "name": "dbt Labs",         "ats": "greenhouse", "token": "dbtlabs",          "target": false, "tags": ["data"],              "verified": false }
+    {
+      "name": "Anthropic",
+      "ats": "greenhouse",
+      "token": "anthropic",
+      "target": true,
+      "tags": [
+        "ai-lab"
+      ],
+      "verified": true
+    },
+    {
+      "name": "OpenAI",
+      "ats": "ashby",
+      "token": "openai",
+      "target": true,
+      "tags": [
+        "ai-lab"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Scale AI",
+      "ats": "greenhouse",
+      "token": "scaleai",
+      "target": true,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Cohere",
+      "ats": "ashby",
+      "token": "cohere",
+      "target": true,
+      "tags": [
+        "ai-lab"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Databricks",
+      "ats": "greenhouse",
+      "token": "databricks",
+      "target": true,
+      "tags": [
+        "data",
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Snowflake",
+      "ats": "ashby",
+      "token": "snowflake",
+      "target": true,
+      "tags": [
+        "data"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Figma",
+      "ats": "greenhouse",
+      "token": "figma",
+      "target": true,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Stripe",
+      "ats": "greenhouse",
+      "token": "stripe",
+      "target": true,
+      "tags": [
+        "fintech",
+        "backend"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Ramp",
+      "ats": "ashby",
+      "token": "ramp",
+      "target": true,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Plaid",
+      "ats": "lever",
+      "token": "plaid",
+      "target": true,
+      "tags": [
+        "fintech"
+      ],
+      "verified": false,
+      "note": "board reachable but currently lists no jobs"
+    },
+    {
+      "name": "Notion",
+      "ats": "ashby",
+      "token": "notion",
+      "target": true,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Linear",
+      "ats": "ashby",
+      "token": "linear",
+      "target": true,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Vercel",
+      "ats": "ashby",
+      "token": "vercel",
+      "target": true,
+      "tags": [
+        "infra"
+      ],
+      "verified": false,
+      "note": "board reachable but currently lists no jobs"
+    },
+    {
+      "name": "Cloudflare",
+      "ats": "greenhouse",
+      "token": "cloudflare",
+      "target": true,
+      "tags": [
+        "infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Datadog",
+      "ats": "greenhouse",
+      "token": "datadog",
+      "target": true,
+      "tags": [
+        "infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "MongoDB",
+      "ats": "greenhouse",
+      "token": "mongodb",
+      "target": true,
+      "tags": [
+        "data"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Confluent",
+      "ats": "ashby",
+      "token": "confluent",
+      "target": true,
+      "tags": [
+        "data",
+        "infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Airtable",
+      "ats": "greenhouse",
+      "token": "airtable",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Asana",
+      "ats": "greenhouse",
+      "token": "asana",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Airbnb",
+      "ats": "greenhouse",
+      "token": "airbnb",
+      "target": true,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Coinbase",
+      "ats": "greenhouse",
+      "token": "coinbase",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Robinhood",
+      "ats": "greenhouse",
+      "token": "robinhood",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Affirm",
+      "ats": "greenhouse",
+      "token": "affirm",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Brex",
+      "ats": "greenhouse",
+      "token": "brex",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "DoorDash",
+      "ats": "greenhouse",
+      "token": "doordashusa",
+      "target": true,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Instacart",
+      "ats": "greenhouse",
+      "token": "instacart",
+      "target": false,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Lyft",
+      "ats": "greenhouse",
+      "token": "lyft",
+      "target": false,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Reddit",
+      "ats": "greenhouse",
+      "token": "reddit",
+      "target": true,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Discord",
+      "ats": "greenhouse",
+      "token": "discord",
+      "target": true,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Twitch",
+      "ats": "greenhouse",
+      "token": "twitch",
+      "target": false,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Pinterest",
+      "ats": "greenhouse",
+      "token": "pinterest",
+      "target": false,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Roblox",
+      "ats": "greenhouse",
+      "token": "roblox",
+      "target": false,
+      "tags": [
+        "big-tech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Samsara",
+      "ats": "greenhouse",
+      "token": "samsara",
+      "target": false,
+      "tags": [
+        "infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Gusto",
+      "ats": "greenhouse",
+      "token": "gusto",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Benchling",
+      "ats": "ashby",
+      "token": "benchling",
+      "target": false,
+      "tags": [
+        "bio"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Verkada",
+      "ats": "greenhouse",
+      "token": "verkada",
+      "target": false,
+      "tags": [
+        "hardware"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Anduril",
+      "ats": "greenhouse",
+      "token": "andurilindustries",
+      "target": false,
+      "tags": [
+        "defense"
+      ],
+      "verified": true,
+      "note": "Most reqs require US citizenship - expect the citizenship disqualifier to fire often."
+    },
+    {
+      "name": "SpaceX",
+      "ats": "greenhouse",
+      "token": "spacex",
+      "target": false,
+      "tags": [
+        "aerospace"
+      ],
+      "verified": true,
+      "note": "ITAR: US person requirement on nearly every req."
+    },
+    {
+      "name": "Palantir",
+      "ats": "lever",
+      "token": "palantir",
+      "target": false,
+      "tags": [
+        "defense",
+        "data"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Waymo",
+      "ats": "greenhouse",
+      "token": "waymo",
+      "target": true,
+      "tags": [
+        "av",
+        "ai"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Zoox",
+      "ats": "lever",
+      "token": "zoox",
+      "target": false,
+      "tags": [
+        "av"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Nuro",
+      "ats": "greenhouse",
+      "token": "nuro",
+      "target": false,
+      "tags": [
+        "av"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Lucid Motors",
+      "ats": "greenhouse",
+      "token": "lucidmotors",
+      "target": false,
+      "tags": [
+        "auto"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Runway",
+      "ats": "ashby",
+      "token": "runway",
+      "target": true,
+      "tags": [
+        "ai-lab"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Perplexity",
+      "ats": "ashby",
+      "token": "perplexity",
+      "target": true,
+      "tags": [
+        "ai-lab"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Sierra",
+      "ats": "ashby",
+      "token": "sierra",
+      "target": true,
+      "tags": [
+        "ai-lab"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Together AI",
+      "ats": "greenhouse",
+      "token": "togetherai",
+      "target": true,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Modal",
+      "ats": "ashby",
+      "token": "modal",
+      "target": true,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "LangChain",
+      "ats": "ashby",
+      "token": "langchain",
+      "target": false,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Pinecone",
+      "ats": "ashby",
+      "token": "pinecone",
+      "target": false,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Chroma",
+      "ats": "ashby",
+      "token": "trychroma",
+      "target": false,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Baseten",
+      "ats": "ashby",
+      "token": "baseten",
+      "target": false,
+      "tags": [
+        "ai-infra"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Cursor",
+      "ats": "ashby",
+      "token": "cursor",
+      "target": true,
+      "tags": [
+        "ai-tools"
+      ],
+      "verified": true,
+      "note": "Legal entity is Anysphere."
+    },
+    {
+      "name": "Replit",
+      "ats": "ashby",
+      "token": "replit",
+      "target": false,
+      "tags": [
+        "ai-tools"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Duolingo",
+      "ats": "greenhouse",
+      "token": "duolingo",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Jane Street",
+      "ats": "greenhouse",
+      "token": "janestreet",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Point72",
+      "ats": "greenhouse",
+      "token": "point72",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": true
+    },
+    {
+      "name": "IMC Trading",
+      "ats": "greenhouse",
+      "token": "imc",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Optiver",
+      "ats": "greenhouse",
+      "token": "optiver",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": false,
+      "note": "board reachable but currently lists no jobs"
+    },
+    {
+      "name": "Akuna Capital",
+      "ats": "greenhouse",
+      "token": "akunacapital",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": true
+    },
+    {
+      "name": "DRW",
+      "ats": "greenhouse",
+      "token": "drweng",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Jump Trading",
+      "ats": "greenhouse",
+      "token": "jumptrading",
+      "target": false,
+      "tags": [
+        "quant"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Squarespace",
+      "ats": "greenhouse",
+      "token": "squarespace",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Wealthfront",
+      "ats": "lever",
+      "token": "wealthfront",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Chime",
+      "ats": "greenhouse",
+      "token": "chime",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Nextdoor",
+      "ats": "greenhouse",
+      "token": "nextdoor",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Life360",
+      "ats": "greenhouse",
+      "token": "life360",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Sofi",
+      "ats": "greenhouse",
+      "token": "sofi",
+      "target": false,
+      "tags": [
+        "fintech"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Attentive",
+      "ats": "greenhouse",
+      "token": "attentive",
+      "target": false,
+      "tags": [
+        "product"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Amplitude",
+      "ats": "greenhouse",
+      "token": "amplitude",
+      "target": false,
+      "tags": [
+        "data"
+      ],
+      "verified": true
+    },
+    {
+      "name": "Sigma Computing",
+      "ats": "greenhouse",
+      "token": "sigmacomputing",
+      "target": false,
+      "tags": [
+        "data"
+      ],
+      "verified": true
+    }
   ],
-
   "_not_included": [
     "Google, Meta, Amazon, Apple, Microsoft, NVIDIA and other large employers",
     "run proprietary career sites, not public Greenhouse/Lever/Ashby boards, so",

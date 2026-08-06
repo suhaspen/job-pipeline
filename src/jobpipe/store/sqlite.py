@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import zlib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -21,7 +22,7 @@ from typing import Any, Iterable
 from jobpipe.models import Disqualifier, Posting, Status, Tier, iso, utcnow
 from jobpipe.store import UpsertResult
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS postings (
@@ -83,6 +84,16 @@ CREATE TABLE IF NOT EXISTS notifications (
     PRIMARY KEY (posting_id, sent_at)
 );
 CREATE INDEX IF NOT EXISTS idx_notifications_sent ON notifications(sent_at);
+
+-- ETag / Last-Modified cache for conditional requests. Persisted rather than
+-- held in memory because each GitHub Actions run is a fresh container: without
+-- this, every run would re-download all 12 MB of Simplify's listings.json.
+CREATE TABLE IF NOT EXISTS http_cache (
+    url           TEXT PRIMARY KEY,
+    etag          TEXT,
+    last_modified TEXT,
+    fetched_at    TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,
@@ -273,18 +284,51 @@ class SqliteStore:
     # ------------------------------------------------------------------
 
     def record_raw(self, run_id: str, source: str, payload: Any) -> None:
+        # zlib-compressed, because this database is committed to git on a
+        # */30 cron and job descriptions compress ~8x. Stored uncompressed,
+        # a single run's replay payloads ran to 10 MB.
+        blob = zlib.compress(json.dumps(payload, default=str).encode("utf-8"), 6)
         self.conn.execute(
             "INSERT INTO raw_payloads(run_id, source, payload, created_at) VALUES (?,?,?,?) "
             "ON CONFLICT(run_id, source) DO UPDATE SET payload=excluded.payload",
-            (run_id, source, json.dumps(payload, default=str), iso(utcnow())),
+            (run_id, source, blob, iso(utcnow())),
         )
+
+    def vacuum(self) -> None:
+        """Reclaim space after pruning. Without it the file never shrinks."""
+        self.conn.execute("VACUUM")
+
+    def prune_raw(self, keep_runs: int = 3) -> int:
+        """Keep replay payloads for only the most recent runs.
+
+        The database is committed to git on a */30 cron. Simplify's feed alone
+        is ~12 MB, so retaining every run's payload would add gigabytes a week
+        to the repo. Five runs is enough to replay a triage change against
+        recent history, which is what `--replay` is actually for.
+        """
+        cur = self.conn.execute(
+            "DELETE FROM raw_payloads WHERE run_id NOT IN "
+            "(SELECT run_id FROM raw_payloads ORDER BY created_at DESC LIMIT ?)",
+            (keep_runs,),
+        )
+        return cur.rowcount
 
     def get_raw(self, run_id: str) -> list[tuple[str, Any]]:
         rows = self.conn.execute(
             "SELECT source, payload FROM raw_payloads WHERE run_id = ? ORDER BY source",
             (run_id,),
         ).fetchall()
-        return [(r["source"], json.loads(r["payload"])) for r in rows]
+        out = []
+        for r in rows:
+            raw = r["payload"]
+            # Tolerate pre-compression rows so an existing database keeps working.
+            if isinstance(raw, bytes):
+                try:
+                    raw = zlib.decompress(raw).decode("utf-8")
+                except zlib.error:
+                    raw = raw.decode("utf-8", "replace")
+            out.append((r["source"], json.loads(raw)))
+        return out
 
     def record_run(self, report: dict[str, Any]) -> None:
         self.conn.execute(
@@ -322,6 +366,26 @@ class SqliteStore:
                 (iso(since), int(tier)),
             ).fetchone()
         return int(row["n"])
+
+    # ------------------------------------------------------------------
+    # Conditional-request cache
+    # ------------------------------------------------------------------
+
+    def get_cache_validators(self, url: str) -> tuple[str | None, str | None]:
+        row = self.conn.execute(
+            "SELECT etag, last_modified FROM http_cache WHERE url = ?", (url,)
+        ).fetchone()
+        return (row["etag"], row["last_modified"]) if row else (None, None)
+
+    def set_cache_validators(
+        self, url: str, etag: str | None, last_modified: str | None
+    ) -> None:
+        self.conn.execute(
+            "INSERT INTO http_cache(url, etag, last_modified, fetched_at) VALUES (?,?,?,?) "
+            "ON CONFLICT(url) DO UPDATE SET etag=excluded.etag, "
+            "last_modified=excluded.last_modified, fetched_at=excluded.fetched_at",
+            (url, etag, last_modified, iso(utcnow())),
+        )
 
     def last_new_posting_at(self) -> datetime | None:
         """Newest `first_seen_at`, i.e. when the pipeline last learned anything.

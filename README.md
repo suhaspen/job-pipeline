@@ -4,15 +4,22 @@ A polling pipeline for co-op and new-grad SWE / AI-ML postings. Runs on GitHub
 Actions cron — no server, no always-on machine. Every run fetches, normalizes,
 dedupes, triages, stores, notifies and reports in a single pass.
 
-**Status: Phase 0 complete.** Store, normalization and dedupe are built and
-tested. Sources land in Phase 1. See [FEEDBACK.md](FEEDBACK.md) for what is and
-is not built, and [ASSUMPTIONS.md](ASSUMPTIONS.md) for every judgment call.
+**Status: Phase 1 complete.** All Tier A sources run end to end into SQLite —
+2,514 postings from 4 sources in 23s. Notifications land in Phase 2. See
+[FEEDBACK.md](FEEDBACK.md) for what is and is not built, and
+[ASSUMPTIONS.md](ASSUMPTIONS.md) for every judgment call.
 
 ## Quick start
 
 ```bash
 make install
 make test
+```
+
+Run the pipeline:
+
+```bash
+make dry-run
 ```
 
 Inspect how any posting would be deduped:
@@ -39,14 +46,31 @@ src/jobpipe/
   models.py       RawPosting (what sources emit) -> Posting (what is stored)
   normalize.py    company/title/location/term normalization + dedupe key
   store/          Store protocol + SQLite implementation
+  sources/        simplify, speedyapply, ats (greenhouse/lever/ashby)
+  triage/         prefilter (eligibility rules); scoring lands in Phase 3
+  runner.py       one pass: fetch -> prefilter -> dedupe -> store -> report
   config.py       env + companies.json
   logging_.py     JSON-lines run logs
   cli.py          jobpipe entry point
 companies.json    ATS board tokens; `target: true` gates tier 1
 profile/          resume.md + targets.md — the candidate side of triage
 data/postings.db  source of truth, committed to the repo
+data/run-report.json  machine-readable outcome of the latest run
+docs/sources.md   every endpoint and schema, with what was verified how
 tests/            fixture-driven, no network
 ```
+
+## Sources
+
+| Source | What it reads |
+|---|---|
+| `simplify-newgrad` | `listings.json` on branch `dev` — JSON, not the README |
+| `speedyapply-swe` | `NEW_GRAD_USA.md` + `README.md` raw markdown |
+| `speedyapply-ai` | same, AI/ML-focused repo |
+| `ats` | 71 Greenhouse / Lever / Ashby boards from `companies.json` |
+
+Full endpoint and schema notes, including what was reverse-engineered and how,
+are in [docs/sources.md](docs/sources.md).
 
 ## Design notes
 
@@ -67,6 +91,16 @@ a per-process-salted id would orphan every row between runs.
 one, and `term` stays `unknown` without an explicit marker — a guessed term
 poisons the dedupe key.
 
+**A prefilter runs before storage.** ATS boards return every open req a company
+has: 15,968 fetched per run, 15,629 of them sales, recruiting or senior. The
+gate is an eligibility question ("is this the right kind of job"), never a score.
+Curated feeds run lenient; raw company boards run strict. See
+[ASSUMPTIONS.md](ASSUMPTIONS.md) B1-B2.
+
+**One broken source never kills a run.** Every source is wrapped; failures land
+in `data/run-report.json` with `ok: false`. A run that dies because one feed
+changed its schema is a silent outage while you believe you are covered.
+
 ## Commands
 
 | | |
@@ -76,6 +110,8 @@ poisons the dedupe key.
 | `make recent` | list stored postings |
 | `make dry-run` | full pipeline, no writes, no pushes |
 | `make feedback` | copy-paste block + latest EVAL summary |
+| `jobpipe run --source ats` | limit a run to named sources |
+| `jobpipe verify-companies --write` | probe every ATS board and repair `companies.json` |
 
 ## Not sources
 

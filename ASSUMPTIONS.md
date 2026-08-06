@@ -5,6 +5,90 @@ change if it is wrong. Reverse-chronological by phase.
 
 ---
 
+## Phase 1
+
+### B1 — A prefilter runs before storage, and it is not in the brief
+The brief's pipeline is fetch → normalize → dedupe → triage → store. I added a
+deterministic eligibility gate (`triage/prefilter.py`) *before* storage.
+
+**Why:** the ATS feeds return every open req a company has. Measured on the live
+run, that is 15,968 postings across 68 boards, of which 15,629 are sales,
+recruiting, senior or otherwise ineligible. Storing them would put ~19k rows in
+a database that gets committed to git every 30 minutes, and bury the real
+postings in every `recent` listing.
+
+This is the rules half of the hybrid triage you chose, arriving one phase early.
+It answers "is this even the right kind of job", never "how good is it" — no
+score is assigned.
+
+**If wrong:** the gate is lenient by design (dropping a real posting is
+invisible; keeping junk costs a row). Every rule is a high-confidence exclusion.
+Reversing it is deleting one call in `runner.py`.
+
+### B2 — Two prefilter strictness levels
+Curated GitHub feeds run lenient; raw ATS boards run strict, requiring an
+early-career signal in the title or body.
+
+**Why:** on a curated new-grad repo, an unlabeled "Software Engineer" is very
+likely the unlabeled new-grad req. On a raw company board it is overwhelmingly
+an experienced-IC role — sampled live: "Researcher, Alignment", "Software
+Engineer, Money Movement", "Distributed Systems Engineer - Data Platform". I
+audited 341 postings dropped by this rule across ten target boards and found no
+genuine new-grad reqs among them.
+
+**Would have asked:** are you willing to trade some recall on unlabeled ATS
+reqs for a database that is 8x smaller and actually readable?
+
+### B3 — `INTERN_USA.md` does not exist; README.md is used instead
+Neither speedyapply repo has that file. The USA internship tables are inside
+`README.md`. Documented with the full file listing in `docs/sources.md`.
+
+### B4 — speedyapply's relative `Age` column becomes `posted_at`
+`1d` / `12d` / `2mo` is converted to `now - age`. This is the source's own
+stated age rather than an inference, but it is only day-granular.
+
+**Tension with the brief:** "posted_at if the source provides it, else null — do
+not guess". I judged a stated relative age to be provided, not guessed. It is
+the only recency signal those tables carry, and recency is what decides whether
+you are an early applicant. Say the word and I will null it instead.
+
+### B5 — International speedyapply files are not read
+`INTERN_INTL.md` and `NEW_GRAD_INTL.md` are skipped. They would roughly triple
+volume with postings that fail triage on location anyway.
+
+**If wrong:** one line in `sources/speedyapply.py:FILES`.
+
+### B6 — Dead ATS tokens are deleted, not disabled
+18 of 89 boards 404'd and were removed from `companies.json` rather than kept
+with `verified: false`. A dead token costs a request every run forever and can
+never return data. The removed names are listed in the file's header comment so
+you can revisit them by hand.
+
+### B7 — Replay payloads are prefiltered postings, not raw source bytes
+`--replay` needs stored payloads. Storing the raw responses meant 10.4 MB per
+run in a git-committed database. Instead the prefiltered `RawPosting`s are
+stored, zlib-compressed, for the last 3 runs, and `VACUUM` runs after pruning.
+Result: 2.0 MB total instead of 14 MB and growing.
+
+**Cost:** a posting dropped by the prefilter cannot be replayed. Since triage
+only ever sees post-prefilter postings, replay fidelity for triage is exact.
+
+### B8 — Simplify categories `Hardware` and `Product` are dropped
+Kept: Software, Software Engineering, AI/ML/Data, "Data Science, AI & Machine
+Learning", Quant. Quant is kept because several quant firms hire new-grad SWEs.
+
+### B9 — ATS is one source, not ~70
+All boards are fetched inside a single `ats` source so the run report stays
+readable and dead tokens surface as one warning rather than 70 rows.
+
+**Cost:** per-company latency is not in the report. It is in the JSON logs.
+
+### B10 — ATS boards are polled with a 0.15s gap
+~70 unauthenticated free APIs hit back-to-back every 30 minutes is how a
+personal tool gets IP-banned. Costs ~10s per run.
+
+---
+
 ## Phase 0
 
 ### A1 — `unknown` is a first-class term, and terms are never guessed

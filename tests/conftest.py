@@ -22,7 +22,7 @@ def raw_from_dict(d: dict) -> RawPosting:
         title=d["title"],
         apply_url=d["apply_url"],
         location=d.get("location"),
-        term_hint=d.get("term_hint"),
+        term_default=d.get("term_default"),
         remote_hint=d.get("remote_hint"),
         description=d.get("description"),
         source_id=d.get("source_id"),
