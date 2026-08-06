@@ -1,14 +1,15 @@
 """The pipeline run.
 
-One pass: fetch every source, prefilter, normalize, dedupe, store, report.
-Triage and notification hook in here in Phases 2-3; the report already carries
-their fields so the shape does not change under you.
+One pass: fetch, prefilter, normalize, cutover, dedupe, store, triage, notify,
+report. Storage and notification happen in the same run by design - chaining
+notification off the storage layer adds latency, and on Google Sheets API
+writes do not fire change triggers at all.
 
 The governing rule is *fail loudly in the report, quietly in the run*. Every
 source is wrapped: a source that raises is recorded with its traceback and the
-run continues with the others. A run that returns nothing because one feed
-changed its schema is a bad day; a run that dies for the same reason is a
-silent outage while you believe you are covered.
+run continues. A run that returns nothing because one feed changed its schema
+is a bad day; a run that dies for the same reason is a silent outage while you
+believe you are covered.
 """
 
 from __future__ import annotations
@@ -20,12 +21,18 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
 
-from jobpipe.config import RUN_REPORT_PATH, Config
+from jobpipe.config import FILTER_VERSION, RUN_REPORT_PATH, Config
 from jobpipe.logging_ import RunLogger
-from jobpipe.models import Posting, RawPosting, utcnow
+from jobpipe.models import Posting, RawPosting, Status, Tier, utcnow
+from jobpipe.notify import NotifyContext, NtfyClient, gate, ping_healthcheck, redact
 from jobpipe.sources import HttpClient, build_sources
 from jobpipe.store import SqliteStore
-from jobpipe.triage import prefilter
+from jobpipe.triage import prefilter, provisional
+from jobpipe.triage.eligibility import EligibilityProfile, evaluate as evaluate_eligibility
+
+EXPIRY_ABSENT_HOURS = 48
+RETENTION_DAYS = 90
+ZERO_YIELD_HOURS = 12
 
 
 def make_run_id(now: datetime | None = None) -> str:
@@ -42,6 +49,8 @@ class SourceReport:
     latency_ms: int = 0
     not_modified: bool = False
     filtered_out: int = 0
+    baselined: int = 0
+    term_unknown_rate: float = 0.0
     warnings: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -54,6 +63,8 @@ class SourceReport:
             "latency_ms": self.latency_ms,
             "not_modified": self.not_modified,
             "filtered_out": self.filtered_out,
+            "baselined": self.baselined,
+            "term_unknown_rate": round(self.term_unknown_rate, 3),
             "warnings": self.warnings,
         }
 
@@ -77,8 +88,13 @@ class RunReport:
     backlog_unapplied: int = 0
     warnings: list[str] = field(default_factory=list)
     dry_run: bool = False
-    # Run-scoped id accumulator used only by --dry-run to emulate cross-source
-    # dedupe without writing. Not part of the report payload.
+    baseline_size: int = 0
+    excluded_recorded: int = 0
+    expired: int = 0
+    retired: int = 0
+    healthcheck_ok: bool = False
+    scheduled_for: str | None = None
+    schedule_delay_s: float | None = None
     dry_seen_ids: set[str] = field(default_factory=set, repr=False)
 
     def to_dict(self) -> dict[str, Any]:
@@ -93,6 +109,13 @@ class RunReport:
             "backlog_unapplied": self.backlog_unapplied,
             "warnings": self.warnings,
             "dry_run": self.dry_run,
+            "baseline_size": self.baseline_size,
+            "excluded_recorded": self.excluded_recorded,
+            "expired": self.expired,
+            "retired": self.retired,
+            "healthcheck_ok": self.healthcheck_ok,
+            "scheduled_for": self.scheduled_for,
+            "schedule_delay_s": self.schedule_delay_s,
         }
 
     @property
@@ -110,19 +133,30 @@ def run(
     only: list[str] | None = None,
     log: RunLogger | None = None,
     report_path: Any = RUN_REPORT_PATH,
+    notifier: NtfyClient | None = None,
+    now: datetime | None = None,
+    scheduled_for: datetime | None = None,
 ) -> RunReport:
-    run_id = make_run_id()
+    run_id = make_run_id(now)
     log = log or RunLogger(run_id)
     started = time.monotonic()
+    clock = now or utcnow()
     report = RunReport(
         run_id=run_id,
-        started_at=datetime.now(timezone.utc).isoformat(),
+        started_at=clock.isoformat(),
         dry_run=cfg.dry_run,
+        scheduled_for=scheduled_for.isoformat() if scheduled_for else None,
+        schedule_delay_s=(clock - scheduled_for).total_seconds() if scheduled_for else None,
     )
 
-    log.info("run.start", dry_run=cfg.dry_run, db=str(cfg.db_path))
+    log.info("run.start", dry_run=cfg.dry_run, ntfy=redact(cfg.ntfy_topic))
     store = SqliteStore(cfg.db_path)
     http = HttpClient(store=None if cfg.dry_run else store)
+    profile = EligibilityProfile.load()
+    baseline = store.baseline_ids()
+    fresh_ids: list[str] = []
+    raw_by_id: dict[str, RawPosting] = {}
+    seen_ids_by_source: dict[str, set[str]] = {}
 
     try:
         sources = build_sources(cfg, http, only)
@@ -140,9 +174,7 @@ def run(
                 sr.latency_ms = int((time.monotonic() - t0) * 1000)
                 report.sources.append(sr)
                 log.error(
-                    "source.failed",
-                    source=source.name,
-                    error=str(exc),
+                    "source.failed", source=source.name, error=str(exc),
                     traceback=traceback.format_exc(),
                 )
                 continue
@@ -152,36 +184,58 @@ def run(
             sr.not_modified = stats.not_modified
             sr.warnings = list(stats.warnings)
             sr.errors = list(stats.errors)
-            # Errors inside a source are partial failures - some boards 404'd
-            # but the rest returned data. The source is still `ok` if it
-            # produced anything; only a total failure flips the flag.
             sr.ok = bool(raw_postings) or not stats.errors or stats.not_modified
 
             strict = getattr(source, "strict_prefilter", False)
             kept, reasons = prefilter.apply(raw_postings, strict=strict)
             sr.fetched = len(kept)
             sr.filtered_out = len(raw_postings) - len(kept)
+
+            if not cfg.dry_run:
+                report.excluded_recorded += _record_exclusions(
+                    store, raw_postings, kept, strict, source.name
+                )
             if reasons:
                 log.info("source.prefilter", source=source.name, **reasons)
 
-            postings = _normalize(kept, log, source.name)
-            sr.new = _persist(store, postings, report, cfg, source, run_id, kept)
+            postings = _normalize(kept, log, source.name, raw_by_id)
+            if postings:
+                unknown = sum(1 for p in postings if p.term.value == "unknown")
+                sr.term_unknown_rate = unknown / len(postings)
+                if sr.term_unknown_rate > 0.10:
+                    report.warnings.append(
+                        f"{source.name}: term unknown for "
+                        f"{sr.term_unknown_rate:.0%} of postings (>10%)"
+                    )
+
+            accepted, baselined = _apply_cutover(postings, baseline, cfg, store)
+            sr.baselined = baselined
+            seen_ids_by_source[source.name] = {p.id for p in postings}
+
+            sr.new = _persist(store, accepted, report, cfg, source, run_id, kept)
+            fresh_ids.extend(p.id for p in accepted)
 
             report.sources.append(sr)
             log.info(
-                "source.done",
-                source=source.name,
-                fetched=sr.fetched,
-                new=sr.new,
-                filtered_out=sr.filtered_out,
-                not_modified=sr.not_modified,
-                latency_ms=sr.latency_ms,
+                "source.done", source=source.name, fetched=sr.fetched, new=sr.new,
+                filtered_out=sr.filtered_out, baselined=sr.baselined,
+                not_modified=sr.not_modified, latency_ms=sr.latency_ms,
             )
 
+        if not cfg.dry_run:
+            _triage(store, cfg, profile, fresh_ids, raw_by_id, report, log)
+            _update_sightings(store, report, seen_ids_by_source, run_id, clock)
+            report.expired = len(store.expire_stale(absent_hours=EXPIRY_ABSENT_HOURS, now=clock))
+            report.retired = len(store.retire_long_expired(days=RETENTION_DAYS, now=clock))
+            store.prune_exclusions(days=14)
+
         report.backlog_unapplied = store.backlog_unapplied()
-        _zero_yield_check(store, report, log)
+        report.baseline_size = store.baseline_count()
+        _zero_yield_check(store, report, log, clock, cfg.cutover_date)
 
         if not cfg.dry_run:
+            _notify(store, cfg, report, fresh_ids, log, clock, notifier)
+            report.healthcheck_ok = ping_healthcheck(cfg.healthcheck_url)
             store.prune_raw(keep_runs=3)
             store.record_run(report.to_dict())
             store.vacuum()
@@ -192,48 +246,101 @@ def run(
             report_path.write_text(json.dumps(report.to_dict(), indent=2), encoding="utf-8")
         store.close()
         log.info(
-            "run.end",
-            duration_s=round(report.duration_s, 2),
-            fetched=report.total_fetched,
-            new=report.total_new,
-            deduped_out=report.deduped_out,
+            "run.end", duration_s=round(report.duration_s, 2), fetched=report.total_fetched,
+            new=report.total_new, deduped_out=report.deduped_out,
+            notified=report.notifications["sent"],
         )
 
     return report
 
 
-def _normalize(raws: list[RawPosting], log: RunLogger, source_name: str) -> list[Posting]:
+# --------------------------------------------------------------------------
+# Stages
+# --------------------------------------------------------------------------
+
+
+def _record_exclusions(
+    store: SqliteStore, raws: list[RawPosting], kept: list[RawPosting], strict: bool, source: str
+) -> int:
+    """Demote rather than drop, so the false-negative rate stays measurable.
+
+    Without this the only evidence a filter rule is wrong is exactly the data
+    the rule threw away.
+    """
+    kept_ids = {id(r) for r in kept}
+    rows = []
+    for raw in raws:
+        if id(raw) in kept_ids:
+            continue
+        result = prefilter.evaluate(raw, strict=strict)
+        try:
+            posting = raw.normalize()
+            pid, term = posting.id, posting.term.value
+        except Exception:
+            continue
+        rows.append({
+            "id": pid, "company": raw.company, "title": raw.title,
+            "apply_url": raw.apply_url, "term": term, "source": source,
+            "filter_reason": result.reason,
+        })
+    return store.record_exclusions(rows, filter_version=FILTER_VERSION) if rows else 0
+
+
+def _normalize(
+    raws: list[RawPosting], log: RunLogger, source_name: str,
+    raw_by_id: dict[str, RawPosting] | None = None,
+) -> list[Posting]:
+    """Normalize a batch, recording id -> RawPosting so triage can reach the
+    original description and structured fields. `Posting` is a slots dataclass,
+    so the mapping lives here rather than as an attribute on the row."""
     out: list[Posting] = []
     for raw in raws:
         try:
-            out.append(raw.normalize())
+            posting = raw.normalize()
+            if raw_by_id is not None:
+                raw_by_id.setdefault(posting.id, raw)
+            out.append(posting)
         except Exception as exc:
-            # A single malformed row must not cost the rest of the batch.
             log.warn(
-                "normalize.failed",
-                source=source_name,
-                company=raw.company,
-                title=raw.title,
-                error=str(exc),
+                "normalize.failed", source=source_name, company=raw.company,
+                title=raw.title, error=str(exc),
             )
     return out
 
 
+def _apply_cutover(
+    postings: list[Posting], baseline: set[str], cfg: Config, store: SqliteStore
+) -> tuple[list[Posting], int]:
+    """Drop anything already known at cutover, unless it is a genuine relist.
+
+    The relist exception matters: companies do close and repost reqs, and a
+    `first_published` newer than the cutover means the opening is real even
+    though the dedupe key is one we have seen.
+    """
+    if cfg.cutover_date is None:
+        return postings, 0
+
+    accepted: list[Posting] = []
+    baselined = 0
+    for posting in postings:
+        if posting.id not in baseline:
+            accepted.append(posting)
+            continue
+        if posting.posted_at and posting.posted_at > cfg.cutover_date:
+            if not cfg.dry_run:
+                store.promote_from_baseline(posting.id)
+            baseline.discard(posting.id)
+            accepted.append(posting)
+            continue
+        baselined += 1
+    return accepted, baselined
+
+
 def _persist(
-    store: SqliteStore,
-    postings: list[Posting],
-    report: RunReport,
-    cfg: Config,
-    source: Any,
-    run_id: str,
-    kept_raw: list[RawPosting],
+    store: SqliteStore, postings: list[Posting], report: RunReport, cfg: Config,
+    source: Any, run_id: str, kept_raw: list[RawPosting],
 ) -> int:
-    """Upsert one source's batch and return how many rows were genuinely new."""
     if cfg.dry_run:
-        # Same dedupe question, no writes. The accumulator is run-scoped, not
-        # batch-scoped: a job already reported by an earlier source is overlap,
-        # and scoping this per source would hide all cross-source dedupe and
-        # make a dry run overstate `new` against what a real run would do.
         new = 0
         for posting in postings:
             if posting.id in report.dry_seen_ids:
@@ -248,43 +355,158 @@ def _persist(
 
     result = store.upsert(postings)
     report.deduped_out += result.deduped_out
-    # Replay payloads are the prefiltered postings, not the raw source bytes:
-    # Simplify's feed alone is ~12 MB and this database is committed to git.
+    accepted_ids = {p.id for p in postings}
     store.record_raw(
-        run_id,
-        source.name,
+        run_id, source.name,
         [
             {
-                "company": r.company,
-                "title": r.title,
-                "apply_url": r.apply_url,
-                "location": r.location,
-                "term_default": r.term_default,
+                "company": r.company, "title": r.title, "apply_url": r.apply_url,
+                "location": r.location, "term_default": r.term_default,
                 "posted_at": r.posted_at.isoformat() if r.posted_at else None,
                 "description": (r.description or "")[:2000] or None,
-                "source_id": r.source_id,
-                "raw": r.raw,
+                "source_id": r.source_id, "raw": r.raw,
             }
             for r in kept_raw
         ],
     )
-    return result.new_count
+    return len([p for p in result.new if p.id in accepted_ids])
 
 
-def _zero_yield_check(store: SqliteStore, report: RunReport, log: RunLogger) -> None:
-    """Warn when nothing new has arrived for 12+ hours.
+def _triage(
+    store: SqliteStore, cfg: Config, profile: EligibilityProfile,
+    fresh_ids: list[str], raw_by_id: dict[str, RawPosting],
+    report: RunReport, log: RunLogger,
+) -> None:
+    """Assign disqualifiers, score and tier.
 
-    A long dry spell almost always means a source changed its schema and is now
-    parsing to nothing, which otherwise looks exactly like a quiet job market.
+    PROVISIONAL: `triage.provisional` is a placeholder rule, not a fit score.
+    The real scorer replaces it behind this same call.
+    """
+    targets = cfg.target_companies
+    for posting_id in fresh_ids:
+        posting = store.get(posting_id)
+        if posting is None:
+            continue
+        probe = raw_by_id.get(posting_id) or RawPosting(
+            source=posting.source, company=posting.company, title=posting.title,
+            apply_url=posting.apply_url, location=posting.location,
+        )
+        disqualifiers = evaluate_eligibility(probe, profile, term=posting.term)
+        score, tier, rationale = provisional.score_and_tier(
+            posting, disqualifiers, target_companies=targets, profile=profile
+        )
+        store.update_triage(
+            posting_id, tier=tier, score=score, rationale=rationale,
+            disqualifiers=disqualifiers,
+        )
+        report.tiers[str(int(tier))] = report.tiers.get(str(int(tier)), 0) + 1
+    log.info("triage.done", scored=len(fresh_ids), tiers=report.tiers)
+
+
+def _update_sightings(
+    store: SqliteStore, report: RunReport, seen_by_source: dict[str, set[str]],
+    run_id: str, clock: datetime,
+) -> None:
+    """Advance the expiry clock, but only for sources that actually succeeded.
+
+    The success qualifier is load-bearing. Counting a miss when a source
+    errored or 304'd would let one flaky feed expire its entire catalogue,
+    which then inflates the unapplied backlog and trips backpressure.
+    """
+    healthy = {
+        s.name for s in report.sources
+        if s.ok and not s.not_modified and s.fetched > 0
+    }
+    if not healthy:
+        return
+
+    all_seen: set[str] = set()
+    for name in healthy:
+        all_seen |= seen_by_source.get(name, set())
+    if all_seen:
+        store.mark_seen(all_seen, run_id)
+
+    rows = store.conn.execute(
+        "SELECT id, source FROM postings WHERE status NOT IN (?, ?)",
+        (Status.APPLIED.value, Status.EXPIRED.value),
+    ).fetchall()
+    missing = [r["id"] for r in rows if r["source"] in healthy and r["id"] not in all_seen]
+    if missing:
+        store.mark_missed(missing, now=clock)
+
+
+def _notify(
+    store: SqliteStore, cfg: Config, report: RunReport, fresh_ids: list[str],
+    log: RunLogger, clock: datetime, notifier: NtfyClient | None,
+) -> None:
+    client = notifier or NtfyClient(cfg)
+    if not client.enabled:
+        log.info("notify.skipped", reason="NTFY_TOPIC unset")
+        return
+
+    from datetime import timedelta
+
+    candidates = [p for p in (store.get(i) for i in fresh_ids) if p is not None]
+    if not candidates:
+        return
+
+    ctx = NotifyContext(
+        now=clock,
+        interrupting_last_hour=store.notifications_since(
+            clock - timedelta(hours=1), tier=Tier.INTERRUPTING
+        ),
+        backlog_unapplied=report.backlog_unapplied,
+        baseline_ids=frozenset(store.baseline_ids()),
+    )
+    result = gate(candidates, ctx)
+
+    report.notifications["suppressed_rate_cap"] = result.suppressed_rate_cap
+    report.notifications["suppressed_quiet_hours"] = result.suppressed_quiet_hours
+    report.notifications["suppressed_backpressure"] = result.suppressed_backpressure
+
+    sent = 0
+    for posting, priority in result.to_send:
+        try:
+            if client.send_posting(posting, priority):
+                store.record_notification(posting.id, posting.tier, sent_at=clock)
+                store.set_status(posting.id, Status.NOTIFIED)
+                sent += 1
+        except Exception as exc:
+            # A failed push must not fail the run; the row stays `new` and is
+            # retried next run rather than being silently marked notified.
+            log.error("notify.failed", posting=posting.id, error=str(exc))
+            report.warnings.append(f"push failed for {posting.id}: {exc}")
+
+    report.notifications["sent"] = sent
+    log.info(
+        "notify.done", sent=sent, interrupting=len(result.interrupting),
+        silent=len(result.silent), digest=len(result.digest),
+        quiet_hours=ctx.quiet, backpressure=ctx.backpressure,
+    )
+
+
+def _zero_yield_check(
+    store: SqliteStore, report: RunReport, log: RunLogger, clock: datetime,
+    cutover: datetime | None = None,
+) -> None:
+    """Warn when nothing new has arrived for a long stretch.
+
+    The reference point is the later of "last new posting" and the cutover
+    instant. Straight after a cutover the postings table is legitimately
+    empty, and without this the alarm would fire on every run until the first
+    new posting arrived - training you to ignore the one signal that is
+    supposed to mean a source broke.
     """
     if report.total_new:
         return
     last = store.last_new_posting_at()
-    if last is None:
+    if last is None and cutover is None:
         report.warnings.append("no postings have ever been stored")
         return
-    hours = (utcnow() - last).total_seconds() / 3600
-    if hours >= 12:
-        msg = f"zero new postings for {hours:.1f}h - a source schema may have changed"
-        report.warnings.append(msg)
+    reference = max([d for d in (last, cutover) if d is not None])
+    hours = (clock - reference).total_seconds() / 3600
+    if hours >= ZERO_YIELD_HOURS:
+        report.warnings.append(
+            f"zero new postings for {hours:.1f}h - a source schema may have changed"
+        )
         log.warn("zero_yield", hours=round(hours, 1))

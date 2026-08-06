@@ -5,6 +5,7 @@ description = "Low-latency polling pipeline for co-op and new-grad SWE/AI-ML pos
 requires-python = ">=3.11"
 dependencies = [
     "requests>=2.32",
+    "PyYAML>=6.0",
 ]
 
 [project.optional-dependencies]

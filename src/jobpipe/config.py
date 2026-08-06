@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +20,16 @@ DEFAULT_COMPANIES = REPO_ROOT / "companies.json"
 LOG_DIR = REPO_ROOT / "logs"
 RUN_REPORT_PATH = REPO_ROOT / "data" / "run-report.json"
 CANDIDATE_COMPANIES_PATH = REPO_ROOT / "data" / "candidate-companies.csv"
+
+# Everything first seen before this instant is baseline: known, but never
+# stored, exported or notified on. Set once at cutover and then left alone -
+# moving it forward would silently re-baseline live postings, and moving it
+# back would resurrect the whole pre-cutover backlog as "new".
+CUTOVER_DATE_PATH = REPO_ROOT / "data" / "cutover.json"
+
+# Bumped whenever the eligibility rules change, so `excluded` rows stay
+# attributable to the rule version that produced them.
+FILTER_VERSION = "2026-08-06.1"
 
 USER_AGENT = (
     "jobpipe/0.1 (personal job-search poller; +https://github.com/"
@@ -50,9 +61,27 @@ class ATSCompany:
     note: str | None = None
 
 
+def load_cutover_date(path: Path | None = None) -> datetime | None:
+    path = path or CUTOVER_DATE_PATH
+    if not path.exists():
+        return None
+    raw = json.loads(path.read_text(encoding="utf-8")).get("cutover_date")
+    return datetime.fromisoformat(raw) if raw else None
+
+
+def write_cutover_date(when: datetime, path: Path | None = None) -> None:
+    path = path or CUTOVER_DATE_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"cutover_date": when.astimezone(timezone.utc).isoformat()}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
 @dataclass(slots=True)
 class Config:
     db_path: Path = DEFAULT_DB
+    cutover_date: datetime | None = None
     companies: list[ATSCompany] = field(default_factory=list)
 
     ntfy_topic: str | None = None
@@ -118,6 +147,7 @@ def load_config(*, dry_run: bool = False, companies_path: Path | None = None) ->
     ack = os.environ.get("NTFY_ACK_TOPIC") or (f"{topic}-ack" if topic else None)
     return Config(
         db_path=Path(os.environ.get("JOBPIPE_DB", DEFAULT_DB)),
+        cutover_date=load_cutover_date(),
         companies=load_companies(companies_path),
         ntfy_topic=topic,
         ntfy_ack_topic=ack,

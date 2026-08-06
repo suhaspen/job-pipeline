@@ -15,14 +15,14 @@ from __future__ import annotations
 import json
 import sqlite3
 import zlib
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
 from jobpipe.models import Disqualifier, Posting, Status, Tier, iso, utcnow
 from jobpipe.store import UpsertResult
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS postings (
@@ -84,6 +84,42 @@ CREATE TABLE IF NOT EXISTS notifications (
     PRIMARY KEY (posting_id, sent_at)
 );
 CREATE INDEX IF NOT EXISTS idx_notifications_sent ON notifications(sent_at);
+
+-- Ids the pipeline has seen but deliberately does not hold rows for. Answers
+-- "have I seen this before" and nothing else: no titles, no payloads, ~30
+-- bytes a row. Baseline ids never notify and never enter an export.
+CREATE TABLE IF NOT EXISTS baseline (
+    id        TEXT PRIMARY KEY,
+    seeded_at TEXT NOT NULL
+);
+
+-- Postings the eligibility gate rejected. Kept for 14 days so the
+-- false-negative rate is measurable - otherwise the only evidence of a wrong
+-- filter rule is exactly the data the rule threw away.
+CREATE TABLE IF NOT EXISTS excluded (
+    id             TEXT NOT NULL,
+    company        TEXT,
+    title          TEXT,
+    apply_url      TEXT,
+    term           TEXT,
+    source         TEXT,
+    filter_reason  TEXT NOT NULL,
+    filter_version TEXT NOT NULL,
+    seen_at        TEXT NOT NULL,
+    PRIMARY KEY (id, filter_version)
+);
+CREATE INDEX IF NOT EXISTS idx_excluded_seen   ON excluded(seen_at);
+CREATE INDEX IF NOT EXISTS idx_excluded_reason ON excluded(filter_reason);
+
+-- Per-posting absence tracking for the expiry rule. Only successful runs in
+-- which the source returned data are counted, so one flaky source cannot
+-- expire its whole catalogue.
+CREATE TABLE IF NOT EXISTS sightings (
+    id             TEXT PRIMARY KEY,
+    last_seen_run  TEXT,
+    missed_runs    INTEGER NOT NULL DEFAULT 0,
+    first_missed_at TEXT
+);
 
 -- ETag / Last-Modified cache for conditional requests. Persisted rather than
 -- held in memory because each GitHub Actions run is a fresh container: without
@@ -366,6 +402,167 @@ class SqliteStore:
                 (iso(since), int(tier)),
             ).fetchone()
         return int(row["n"])
+
+    # ------------------------------------------------------------------
+    # Baseline (cutover)
+    # ------------------------------------------------------------------
+
+    def seed_baseline(self, ids: Iterable[str], *, seeded_at: datetime | None = None) -> int:
+        stamp = iso(seeded_at or utcnow())
+        rows = [(i, stamp) for i in ids]
+        self.conn.executemany(
+            "INSERT OR IGNORE INTO baseline(id, seeded_at) VALUES (?,?)", rows
+        )
+        return len(rows)
+
+    def in_baseline(self, posting_id: str) -> bool:
+        return (
+            self.conn.execute(
+                "SELECT 1 FROM baseline WHERE id = ? LIMIT 1", (posting_id,)
+            ).fetchone()
+            is not None
+        )
+
+    def baseline_ids(self) -> set[str]:
+        return {r["id"] for r in self.conn.execute("SELECT id FROM baseline")}
+
+    def baseline_count(self) -> int:
+        return int(self.conn.execute("SELECT COUNT(*) n FROM baseline").fetchone()["n"])
+
+    def promote_from_baseline(self, posting_id: str) -> None:
+        """Drop an id out of baseline so it can be stored as genuinely new."""
+        self.conn.execute("DELETE FROM baseline WHERE id = ?", (posting_id,))
+
+    def demote_to_baseline(self, posting_id: str) -> None:
+        """Retention: keep the id, delete the row."""
+        self.conn.execute("BEGIN")
+        try:
+            self.conn.execute(
+                "INSERT OR IGNORE INTO baseline(id, seeded_at) VALUES (?,?)",
+                (posting_id, iso(utcnow())),
+            )
+            self.conn.execute("DELETE FROM postings WHERE id = ?", (posting_id,))
+            self.conn.execute("DELETE FROM sightings WHERE id = ?", (posting_id,))
+            self.conn.execute("COMMIT")
+        except Exception:
+            self.conn.execute("ROLLBACK")
+            raise
+
+    # ------------------------------------------------------------------
+    # Exclusions
+    # ------------------------------------------------------------------
+
+    def record_exclusions(self, rows: Iterable[dict[str, Any]], *, filter_version: str) -> int:
+        stamp = iso(utcnow())
+        payload = [
+            (
+                r["id"], r.get("company"), r.get("title"), r.get("apply_url"),
+                r.get("term"), r.get("source"), r["filter_reason"], filter_version, stamp,
+            )
+            for r in rows
+        ]
+        self.conn.executemany(
+            "INSERT INTO excluded(id, company, title, apply_url, term, source, "
+            "filter_reason, filter_version, seen_at) VALUES (?,?,?,?,?,?,?,?,?) "
+            "ON CONFLICT(id, filter_version) DO UPDATE SET seen_at=excluded.seen_at",
+            payload,
+        )
+        return len(payload)
+
+    def sample_exclusions(
+        self, n: int = 20, *, reason: str | None = None
+    ) -> list[dict[str, Any]]:
+        if reason:
+            rows = self.conn.execute(
+                "SELECT * FROM excluded WHERE filter_reason = ? ORDER BY RANDOM() LIMIT ?",
+                (reason, n),
+            ).fetchall()
+        else:
+            rows = self.conn.execute(
+                "SELECT * FROM excluded ORDER BY RANDOM() LIMIT ?", (n,)
+            ).fetchall()
+        return [dict(r) for r in rows]
+
+    def exclusion_counts(self) -> dict[str, int]:
+        return {
+            r["filter_reason"]: r["n"]
+            for r in self.conn.execute(
+                "SELECT filter_reason, COUNT(*) n FROM excluded GROUP BY 1 ORDER BY n DESC"
+            )
+        }
+
+    def search_exclusions(self, pattern: str) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT * FROM excluded WHERE lower(title) LIKE ? ORDER BY company",
+            (f"%{pattern.lower()}%",),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def prune_exclusions(self, days: int = 14) -> int:
+        cutoff = iso(utcnow() - timedelta(days=days))
+        return self.conn.execute("DELETE FROM excluded WHERE seen_at < ?", (cutoff,)).rowcount
+
+    # ------------------------------------------------------------------
+    # Sightings / expiry
+    # ------------------------------------------------------------------
+
+    def mark_seen(self, ids: Iterable[str], run_id: str) -> None:
+        stamp_rows = [(i, run_id) for i in ids]
+        self.conn.executemany(
+            "INSERT INTO sightings(id, last_seen_run, missed_runs, first_missed_at) "
+            "VALUES (?,?,0,NULL) ON CONFLICT(id) DO UPDATE SET "
+            "last_seen_run=excluded.last_seen_run, missed_runs=0, first_missed_at=NULL",
+            stamp_rows,
+        )
+
+    def mark_missed(self, ids: Iterable[str], *, now: datetime | None = None) -> None:
+        stamp = iso(now or utcnow())
+        self.conn.executemany(
+            "INSERT INTO sightings(id, last_seen_run, missed_runs, first_missed_at) "
+            "VALUES (?,NULL,1,?) ON CONFLICT(id) DO UPDATE SET "
+            "missed_runs = missed_runs + 1, "
+            "first_missed_at = COALESCE(first_missed_at, excluded.first_missed_at)",
+            [(i, stamp) for i in ids],
+        )
+
+    def expire_stale(self, *, absent_hours: int = 48, now: datetime | None = None) -> list[str]:
+        """Mark postings expired after being absent for `absent_hours`.
+
+        The clock only advances on runs where the posting's source succeeded
+        and returned data - `mark_missed` is never called otherwise. Without
+        that qualifier a single flaky source would expire its whole catalogue.
+        """
+        now = now or utcnow()
+        cutoff = iso(now - timedelta(hours=absent_hours))
+        rows = self.conn.execute(
+            "SELECT s.id FROM sightings s JOIN postings p ON p.id = s.id "
+            "WHERE s.first_missed_at IS NOT NULL AND s.first_missed_at <= ? "
+            "AND p.status NOT IN (?, ?)",
+            (cutoff, Status.APPLIED.value, Status.EXPIRED.value),
+        ).fetchall()
+        ids = [r["id"] for r in rows]
+        if ids:
+            self.conn.executemany(
+                "UPDATE postings SET status = ? WHERE id = ?",
+                [(Status.EXPIRED.value, i) for i in ids],
+            )
+        return ids
+
+    def retire_long_expired(self, *, days: int = 90, now: datetime | None = None) -> list[str]:
+        """Expired for `days`+ drops back to baseline: id kept, row deleted.
+
+        This is what keeps repo growth flat instead of accumulating every
+        posting seen across a whole recruiting cycle.
+        """
+        cutoff = iso((now or utcnow()) - timedelta(days=days))
+        rows = self.conn.execute(
+            "SELECT id FROM postings WHERE status = ? AND last_seen_at < ?",
+            (Status.EXPIRED.value, cutoff),
+        ).fetchall()
+        ids = [r["id"] for r in rows]
+        for posting_id in ids:
+            self.demote_to_baseline(posting_id)
+        return ids
 
     # ------------------------------------------------------------------
     # Conditional-request cache

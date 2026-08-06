@@ -16,3 +16,7 @@ logs/*.jsonl
 data/postings.db-wal
 data/postings.db-shm
 data/postings.db-journal
+
+# Gitignored personal eligibility facts (Part A answers)
+profile/local.yml
+data/backlog-review.csv

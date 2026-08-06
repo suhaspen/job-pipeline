@@ -12,7 +12,7 @@ import json
 import sys
 from datetime import timedelta
 
-from jobpipe.config import DEFAULT_COMPANIES, load_config
+from jobpipe.config import DEFAULT_COMPANIES, REPO_ROOT, load_config
 from jobpipe.models import RawPosting, Status, Tier, utcnow
 from jobpipe.normalize import (
     infer_term,
@@ -107,6 +107,136 @@ def _cmd_applied(args: argparse.Namespace) -> int:
         ok = store.set_status(args.posting_id, Status.APPLIED)
     print("marked applied" if ok else f"no posting with id {args.posting_id}", file=sys.stderr)
     return 0 if ok else 1
+
+
+def _cmd_init_topic(args: argparse.Namespace) -> int:
+    """Generate an unguessable ntfy topic and write it to .env.
+
+    ntfy topics are public: anyone who knows the name reads every message.
+    The topic is therefore a bearer secret, printed here only redacted.
+    """
+    from jobpipe.notify import generate_topic, redact
+
+    topic = generate_topic()
+    env = REPO_ROOT / ".env"
+    lines = env.read_text(encoding="utf-8").splitlines() if env.exists() else []
+    lines = [ln for ln in lines if not ln.startswith(("NTFY_TOPIC=", "NTFY_ACK_TOPIC="))]
+    lines.append(f"NTFY_TOPIC={topic}")
+    env.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    print(f"wrote NTFY_TOPIC to {env} (gitignored)")
+    print(f"topic (redacted): {redact(topic)}")
+    print()
+    print("Subscribe on your phone:")
+    print("  1. install ntfy (App Store / Play Store / F-Droid)")
+    print("  2. Subscribe to topic -> paste the value of NTFY_TOPIC from .env")
+    print()
+    print("Treat that string like a password: anyone who has it reads your alerts.")
+    return 0
+
+
+def _cmd_notify_test(args: argparse.Namespace) -> int:
+    """Fire one synthetic push through the real client and payload builder."""
+    from datetime import timedelta
+
+    from jobpipe.models import Posting, Term, Tier, utcnow
+    from jobpipe.notify import NtfyClient, is_quiet_hours, redact
+
+    cfg = load_config()
+    if not cfg.ntfy_topic:
+        print("NTFY_TOPIC is unset. Run: jobpipe init-topic", file=sys.stderr)
+        return 2
+
+    now = utcnow()
+    synthetic = Posting(
+        id="notify-test", dedupe_key="test|test|test|test",
+        company="Cloudflare", title="Software Engineer Intern (Fall 2026)",
+        term=Term.FALL_2026, location="Austin, TX", remote=False,
+        apply_url="https://boards.greenhouse.io/cloudflare",
+        source="notify-test", first_seen_at=now, last_seen_at=now,
+        posted_at=now - timedelta(days=2), tier=Tier.INTERRUPTING, score=88,
+        score_rationale="synthetic test push - confirms end-to-end delivery",
+        location_norm="austin",
+    )
+
+    client = NtfyClient(cfg)
+    print(f"server  {cfg.ntfy_server}")
+    print(f"topic   {redact(cfg.ntfy_topic)}")
+    quiet = is_quiet_hours(now)
+    print(f"quiet hours right now: {quiet}"
+          + ("  (a real tier-1 would be downgraded to silent)" if quiet else ""))
+    try:
+        client.send_posting(synthetic, priority=5)
+    except Exception as exc:
+        print(f"send FAILED: {exc}", file=sys.stderr)
+        return 1
+    print("\nsent. check your phone.")
+    return 0
+
+
+def _cmd_cutover(args: argparse.Namespace) -> int:
+    """Collapse the current working set to baseline and start forward-only.
+
+    Order matters and is enforced here: export first, then baseline, then set
+    the date. Reversing it would lose the review artifact.
+    """
+    import csv
+
+    from jobpipe.config import CUTOVER_DATE_PATH, write_cutover_date
+    from jobpipe.models import utcnow
+
+    cfg = load_config()
+    when = utcnow()
+    with SqliteStore(cfg.db_path) as store:
+        rows = store.recent(limit=10**6)
+        if not rows:
+            print("no postings to cut over", file=sys.stderr)
+            return 1
+
+        # 1. export for one-time manual review (gitignored, throwaway)
+        out = REPO_ROOT / "data" / "backlog-review.csv"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        term_order = {
+            "fall-2026": 0, "winter-2027": 1, "spring-2027": 2,
+            "new-grad": 3, "summer-2027": 4, "unknown": 5,
+        }
+        rows.sort(key=lambda p: (term_order.get(p.term.value, 9), -p.score, p.company.lower()))
+        with out.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow([
+                "term", "score", "tier", "company", "title", "location",
+                "remote", "posted_at", "source", "apply_url", "disqualifiers",
+            ])
+            for p in rows:
+                w.writerow([
+                    p.term.value, p.score, int(p.tier), p.company, p.title,
+                    p.location_norm, int(p.remote),
+                    p.posted_at.date().isoformat() if p.posted_at else "",
+                    p.source, p.apply_url,
+                    "|".join(d.value for d in p.disqualifiers),
+                ])
+        print(f"1. exported {len(rows)} postings -> {out}")
+        by_term: dict[str, int] = {}
+        for p in rows:
+            by_term[p.term.value] = by_term.get(p.term.value, 0) + 1
+        for term, n in sorted(by_term.items(), key=lambda kv: term_order.get(kv[0], 9)):
+            print(f"     {term:<14} {n}")
+
+        # 2. collapse to baseline
+        ids = [p.id for p in rows]
+        store.seed_baseline(ids, seeded_at=when)
+        store.conn.execute("DELETE FROM postings")
+        store.conn.execute("DELETE FROM sightings")
+        store.vacuum()
+        print(f"2. collapsed {len(ids)} ids to baseline; postings table emptied")
+
+        # 3. record the cutover instant
+        write_cutover_date(when)
+        print(f"3. cutover date set -> {CUTOVER_DATE_PATH.name} = {when.isoformat()}")
+
+    print("\nFrom now on only postings first seen after that instant are stored.")
+    print(f"Review {out.name} before it is deleted - it is gitignored and not recoverable.")
+    return 0
 
 
 def _cmd_verify_companies(args: argparse.Namespace) -> int:
@@ -252,6 +382,16 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--write", action="store_true", help="update companies.json in place")
     verify.add_argument("--delay", type=float, default=0.15, help="seconds between requests")
     verify.set_defaults(func=_cmd_verify_companies)
+
+    sub.add_parser("init-topic", help="generate an ntfy topic into .env").set_defaults(
+        func=_cmd_init_topic
+    )
+    sub.add_parser(
+        "notify-test", help="fire one synthetic push through the real path"
+    ).set_defaults(func=_cmd_notify_test)
+    sub.add_parser(
+        "cutover", help="export backlog, collapse to baseline, start forward-only"
+    ).set_defaults(func=_cmd_cutover)
 
     applied = sub.add_parser("applied", help="mark a posting as applied")
     applied.add_argument("posting_id")

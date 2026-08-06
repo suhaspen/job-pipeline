@@ -1,0 +1,40 @@
+# Copy to profile/local.yml and fill in. local.yml is GITIGNORED — it holds
+# personal eligibility facts that should not be in a repo, even a private one.
+#
+# Without local.yml the pipeline still runs; the work-authorization
+# disqualifiers simply stay inert and nothing is filtered on those grounds.
+
+work_authorization:
+  # true  -> you will need visa sponsorship at some point
+  # Postings saying "no sponsorship available" become disqualifying.
+  needs_sponsorship: false
+
+  # true  -> you are a US citizen, permanent resident, or otherwise a
+  #          "US person" for ITAR/EAR purposes.
+  # Postings requiring US citizenship or US-person status then CLEAR.
+  us_person: true
+
+  # true  -> you already hold an active security clearance.
+  # This is deliberately separate from `us_person`. The three clearance
+  # phrasings are three different rules and must not be collapsed:
+  #
+  #   "US citizenship required"        -> cleared by us_person
+  #   "Active TS/SCI required"         -> DISQUALIFYING unless you hold one
+  #   "Must be eligible to obtain"     -> NOT disqualifying; these are
+  #                                       frequently new-grad reqs at defense
+  #                                       primes, which sponsor the clearance
+  holds_active_clearance: false
+
+# Optional. Graduation year drives the grad-date-mismatch disqualifier.
+education:
+  graduation_year: 2027
+  degree: bachelors
+
+# Optional. Terms you are actually hiring for. Anything listed as false
+# becomes a disqualifier when the posting is unambiguously that term.
+terms:
+  fall-2026: true
+  winter-2027: true
+  spring-2027: true
+  summer-2027: false   # graduating June 2027 — starts after graduation
+  new-grad: true
