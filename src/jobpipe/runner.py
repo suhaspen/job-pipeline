@@ -18,10 +18,13 @@ import json
 import time
 import traceback
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from jobpipe.config import FILTER_VERSION, RUN_REPORT_PATH, Config
+from jobpipe.config import FILTER_VERSION, INDEX_PATH, RUN_REPORT_PATH, Config
+from jobpipe.health import STALE_304_DAYS, evaluate_all
+from jobpipe import index_md
+from jobpipe.linkcheck import LinkStatus, check as check_link
 from jobpipe.logging_ import RunLogger
 from jobpipe.models import Posting, RawPosting, Status, Tier, utcnow
 from jobpipe.notify import NotifyContext, NtfyClient, gate, ping_healthcheck, redact
@@ -44,6 +47,7 @@ class SourceReport:
     name: str
     ok: bool = True
     fetched: int = 0
+    raw_fetched: int = 0
     new: int = 0
     errors: list[str] = field(default_factory=list)
     latency_ms: int = 0
@@ -58,6 +62,7 @@ class SourceReport:
             "name": self.name,
             "ok": self.ok,
             "fetched": self.fetched,
+            "raw_fetched": self.raw_fetched,
             "new": self.new,
             "errors": self.errors,
             "latency_ms": self.latency_ms,
@@ -93,6 +98,9 @@ class RunReport:
     expired: int = 0
     retired: int = 0
     healthcheck_ok: bool = False
+    links: dict[str, int] = field(default_factory=dict)
+    links_by_source: dict[str, dict[str, int]] = field(default_factory=dict)
+    url_upgrades: int = 0
     scheduled_for: str | None = None
     schedule_delay_s: float | None = None
     dry_seen_ids: set[str] = field(default_factory=set, repr=False)
@@ -114,6 +122,9 @@ class RunReport:
             "expired": self.expired,
             "retired": self.retired,
             "healthcheck_ok": self.healthcheck_ok,
+            "links": self.links,
+            "links_by_source": self.links_by_source,
+            "url_upgrades": self.url_upgrades,
             "scheduled_for": self.scheduled_for,
             "schedule_delay_s": self.schedule_delay_s,
         }
@@ -188,6 +199,7 @@ def run(
 
             strict = getattr(source, "strict_prefilter", False)
             kept, reasons = prefilter.apply(raw_postings, strict=strict)
+            sr.raw_fetched = len(raw_postings)
             sr.fetched = len(kept)
             sr.filtered_out = len(raw_postings) - len(kept)
 
@@ -224,6 +236,7 @@ def run(
 
         if not cfg.dry_run:
             _triage(store, cfg, profile, fresh_ids, raw_by_id, report, log)
+            _validate_links(store, fresh_ids, report, log, clock)
             _update_sightings(store, report, seen_ids_by_source, run_id, clock)
             report.expired = len(store.expire_stale(absent_hours=EXPIRY_ABSENT_HOURS, now=clock))
             report.retired = len(store.retire_long_expired(days=RETENTION_DAYS, now=clock))
@@ -231,11 +244,18 @@ def run(
 
         report.backlog_unapplied = store.backlog_unapplied()
         report.baseline_size = store.baseline_count()
-        _zero_yield_check(store, report, log, clock, cfg.cutover_date)
+        report.links_by_source = store.link_status_counts()
+        totals: dict[str, int] = {}
+        for per_source in report.links_by_source.values():
+            for status, n in per_source.items():
+                totals[status] = totals.get(status, 0) + n
+        report.links = totals
+        _source_health_check(store, report, log, clock)
 
         if not cfg.dry_run:
             _notify(store, cfg, report, fresh_ids, log, clock, notifier)
             report.healthcheck_ok = ping_healthcheck(cfg.healthcheck_url)
+            index_md.write(store.recent(limit=10**6), INDEX_PATH, now=clock)
             store.prune_raw(keep_runs=3)
             store.record_run(report.to_dict())
             store.vacuum()
@@ -355,6 +375,7 @@ def _persist(
 
     result = store.upsert(postings)
     report.deduped_out += result.deduped_out
+    report.url_upgrades += result.url_upgrades
     accepted_ids = {p.id for p in postings}
     store.record_raw(
         run_id, source.name,
@@ -444,7 +465,6 @@ def _notify(
         log.info("notify.skipped", reason="NTFY_TOPIC unset")
         return
 
-    from datetime import timedelta
 
     candidates = [p for p in (store.get(i) for i in fresh_ids) if p is not None]
     if not candidates:
@@ -467,6 +487,20 @@ def _notify(
     sent = 0
     for posting, priority in result.to_send:
         try:
+            # Re-check tier 1 immediately before pushing. One request is cheap
+            # next to being sent to a dead link from a lock screen. A failed
+            # check does not cancel the push - it annotates it.
+            if posting.tier is Tier.INTERRUPTING:
+                recheck = check_link(posting.apply_url)
+                if not recheck.usable:
+                    store.set_link_status(
+                        posting.id, recheck.status.value, recheck.final_url, checked_at=clock
+                    )
+                    posting.score_rationale = (
+                        f"[link {recheck.status.value}] {posting.score_rationale}"
+                    )
+                    log.warn("notify.link_suspect", posting=posting.id,
+                             status=recheck.status.value)
             if client.send_posting(posting, priority):
                 store.record_notification(posting.id, posting.tier, sent_at=clock)
                 store.set_status(posting.id, Status.NOTIFIED)
@@ -485,28 +519,52 @@ def _notify(
     )
 
 
-def _zero_yield_check(
-    store: SqliteStore, report: RunReport, log: RunLogger, clock: datetime,
-    cutover: datetime | None = None,
+def _validate_links(
+    store: SqliteStore, fresh_ids: list[str], report: RunReport,
+    log: RunLogger, clock: datetime,
 ) -> None:
-    """Warn when nothing new has arrived for a long stretch.
+    """Resolve each new posting's apply URL and record where it lands.
 
-    The reference point is the later of "last new posting" and the cutover
-    instant. Straight after a cutover the postings table is legitimately
-    empty, and without this the alarm would fire on every run until the first
-    new posting arrived - training you to ignore the one signal that is
-    supposed to mean a source broke.
+    A dead or index-redirected link is an expiry signal in its own right. The
+    req is gone; waiting out the full 48-hour absence window would leave a
+    notification pointing at a careers page.
     """
-    if report.total_new:
-        return
-    last = store.last_new_posting_at()
-    if last is None and cutover is None:
-        report.warnings.append("no postings have ever been stored")
-        return
-    reference = max([d for d in (last, cutover) if d is not None])
-    hours = (clock - reference).total_seconds() / 3600
-    if hours >= ZERO_YIELD_HOURS:
-        report.warnings.append(
-            f"zero new postings for {hours:.1f}h - a source schema may have changed"
+    for posting_id in fresh_ids:
+        posting = store.get(posting_id)
+        if posting is None or not posting.apply_url:
+            continue
+        result = check_link(posting.apply_url)
+        store.set_link_status(
+            posting_id, result.status.value, result.final_url, checked_at=clock
         )
-        log.warn("zero_yield", hours=round(hours, 1))
+        if result.is_expiry_signal:
+            store.set_status(posting_id, Status.EXPIRED)
+            log.warn(
+                "link.bad", posting=posting_id, status=result.status.value,
+                url=posting.apply_url, final=result.final_url, note=result.note,
+            )
+
+
+def _source_health_check(
+    store: SqliteStore, report: RunReport, log: RunLogger, clock: datetime
+) -> None:
+    """Alarm on per-source fetch volume, not on new-row count.
+
+    New-row count cannot distinguish a broken source from a quiet weekend -
+    both are zero. Raw fetch volume can: a healthy feed returns roughly the
+    same number of postings regardless of how many are new.
+    """
+    history = store.runs(since=clock - timedelta(days=STALE_304_DAYS + 1))
+    current = [(s.name, s.raw_fetched, s.not_modified) for s in report.sources if s.ok]
+    for health in evaluate_all(current, history, now=clock):
+        message = health.message()
+        if message:
+            report.warnings.append(message)
+            log.warn(
+                "source.health",
+                source=health.name,
+                raw_fetched=health.raw_fetched,
+                median=health.median,
+                volume_drop=health.volume_drop,
+                stale_304=health.stale_304,
+            )

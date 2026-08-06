@@ -193,27 +193,59 @@ class TestReplayPayloads:
         assert payloads["a"][0]["company"] == "Acme"
 
 
-class TestZeroYield:
-    def test_warns_when_nothing_is_stored(self, cfg, report_path, monkeypatch):
-        report = _run(cfg, [StubSource("a", [])], report_path, monkeypatch)
-        assert any("have ever been stored" in w for w in report.warnings)
+class TestSourceHealth:
+    """Alarm on fetch volume, not new-row count.
 
-    def test_silent_when_postings_are_new(self, cfg, report_path, monkeypatch):
-        report = _run(cfg, [StubSource("a", [posting()])], report_path, monkeypatch)
-        assert report.warnings == []
+    New-row count cannot tell a broken source from a quiet weekend - both are
+    zero. These assert the replacement behaves.
+    """
 
-    def test_warns_after_a_long_dry_spell(self, cfg, report_path, monkeypatch):
+    def _seed_history(self, cfg, report_path, monkeypatch, volumes, base=None):
+        """Seed prior runs with distinct clocks.
+
+        run_id is second-granular, so runs seeded inside the same second would
+        collide on the primary key and overwrite each other, leaving too little
+        history for a median.
+        """
         from datetime import timedelta
 
         from jobpipe.models import utcnow
 
-        _run(cfg, [StubSource("a", [posting()])], report_path, monkeypatch)
-        with SqliteStore(cfg.db_path) as store:
-            old = (utcnow() - timedelta(hours=20)).isoformat()
-            store.conn.execute("UPDATE postings SET first_seen_at = ?", (old,))
+        base = base or utcnow() - timedelta(hours=len(volumes) + 1)
+        for i, v in enumerate(volumes):
+            _run(
+                cfg,
+                [StubSource("a", [posting(title=f"SWE Intern {j}") for j in range(v)])],
+                report_path, monkeypatch, now=base + timedelta(minutes=30 * i),
+            )
 
+    def test_quiet_run_with_normal_volume_does_not_warn(self, cfg, report_path, monkeypatch):
+        self._seed_history(cfg, report_path, monkeypatch, [10, 10, 10])
+        # Same volume, nothing new: a quiet weekend, not a broken source.
+        report = _run(cfg, [StubSource("a", [posting(title=f"SWE Intern {i}") for i in range(10)])],
+                      report_path, monkeypatch)
+        assert report.total_new == 0
+        assert not any("may be broken" in w for w in report.warnings)
+
+    def test_volume_collapse_warns_even_though_new_is_also_zero(self, cfg, report_path, monkeypatch):
+        self._seed_history(cfg, report_path, monkeypatch, [10, 10, 10])
         report = _run(cfg, [StubSource("a", [])], report_path, monkeypatch)
-        assert any("schema may have changed" in w for w in report.warnings)
+        assert any("may be broken" in w for w in report.warnings)
+
+    def test_partial_drop_below_half_warns(self, cfg, report_path, monkeypatch):
+        self._seed_history(cfg, report_path, monkeypatch, [20, 20, 20])
+        report = _run(cfg, [StubSource("a", [posting(title=f"SWE Intern {i}") for i in range(5)])],
+                      report_path, monkeypatch)
+        assert any("trailing median" in w for w in report.warnings)
+
+    def test_no_warning_without_enough_history(self, cfg, report_path, monkeypatch):
+        report = _run(cfg, [StubSource("a", [])], report_path, monkeypatch)
+        assert not any("median" in w for w in report.warnings)
+
+    def test_304_is_not_a_volume_drop(self, cfg, report_path, monkeypatch):
+        self._seed_history(cfg, report_path, monkeypatch, [10, 10, 10])
+        report = _run(cfg, [StubSource("a", [], not_modified=True)], report_path, monkeypatch)
+        assert not any("may be broken" in w for w in report.warnings)
 
 
 class TestBacklog:
@@ -226,3 +258,99 @@ class TestBacklog:
 
         report = _run(cfg, [StubSource("a", [])], report_path, monkeypatch)
         assert report.backlog_unapplied == 1
+
+
+class TestGlobalBaseline:
+    """Baseline membership is global, not per-source.
+
+    Same bug shape as the --dry-run seen-set issue: a set scoped per source
+    would let source B re-notify a job that source A already had baselined.
+    Ids are content-derived, so the same job from a different feed is the same
+    id and must be recognised as already known.
+    """
+
+    def _cutover(self, cfg, report_path, monkeypatch, job):
+        from jobpipe.config import write_cutover_date
+        from jobpipe.models import utcnow
+
+        _run(cfg, [StubSource("a", [job])], report_path, monkeypatch)
+        with SqliteStore(cfg.db_path) as store:
+            ids = [p.id for p in store.recent(limit=100)]
+            store.seed_baseline(ids)
+            store.conn.execute("DELETE FROM postings")
+        when = utcnow()
+        write_cutover_date(when, cfg.db_path.parent / "cutover.json")
+        cfg.cutover_date = when
+        return ids
+
+    def test_source_b_cannot_resurrect_a_baselined_job_from_source_a(
+        self, cfg, report_path, monkeypatch
+    ):
+        job = posting(company="Acme", title="Software Engineer, New Grad")
+        baselined = self._cutover(cfg, report_path, monkeypatch, job)
+
+        # Same job, different feed. Identical dedupe key -> identical id.
+        from_b = posting(company="Acme", title="Software Engineer, New Grad")
+        from_b.source = "b"
+        report = _run(cfg, [StubSource("b", [from_b])], report_path, monkeypatch)
+
+        assert from_b.normalize().id in baselined
+        assert report.total_new == 0
+        assert report.sources[0].baselined == 1
+        assert report.notifications["sent"] == 0
+        with SqliteStore(cfg.db_path) as store:
+            assert store.recent(limit=100) == []
+
+    def test_baselined_across_three_sources_in_one_run(self, cfg, report_path, monkeypatch):
+        job = posting(company="Acme", title="Software Engineer, New Grad")
+        self._cutover(cfg, report_path, monkeypatch, job)
+
+        sources = []
+        for name in ("b", "c", "d"):
+            dup = posting(company="Acme", title="Software Engineer, New Grad")
+            dup.source = name
+            sources.append(StubSource(name, [dup]))
+        report = _run(cfg, sources, report_path, monkeypatch)
+
+        assert report.total_new == 0
+        assert sum(s.baselined for s in report.sources) == 3
+
+    def test_a_genuine_repost_is_promoted_out_of_baseline(
+        self, cfg, report_path, monkeypatch
+    ):
+        """Companies do close and relist reqs, and those are real openings.
+
+        A baseline id whose source reports a first_published newer than the
+        cutover is promoted back out and treated as new.
+        """
+        from datetime import timedelta
+
+        from jobpipe.models import utcnow
+
+        job = posting(company="Acme", title="Software Engineer, New Grad")
+        self._cutover(cfg, report_path, monkeypatch, job)
+
+        relisted = posting(company="Acme", title="Software Engineer, New Grad")
+        relisted.posted_at = utcnow() + timedelta(minutes=5)  # published after cutover
+        report = _run(cfg, [StubSource("a", [relisted])], report_path, monkeypatch)
+
+        assert report.total_new == 1
+        assert report.sources[0].baselined == 0
+        with SqliteStore(cfg.db_path) as store:
+            assert len(store.recent(limit=100)) == 1
+            assert store.in_baseline(relisted.normalize().id) is False
+
+    def test_an_old_repost_stays_baselined(self, cfg, report_path, monkeypatch):
+        from datetime import timedelta
+
+        from jobpipe.models import utcnow
+
+        job = posting(company="Acme", title="Software Engineer, New Grad")
+        self._cutover(cfg, report_path, monkeypatch, job)
+
+        stale = posting(company="Acme", title="Software Engineer, New Grad")
+        stale.posted_at = utcnow() - timedelta(days=30)
+        report = _run(cfg, [StubSource("a", [stale])], report_path, monkeypatch)
+
+        assert report.total_new == 0
+        assert report.sources[0].baselined == 1

@@ -98,8 +98,11 @@ class TestDedupeThroughStore:
         assert after.first_seen_at == original.first_seen_at
         assert after.status is Status.APPLIED
         assert after.applied_at == original.applied_at
-        # The live apply URL does move on to the new listing.
-        assert after.apply_url == second.apply_url
+        # Cross-source at equal precedence keeps the incumbent URL, so two
+        # feeds cannot flip it back and forth on alternating runs.
+        assert after.apply_url in (first.apply_url, second.apply_url)
+        # The original is never discarded.
+        assert after.source_url is not None
         assert after.last_seen_at >= original.last_seen_at
 
     def test_repost_preserves_triage_results(self, store, repost_fixtures):
@@ -184,3 +187,57 @@ def test_missing_fields_do_not_raise(bad):
     ).normalize()
     assert posting.id
     assert posting.location_norm == "unknown"
+
+
+class TestApplyUrlPrecedence:
+    """apply_url resolves by source precedence; source_url is never discarded.
+
+    A notification that sends you to a careers index instead of the req is the
+    failure this prevents.
+    """
+
+    def _p(self, source, url):
+        from jobpipe.models import RawPosting
+
+        return RawPosting(
+            source=source, company="Acme", title="Software Engineer, New Grad",
+            apply_url=url, location="San Francisco, CA",
+        ).normalize()
+
+    def test_ats_beats_curated_list(self, store):
+        store.upsert([self._p("speedyapply-swe", "https://tracker.io/r?u=x")])
+        result = store.upsert([self._p("ats", "https://boards.greenhouse.io/acme/jobs/991")])
+        got = store.recent()[0]
+        assert got.apply_url == "https://boards.greenhouse.io/acme/jobs/991"
+        assert result.url_upgrades == 1
+
+    def test_curated_list_does_not_clobber_ats(self, store):
+        store.upsert([self._p("ats", "https://boards.greenhouse.io/acme/jobs/991")])
+        result = store.upsert([self._p("speedyapply-swe", "https://tracker.io/r?u=x")])
+        assert store.recent()[0].apply_url == "https://boards.greenhouse.io/acme/jobs/991"
+        assert result.url_upgrades == 0
+
+    def test_equal_precedence_keeps_the_incumbent(self, store):
+        store.upsert([self._p("speedyapply-swe", "https://a/jobs/1")])
+        store.upsert([self._p("speedyapply-ai", "https://b/jobs/2")])
+        assert store.recent()[0].apply_url == "https://a/jobs/1"
+
+    def test_same_source_repost_refreshes_the_url(self, store):
+        """The previous req has closed; its link now 404s."""
+        store.upsert([self._p("ats", "https://boards.greenhouse.io/acme/jobs/1")])
+        store.upsert([self._p("ats", "https://boards.greenhouse.io/acme/jobs/2")])
+        assert store.recent()[0].apply_url == "https://boards.greenhouse.io/acme/jobs/2"
+
+    def test_source_url_retains_the_original(self, store):
+        store.upsert([self._p("speedyapply-swe", "https://tracker.io/r?u=x")])
+        store.upsert([self._p("ats", "https://boards.greenhouse.io/acme/jobs/991")])
+        got = store.recent()[0]
+        assert got.source_url == "https://tracker.io/r?u=x"
+        assert got.apply_url != got.source_url
+
+    def test_changing_the_url_resets_link_status(self, store):
+        p = self._p("speedyapply-swe", "https://tracker.io/r?u=x")
+        store.upsert([p])
+        store.set_link_status(p.id, "ok", "https://tracker.io/r?u=x")
+        store.upsert([self._p("ats", "https://boards.greenhouse.io/acme/jobs/991")])
+        assert store.recent()[0].link_status == "unchecked"

@@ -27,6 +27,8 @@ class UpsertResult:
     # two sources reporting the same job in one run. Tracked separately from
     # `updated` because cross-source overlap is a metric EVAL.md reports on.
     collisions: int = 0
+    # apply_url replaced because a higher-precedence source supplied a better one.
+    url_upgrades: int = 0
 
     @property
     def new_count(self) -> int:
@@ -93,6 +95,14 @@ class Store(Protocol):
     def sample_exclusions(self, n: int = 20, *, reason: str | None = None) -> list[dict[str, Any]]: ...
     def exclusion_counts(self) -> dict[str, int]: ...
     def prune_exclusions(self, days: int = 14) -> int: ...
+
+    # --- link quality ---
+    def set_link_status(
+        self, posting_id: str, status: str, final_url: str | None,
+        *, checked_at: datetime | None = None,
+    ) -> None: ...
+    def link_status_counts(self) -> dict[str, dict[str, int]]: ...
+    def needing_link_check(self, limit: int | None = None) -> list[Posting]: ...
 
     # --- sightings / expiry ---
     def mark_seen(self, ids: Iterable[str], run_id: str) -> None: ...

@@ -20,11 +20,12 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from jobpipe.models import Disqualifier, Posting, Status, Tier, iso, utcnow
+from jobpipe.linkcheck import prefer_url
 from jobpipe.store import UpsertResult
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
-_SCHEMA = """
+_SCHEMA_TABLES = """
 CREATE TABLE IF NOT EXISTS postings (
     id                 TEXT PRIMARY KEY,
     dedupe_key         TEXT NOT NULL UNIQUE,
@@ -51,12 +52,12 @@ CREATE TABLE IF NOT EXISTS postings (
     company_norm       TEXT DEFAULT '',
     title_norm         TEXT DEFAULT '',
     location_norm      TEXT DEFAULT '',
-    source_id          TEXT
+    source_id          TEXT,
+    source_url         TEXT,
+    final_url          TEXT,
+    link_status        TEXT NOT NULL DEFAULT 'unchecked',
+    link_checked_at    TEXT
 );
-CREATE INDEX IF NOT EXISTS idx_postings_status     ON postings(status);
-CREATE INDEX IF NOT EXISTS idx_postings_tier       ON postings(tier);
-CREATE INDEX IF NOT EXISTS idx_postings_first_seen ON postings(first_seen_at);
-CREATE INDEX IF NOT EXISTS idx_postings_source     ON postings(source);
 
 -- Raw source payloads, so `--replay <run-id>` can re-score without refetching.
 CREATE TABLE IF NOT EXISTS raw_payloads (
@@ -73,7 +74,6 @@ CREATE TABLE IF NOT EXISTS runs (
     started_at TEXT NOT NULL,
     report     TEXT NOT NULL
 );
-CREATE INDEX IF NOT EXISTS idx_runs_started ON runs(started_at);
 
 -- Notification ledger. The hourly rate cap spans runs, and every run is a
 -- fresh container, so this has to be persisted rather than held in memory.
@@ -83,7 +83,6 @@ CREATE TABLE IF NOT EXISTS notifications (
     sent_at    TEXT NOT NULL,
     PRIMARY KEY (posting_id, sent_at)
 );
-CREATE INDEX IF NOT EXISTS idx_notifications_sent ON notifications(sent_at);
 
 -- Ids the pipeline has seen but deliberately does not hold rows for. Answers
 -- "have I seen this before" and nothing else: no titles, no payloads, ~30
@@ -108,8 +107,6 @@ CREATE TABLE IF NOT EXISTS excluded (
     seen_at        TEXT NOT NULL,
     PRIMARY KEY (id, filter_version)
 );
-CREATE INDEX IF NOT EXISTS idx_excluded_seen   ON excluded(seen_at);
-CREATE INDEX IF NOT EXISTS idx_excluded_reason ON excluded(filter_reason);
 
 -- Per-posting absence tracking for the expiry rule. Only successful runs in
 -- which the source returned data are counted, so one flaky source cannot
@@ -134,7 +131,21 @@ CREATE TABLE IF NOT EXISTS http_cache (
 CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
-);
+);"""
+
+# Indexes are applied AFTER migration: several reference columns added by
+# later versions, and a database created before those columns existed
+# would fail here before the migration ever got a chance to run.
+_SCHEMA_INDEXES = """
+CREATE INDEX IF NOT EXISTS idx_postings_status     ON postings(status);
+CREATE INDEX IF NOT EXISTS idx_postings_tier       ON postings(tier);
+CREATE INDEX IF NOT EXISTS idx_postings_first_seen ON postings(first_seen_at);
+CREATE INDEX IF NOT EXISTS idx_postings_source     ON postings(source);
+CREATE INDEX IF NOT EXISTS idx_postings_link       ON postings(link_status);
+CREATE INDEX IF NOT EXISTS idx_runs_started ON runs(started_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_sent ON notifications(sent_at);
+CREATE INDEX IF NOT EXISTS idx_excluded_seen   ON excluded(seen_at);
+CREATE INDEX IF NOT EXISTS idx_excluded_reason ON excluded(filter_reason);
 """
 
 
@@ -147,12 +158,41 @@ class SqliteStore:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=DELETE")
         self.conn.execute("PRAGMA foreign_keys=ON")
-        self.conn.executescript(_SCHEMA)
+        self.conn.executescript(_SCHEMA_TABLES)
+        self._migrate()
+        self.conn.executescript(_SCHEMA_INDEXES)
         self.conn.execute(
             "INSERT INTO meta(key, value) VALUES('schema_version', ?) "
             "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
             (str(SCHEMA_VERSION),),
         )
+
+    def _migrate(self) -> None:
+        """Add columns introduced after a database was first created.
+
+        `CREATE TABLE IF NOT EXISTS` is a no-op on an existing table, so new
+        columns never appear on a database created by an older version. This
+        is additive only - it never drops or rewrites, so an older jobpipe can
+        still read the file.
+        """
+        existing = {
+            row["name"] for row in self.conn.execute("PRAGMA table_info(postings)")
+        }
+        additions = {
+            "source_url": "TEXT",
+            "final_url": "TEXT",
+            "link_status": "TEXT NOT NULL DEFAULT 'unchecked'",
+            "link_checked_at": "TEXT",
+        }
+        for column, decl in additions.items():
+            if column not in existing:
+                self.conn.execute(f"ALTER TABLE postings ADD COLUMN {column} {decl}")
+        if "source_url" not in existing:
+            # Backfill: before this column existed, apply_url was whatever the
+            # source gave, so it is the correct original value.
+            self.conn.execute(
+                "UPDATE postings SET source_url = apply_url WHERE source_url IS NULL"
+            )
 
     def close(self) -> None:
         self.conn.close()
@@ -196,6 +236,19 @@ class SqliteStore:
                 # relisted req must not reappear as `new` and re-notify, and
                 # posted_at is filled only when previously unknown so an old
                 # row never falsely looks fresh.
+                # apply_url resolves by source precedence, not by whichever
+                # source ran last: an ATS canonical link beats a curated
+                # list's mirror, which beats an aggregator's tracking wrapper.
+                if existing is not None:
+                    resolved_url, resolved_source, changed = prefer_url(
+                        existing.apply_url, existing.source,
+                        posting.apply_url, posting.source,
+                    )
+                    if changed:
+                        result.url_upgrades += 1
+                else:
+                    resolved_url, resolved_source = posting.apply_url, posting.source
+
                 self.conn.execute(
                     """
                     UPDATE postings
@@ -205,17 +258,21 @@ class SqliteStore:
                            location     = :location,
                            remote       = :remote,
                            source_id    = COALESCE(:source_id, source_id),
-                           posted_at    = COALESCE(posted_at, :posted_at)
+                           source_url   = COALESCE(source_url, :source_url),
+                           posted_at    = COALESCE(posted_at, :posted_at),
+                           link_status  = CASE WHEN :apply_url != apply_url
+                                               THEN 'unchecked' ELSE link_status END
                      WHERE id = :id
                     """,
                     {
                         "id": posting.id,
                         "last_seen_at": iso(posting.last_seen_at),
-                        "apply_url": posting.apply_url,
-                        "source": posting.source,
+                        "apply_url": resolved_url,
+                        "source": resolved_source,
                         "location": posting.location,
                         "remote": int(posting.remote),
                         "source_id": posting.source_id,
+                        "source_url": posting.source_url,
                         "posted_at": iso(posting.posted_at),
                     },
                 )
@@ -498,6 +555,30 @@ class SqliteStore:
         ).fetchall()
         return [dict(r) for r in rows]
 
+    def set_link_status(
+        self, posting_id: str, status: str, final_url: str | None,
+        *, checked_at: datetime | None = None,
+    ) -> None:
+        self.conn.execute(
+            "UPDATE postings SET link_status=?, final_url=?, link_checked_at=? WHERE id=?",
+            (status, final_url, iso(checked_at or utcnow()), posting_id),
+        )
+
+    def link_status_counts(self) -> dict[str, dict[str, int]]:
+        """link_status broken down by source, for the run report."""
+        out: dict[str, dict[str, int]] = {}
+        for row in self.conn.execute(
+            "SELECT source, link_status, COUNT(*) n FROM postings GROUP BY 1, 2"
+        ):
+            out.setdefault(row["source"], {})[row["link_status"]] = row["n"]
+        return out
+
+    def needing_link_check(self, limit: int | None = None) -> list[Posting]:
+        """Rows whose apply_url has not been resolved since it last changed."""
+        sql = "SELECT * FROM postings WHERE link_status = 'unchecked' ORDER BY first_seen_at DESC"
+        rows = self.conn.execute(sql + (f" LIMIT {int(limit)}" if limit else "")).fetchall()
+        return [Posting.from_row(r) for r in rows]
+
     def prune_exclusions(self, days: int = 14) -> int:
         cutoff = iso(utcnow() - timedelta(days=days))
         return self.conn.execute("DELETE FROM excluded WHERE seen_at < ?", (cutoff,)).rowcount
@@ -603,4 +684,5 @@ _COLUMNS = [
     "tier", "score", "score_rationale", "disqualifiers", "recruiter_name",
     "recruiter_title", "recruiter_linkedin", "draft_note", "status",
     "applied_at", "company_norm", "title_norm", "location_norm", "source_id",
+    "source_url", "final_url", "link_status", "link_checked_at",
 ]

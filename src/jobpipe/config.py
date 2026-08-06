@@ -19,6 +19,7 @@ DEFAULT_DB = REPO_ROOT / "data" / "postings.db"
 DEFAULT_COMPANIES = REPO_ROOT / "companies.json"
 LOG_DIR = REPO_ROOT / "logs"
 RUN_REPORT_PATH = REPO_ROOT / "data" / "run-report.json"
+INDEX_PATH = REPO_ROOT / "INDEX.md"
 CANDIDATE_COMPANIES_PATH = REPO_ROOT / "data" / "candidate-companies.csv"
 
 # Everything first seen before this instant is baseline: known, but never

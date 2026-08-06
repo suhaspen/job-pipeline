@@ -209,3 +209,54 @@ class TestPersistence:
             s.upsert([make()])
         leftovers = [p.name for p in tmp_path.iterdir() if p.name != "p.db"]
         assert leftovers == []
+
+
+class TestMigration:
+    def test_adds_columns_to_an_older_database(self, tmp_path):
+        """CREATE TABLE IF NOT EXISTS is a no-op on an existing table.
+
+        Without an explicit migration, a database created before the link
+        columns existed fails on every query that mentions them.
+        """
+        import sqlite3
+
+        path = tmp_path / "old.db"
+        legacy = sqlite3.connect(path)
+        legacy.executescript(
+            """
+            CREATE TABLE postings (
+                id TEXT PRIMARY KEY, dedupe_key TEXT NOT NULL UNIQUE,
+                company TEXT NOT NULL, title TEXT NOT NULL, term TEXT NOT NULL,
+                location TEXT NOT NULL, remote INTEGER NOT NULL DEFAULT 0,
+                apply_url TEXT NOT NULL, source TEXT NOT NULL,
+                first_seen_at TEXT NOT NULL, last_seen_at TEXT NOT NULL,
+                posted_at TEXT, tier INTEGER DEFAULT 3, score INTEGER DEFAULT 0,
+                score_rationale TEXT DEFAULT '', disqualifiers TEXT DEFAULT '[]',
+                recruiter_name TEXT, recruiter_title TEXT, recruiter_linkedin TEXT,
+                draft_note TEXT, status TEXT NOT NULL DEFAULT 'new', applied_at TEXT,
+                company_norm TEXT DEFAULT '', title_norm TEXT DEFAULT '',
+                location_norm TEXT DEFAULT '', source_id TEXT
+            );
+            INSERT INTO postings (id, dedupe_key, company, title, term, location,
+                apply_url, source, first_seen_at, last_seen_at)
+            VALUES ('old1', 'k1', 'Acme', 'SWE Intern', 'new-grad', 'SF',
+                    'https://x/jobs/1', 'ats', '2026-08-01T00:00:00+00:00',
+                    '2026-08-01T00:00:00+00:00');
+            """
+        )
+        legacy.commit()
+        legacy.close()
+
+        with SqliteStore(path) as store:
+            got = store.get("old1")
+            assert got is not None
+            assert got.link_status == "unchecked"
+            # apply_url was the source's own value before the split existed.
+            assert got.source_url == "https://x/jobs/1"
+
+    def test_migration_is_idempotent(self, tmp_path):
+        path = tmp_path / "p.db"
+        with SqliteStore(path) as s:
+            s.upsert([make()])
+        with SqliteStore(path) as s:
+            assert len(s.recent()) == 1

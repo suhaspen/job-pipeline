@@ -612,6 +612,7 @@ def normalize_raw(raw: RawPosting) -> Posting:
         location=(raw.location or "").strip() or "Unknown",
         remote=is_remote(raw.location, raw.remote_hint),
         apply_url=(raw.apply_url or "").strip(),
+        source_url=(raw.apply_url or "").strip() or None,
         source=raw.source,
         first_seen_at=now,
         last_seen_at=now,

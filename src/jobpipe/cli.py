@@ -101,6 +101,51 @@ def _cmd_recent(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_list(args: argparse.Namespace) -> int:
+    """Show live postings, optionally filtered by term."""
+    from jobpipe.index_md import TERM_HEADING, TERM_ORDER
+    from jobpipe.models import Term
+    from jobpipe.notify.ntfy import posted_age
+
+    cfg = load_config()
+    with SqliteStore(cfg.db_path) as store:
+        rows = store.recent(limit=10**6)
+
+    hidden = {Status.EXPIRED, Status.SKIPPED} if not args.all else set()
+    rows = [p for p in rows if p.status not in hidden]
+    if args.term:
+        rows = [p for p in rows if p.term.value == args.term]
+    if args.tier:
+        rows = [p for p in rows if int(p.tier) == args.tier]
+
+    if not rows:
+        print("no live postings" + (f" for term {args.term}" if args.term else ""))
+        return 0
+
+    by_term: dict[Term, list] = {}
+    for p in rows:
+        by_term.setdefault(p.term, []).append(p)
+
+    for term in TERM_ORDER:
+        group = by_term.get(term)
+        if not group:
+            continue
+        group.sort(key=lambda p: (p.posted_at or p.first_seen_at, p.score), reverse=True)
+        print(f"\n{TERM_HEADING[term]}  ({len(group)})")
+        print("-" * 100)
+        for p in group:
+            flag = {"ok": " ", "redirected_to_index": "!", "dead": "X"}.get(p.link_status, "?")
+            print(
+                f" {flag} t{int(p.tier)} {p.score:>3}  {p.company[:20]:<20} "
+                f"{p.title[:44]:<44} {p.location_norm[:12]:<12} "
+                f"{posted_age(p):<12} {p.status.value}"
+            )
+            if args.urls:
+                print(f"        {p.apply_url}")
+    print(f"\n{len(rows)} posting(s).  ! = link resolves to an index, X = dead link")
+    return 0
+
+
 def _cmd_applied(args: argparse.Namespace) -> int:
     cfg = load_config()
     with SqliteStore(cfg.db_path) as store:
@@ -120,10 +165,16 @@ def _cmd_init_topic(args: argparse.Namespace) -> int:
     topic = generate_topic()
     env = REPO_ROOT / ".env"
     lines = env.read_text(encoding="utf-8").splitlines() if env.exists() else []
+    rotating = any(ln.startswith("NTFY_TOPIC=") for ln in lines)
     lines = [ln for ln in lines if not ln.startswith(("NTFY_TOPIC=", "NTFY_ACK_TOPIC="))]
     lines.append(f"NTFY_TOPIC={topic}")
     env.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
+    if rotating:
+        print("ROTATED. The previous topic is now dead to this pipeline.")
+        print("Unsubscribe from it on your phone - anyone holding it can still")
+        print("read whatever was already published there.")
+        print()
     print(f"wrote NTFY_TOPIC to {env} (gitignored)")
     print(f"topic (redacted): {redact(topic)}")
     print()
@@ -148,16 +199,28 @@ def _cmd_notify_test(args: argparse.Namespace) -> int:
         return 2
 
     now = utcnow()
-    synthetic = Posting(
-        id="notify-test", dedupe_key="test|test|test|test",
-        company="Cloudflare", title="Software Engineer Intern (Fall 2026)",
-        term=Term.FALL_2026, location="Austin, TX", remote=False,
-        apply_url="https://boards.greenhouse.io/cloudflare",
-        source="notify-test", first_seen_at=now, last_seen_at=now,
-        posted_at=now - timedelta(days=2), tier=Tier.INTERRUPTING, score=88,
-        score_rationale="synthetic test push - confirms end-to-end delivery",
-        location_norm="austin",
-    )
+    # Prefer a real stored posting: a synthetic fixture can carry a URL that
+    # does not exist, which is exactly how the first test push ended up
+    # pointing at a careers index instead of a req.
+    with SqliteStore(cfg.db_path) as store:
+        real = store.recent(limit=1)
+    if real:
+        synthetic = real[0]
+        synthetic.score_rationale = f"TEST PUSH - {synthetic.score_rationale}"
+        print("using a real stored posting")
+    else:
+        synthetic = Posting(
+            id="notify-test", dedupe_key="test|test|test|test",
+            company="Cloudflare", title="Software Engineer Intern (Fall 2026)",
+            term=Term.FALL_2026, location="Austin, TX", remote=False,
+            # A real req URL, with a job id. Verified live.
+            apply_url="https://boards.greenhouse.io/cloudflare/jobs/8052785?gh_jid=8052785",
+            source="notify-test", first_seen_at=now, last_seen_at=now,
+            posted_at=now - timedelta(days=2), tier=Tier.INTERRUPTING, score=88,
+            score_rationale="synthetic test push - confirms end-to-end delivery",
+            location_norm="austin",
+        )
+        print("no stored postings yet; using a synthetic one with a real req URL")
 
     client = NtfyClient(cfg)
     print(f"server  {cfg.ntfy_server}")
@@ -392,6 +455,15 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser(
         "cutover", help="export backlog, collapse to baseline, start forward-only"
     ).set_defaults(func=_cmd_cutover)
+
+    lst = sub.add_parser("list", help="show live postings grouped by term")
+    lst.add_argument("--term", choices=[
+        "fall-2026", "winter-2027", "spring-2027", "summer-2027", "new-grad", "unknown",
+    ])
+    lst.add_argument("--tier", type=int, choices=[1, 2, 3])
+    lst.add_argument("--urls", action="store_true", help="print apply URLs")
+    lst.add_argument("--all", action="store_true", help="include expired and skipped")
+    lst.set_defaults(func=_cmd_list)
 
     applied = sub.add_parser("applied", help="mark a posting as applied")
     applied.add_argument("posting_id")

@@ -142,6 +142,13 @@ class Posting:
     title_norm: str = ""
     location_norm: str = ""
     source_id: str | None = None
+    # Whatever the source originally gave. Never overwritten by a precedence
+    # decision, so a merge is never destructive.
+    source_url: str | None = None
+    # Where apply_url actually lands after redirects, plus the verdict.
+    final_url: str | None = None
+    link_status: str = "unchecked"
+    link_checked_at: datetime | None = None
 
     def to_row(self) -> dict[str, Any]:
         """Flatten to the SQLite column layout."""
@@ -172,6 +179,10 @@ class Posting:
             "title_norm": self.title_norm,
             "location_norm": self.location_norm,
             "source_id": self.source_id,
+            "source_url": self.source_url,
+            "final_url": self.final_url,
+            "link_status": self.link_status,
+            "link_checked_at": iso(self.link_checked_at),
         }
 
     @classmethod
@@ -206,6 +217,10 @@ class Posting:
             title_norm=row["title_norm"] or "",
             location_norm=row["location_norm"] or "",
             source_id=row["source_id"],
+            source_url=row["source_url"] if "source_url" in row.keys() else None,
+            final_url=row["final_url"] if "final_url" in row.keys() else None,
+            link_status=(row["link_status"] if "link_status" in row.keys() else None) or "unchecked",
+            link_checked_at=dt(row["link_checked_at"]) if "link_checked_at" in row.keys() else None,
         )
 
     def as_dict(self) -> dict[str, Any]:
@@ -214,6 +229,6 @@ class Posting:
         d["tier"] = int(self.tier)
         d["status"] = self.status.value
         d["disqualifiers"] = [x.value for x in self.disqualifiers]
-        for k in ("first_seen_at", "last_seen_at", "posted_at", "applied_at"):
+        for k in ("first_seen_at", "last_seen_at", "posted_at", "applied_at", "link_checked_at"):
             d[k] = iso(getattr(self, k))
         return d

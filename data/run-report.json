@@ -1,28 +1,32 @@
 {
-  "run_id": "20260806T071902Z",
-  "started_at": "2026-08-06T07:19:02.941886+00:00",
-  "duration_s": 7.73,
+  "run_id": "20260806T085955Z",
+  "started_at": "2026-08-06T08:59:55.111939+00:00",
+  "duration_s": 35.0,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 0,
-      "new": 0,
+      "fetched": 1267,
+      "raw_fetched": 1891,
+      "new": 1,
       "errors": [],
-      "latency_ms": 84,
-      "not_modified": true,
-      "filtered_out": 0,
-      "baselined": 0,
+      "latency_ms": 342,
+      "not_modified": false,
+      "filtered_out": 624,
+      "baselined": 1266,
       "term_unknown_rate": 0.0,
-      "warnings": []
+      "warnings": [
+        "18217 records, 15647 inactive, 679 off-category, 1891 kept"
+      ]
     },
     {
       "name": "speedyapply-swe",
       "ok": true,
       "fetched": 0,
+      "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 22,
+      "latency_ms": 253,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -33,9 +37,10 @@
       "name": "speedyapply-ai",
       "ok": true,
       "fetched": 0,
+      "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 22,
+      "latency_ms": 241,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -45,37 +50,49 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 0,
+      "fetched": 104,
+      "raw_fetched": 6415,
       "new": 0,
       "errors": [],
-      "latency_ms": 7402,
+      "latency_ms": 19678,
       "not_modified": false,
-      "filtered_out": 0,
-      "baselined": 0,
-      "term_unknown_rate": 0.0,
+      "filtered_out": 6311,
+      "baselined": 104,
+      "term_unknown_rate": 0.385,
       "warnings": []
     }
   ],
   "deduped_out": 0,
   "tiers": {
     "1": 0,
-    "2": 0,
+    "2": 1,
     "3": 0
   },
   "notifications": {
-    "sent": 0,
+    "sent": 1,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
     "suppressed_backpressure": 0
   },
   "backlog_unapplied": 0,
-  "warnings": [],
+  "warnings": [
+    "ats: term unknown for 38% of postings (>10%)"
+  ],
   "dry_run": false,
   "baseline_size": 2511,
-  "excluded_recorded": 0,
+  "excluded_recorded": 6935,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": false,
+  "links": {
+    "ok": 1
+  },
+  "links_by_source": {
+    "simplify-newgrad": {
+      "ok": 1
+    }
+  },
+  "url_upgrades": 0,
   "scheduled_for": null,
   "schedule_delay_s": null
 }
