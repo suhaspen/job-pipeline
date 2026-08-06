@@ -181,3 +181,67 @@ class TestSourcePrecedence:
     def test_empty_new_url_is_ignored(self):
         url, _, changed = prefer_url("https://gh/jobs/9", "ats", "", "ats")
         assert url == "https://gh/jobs/9" and not changed
+
+
+class TestKnownBlockedDomains:
+    """Domains behind permanent bot protection are never checked.
+
+    A warning that fires on every Citadel push is a warning you stop reading -
+    and then it fails to work when a link is genuinely dead.
+    """
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://www.citadel.com/careers/details/swe-intern-us/",
+            "https://www.citadelsecurities.com/careers/details/x/",
+            "https://jobs.smartrecruiters.com/RedBull/744000139168339",
+            "https://careers.roblox.com/jobs/7992558",
+            "https://www.amazon.jobs/jobs/10468069/apply",
+        ],
+    )
+    def test_recognised(self, url):
+        from jobpipe.linkcheck import is_known_blocked
+
+        assert is_known_blocked(url) is True
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://boards.greenhouse.io/acme/jobs/1",
+            "https://jobs.ashbyhq.com/notion/uuid",
+            "https://jobs.lever.co/palantir/uuid",
+        ],
+    )
+    def test_normal_domains_are_not_blocked(self, url):
+        from jobpipe.linkcheck import is_known_blocked
+
+        assert is_known_blocked(url) is False
+
+    def test_subdomains_are_covered(self):
+        from jobpipe.linkcheck import is_known_blocked
+
+        assert is_known_blocked("https://careers.citadel.com/x") is True
+
+    def test_check_short_circuits_without_a_request(self):
+        from jobpipe.linkcheck import check
+
+        class ExplodingSession:
+            def head(self, *a, **k):
+                raise AssertionError("must not make a request to a known-blocked domain")
+
+            get = head
+
+        result = check(
+            "https://www.citadel.com/careers/details/x/", session=ExplodingSession()
+        )
+        assert result.status is LinkStatus.BLOCKED
+        assert result.is_expiry_signal is False
+        assert "not checked" in result.note
+
+    def test_blocked_never_annotates_a_notification(self):
+        """Only real evidence the req is gone should reach the push body."""
+        from jobpipe.linkcheck import LinkResult
+
+        assert LinkResult(LinkStatus.BLOCKED).is_expiry_signal is False
+        assert LinkResult(LinkStatus.UNREACHABLE).is_expiry_signal is False

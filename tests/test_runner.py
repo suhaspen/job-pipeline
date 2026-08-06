@@ -354,3 +354,87 @@ class TestGlobalBaseline:
 
         assert report.total_new == 0
         assert report.sources[0].baselined == 1
+
+
+class TestSuppressionLogging:
+    """Baseline suppressions must leave a trace.
+
+    Post-cutover this is the only unmeasurable failure mode: a genuinely new
+    posting that normalizes onto a baselined id vanishes with no row, no push
+    and no log, which looks exactly like a quiet day.
+    """
+
+    def _cutover(self, cfg, report_path, monkeypatch, jobs):
+        from jobpipe.models import utcnow
+
+        _run(cfg, [StubSource("a", jobs)], report_path, monkeypatch)
+        with SqliteStore(cfg.db_path) as store:
+            store.seed_baseline([p.id for p in store.recent(limit=100)])
+            store.conn.execute("DELETE FROM postings")
+        cfg.cutover_date = utcnow()
+
+    def test_suppression_is_recorded(self, cfg, report_path, monkeypatch):
+        job = posting(company="Acme", title="Software Engineer, New Grad")
+        self._cutover(cfg, report_path, monkeypatch, [job])
+
+        report = _run(cfg, [StubSource("a", [posting(company="Acme",
+                      title="Software Engineer, New Grad")])], report_path, monkeypatch)
+        assert report.suppressed_by_baseline == 1
+
+        with SqliteStore(cfg.db_path) as store:
+            rows = store.recent_suppressions()
+            assert len(rows) == 1
+            assert rows[0]["company"] == "Acme"
+            assert rows[0]["source"] == "stub"
+            assert rows[0]["baseline_id"]
+
+    def test_repeat_sightings_increment_rather_than_duplicate(
+        self, cfg, report_path, monkeypatch
+    ):
+        job = posting(company="Acme", title="Software Engineer, New Grad")
+        self._cutover(cfg, report_path, monkeypatch, [job])
+        for _ in range(3):
+            _run(cfg, [StubSource("a", [posting(company="Acme",
+                 title="Software Engineer, New Grad")])], report_path, monkeypatch)
+
+        with SqliteStore(cfg.db_path) as store:
+            rows = store.recent_suppressions()
+            assert len(rows) == 1
+            assert rows[0]["times_seen"] == 3
+
+    def test_distinct_titles_on_one_baseline_id_are_visible(
+        self, cfg, report_path, monkeypatch
+    ):
+        """The over-collapse signature: one id absorbing several real titles."""
+        self._cutover(cfg, report_path, monkeypatch,
+                      [posting(company="Acme", title="Software Engineer")])
+
+        variants = [
+            posting(company="Acme", title="Software Engineer 1"),
+            posting(company="Acme", title="Software Engineer II"),
+            posting(company="Acme", title="Software Engineer, Level 3"),
+        ]
+        _run(cfg, [StubSource("a", variants)], report_path, monkeypatch)
+
+        with SqliteStore(cfg.db_path) as store:
+            collapse = store.suppression_collapse()
+        assert collapse and collapse[0]["n_titles"] >= 3
+
+    def test_a_promoted_repost_is_not_logged_as_suppressed(
+        self, cfg, report_path, monkeypatch
+    ):
+        from datetime import timedelta
+
+        from jobpipe.models import utcnow
+
+        self._cutover(cfg, report_path, monkeypatch,
+                      [posting(company="Acme", title="Software Engineer, New Grad")])
+
+        relisted = posting(company="Acme", title="Software Engineer, New Grad")
+        relisted.posted_at = utcnow() + timedelta(minutes=5)
+        report = _run(cfg, [StubSource("a", [relisted])], report_path, monkeypatch)
+
+        assert report.total_new == 1
+        assert report.suppressed_by_baseline == 0
+        with SqliteStore(cfg.db_path) as store:
+            assert store.recent_suppressions() == []

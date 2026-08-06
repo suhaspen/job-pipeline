@@ -31,13 +31,13 @@ recent: ## Show the most recent postings
 	$(PY) -m jobpipe.cli recent --limit 25
 
 eval: ## Regenerate EVAL.md from the stored run reports
-	@if $(PY) -c 'import jobpipe.eval' 2>/dev/null; then \
-		$(PY) -m jobpipe.eval; \
-	else \
-		echo "eval is not built yet (lands with the triage layer in Phase 3)." >&2; \
-		echo "It needs scored run history before the numbers mean anything." >&2; \
-		exit 2; \
-	fi
+	$(PY) -m jobpipe.eval
+	@echo
+	@echo "--- exclusion sample (false-negative check) ---"
+	@$(PY) -m jobpipe.cli audit-exclusions --sample 20 2>/dev/null || true
+	@echo
+	@echo "--- baseline suppressions (over-collapse check) ---"
+	@$(PY) -m jobpipe.cli audit-suppressions --sample 15 2>/dev/null || true
 
 feedback: ## Print the FEEDBACK.md copy-paste block plus the latest EVAL summary
 	@awk '/^```$$/{n++; if(n%2==1){buf=""; next} else {last=buf; next}} \

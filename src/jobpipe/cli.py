@@ -101,6 +101,81 @@ def _cmd_recent(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_audit_exclusions(args: argparse.Namespace) -> int:
+    """Random sample of what the eligibility gate rejected.
+
+    Exists so the false-negative rate is measurable: otherwise the only
+    evidence a filter rule is wrong is exactly the data the rule discarded.
+    """
+    cfg = load_config()
+    with SqliteStore(cfg.db_path) as store:
+        counts = store.exclusion_counts()
+        rows = store.sample_exclusions(args.sample, reason=args.reason)
+
+    total = sum(counts.values())
+    print(f"{total} excluded postings on record (14-day window)\n")
+    for reason, n in sorted(counts.items(), key=lambda kv: -kv[1]):
+        print(f"  {reason:<30} {n:>6}  ({n / total:.0%})" if total else f"  {reason}")
+    if not rows:
+        print("\nnothing to sample.")
+        return 0
+
+    print(f"\n=== random sample of {len(rows)} ===")
+    print("Scan for anything you would actually have applied to.\n")
+    for r in rows:
+        print(f"  [{r['filter_reason']:<26}] {(r['company'] or '')[:20]:<20} {r['title'][:52]}")
+        if args.urls and r.get("apply_url"):
+            print(f"        {r['apply_url']}")
+    return 0
+
+
+def _cmd_audit_suppressions(args: argparse.Namespace) -> int:
+    """Show what the cutover baseline swallowed.
+
+    The one failure mode that is otherwise unmeasurable: a genuinely new
+    posting normalizing onto a baselined id disappears with no row, no push
+    and no log, looking exactly like a quiet day.
+    """
+    from datetime import timedelta
+
+    from jobpipe.models import utcnow
+
+    cfg = load_config()
+    with SqliteStore(cfg.db_path) as store:
+        total = store.suppression_count()
+        since = utcnow() - timedelta(days=args.days)
+        rows = store.recent_suppressions(limit=args.sample, since=since)
+        collapse = store.suppression_collapse(limit=args.top)
+
+    print(f"{total} distinct (baseline id, title, source) suppressions on record")
+    print(f"showing {len(rows)} from the last {args.days} day(s)\n")
+
+    if not rows:
+        print("nothing suppressed in that window.")
+    else:
+        print(f"{'seen':>5}  {'source':<18} {'company':<22} {'title':<44} baseline")
+        print("-" * 118)
+        for r in rows:
+            print(
+                f"{r['times_seen']:>5}  {r['source'][:18]:<18} "
+                f"{(r['company'] or '')[:22]:<22} {r['title'][:44]:<44} {r['baseline_id']}"
+            )
+
+    print(f"\n=== over-collapse check: top {args.top} baseline ids by distinct titles ===")
+    print("An id absorbing several DIFFERENT titles means the dedupe key is too")
+    print("coarse. Repeats of one title are just the same job seen every run.\n")
+    multi = [c for c in collapse if c["n_titles"] > 1]
+    if not multi:
+        print("  no baseline id has absorbed more than one distinct title.")
+    for c in collapse[: args.top]:
+        marker = "  <-- REVIEW" if c["n_titles"] > 1 else ""
+        print(f"  {c['baseline_id']}  titles={c['n_titles']}  hits={c['hits']}{marker}")
+        if c["n_titles"] > 1:
+            for title in (c["titles"] or "").split(",")[:6]:
+                print(f"        {title[:88]}")
+    return 0
+
+
 def _cmd_list(args: argparse.Namespace) -> int:
     """Show live postings, optionally filtered by term."""
     from jobpipe.index_md import TERM_HEADING, TERM_ORDER
@@ -455,6 +530,22 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser(
         "cutover", help="export backlog, collapse to baseline, start forward-only"
     ).set_defaults(func=_cmd_cutover)
+
+    exc = sub.add_parser(
+        "audit-exclusions", help="sample what the eligibility gate rejected"
+    )
+    exc.add_argument("--sample", type=int, default=20)
+    exc.add_argument("--reason", help="filter to one filter_reason")
+    exc.add_argument("--urls", action="store_true")
+    exc.set_defaults(func=_cmd_audit_exclusions)
+
+    sup = sub.add_parser(
+        "audit-suppressions", help="show what the cutover baseline swallowed"
+    )
+    sup.add_argument("--days", type=int, default=30)
+    sup.add_argument("--sample", type=int, default=40)
+    sup.add_argument("--top", type=int, default=20)
+    sup.set_defaults(func=_cmd_audit_suppressions)
 
     lst = sub.add_parser("list", help="show live postings grouped by term")
     lst.add_argument("--term", choices=[

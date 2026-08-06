@@ -155,6 +155,42 @@ def looks_like_index(url: str) -> bool:
     return False
 
 
+# Domains that answer 403 to any non-browser client. Checking them produces a
+# `blocked` verdict every single time, so validation is skipped entirely: a
+# warning that fires on every Citadel push is a warning you stop reading, and
+# then it fails to work when a link is genuinely dead.
+KNOWN_BLOCKED_DOMAINS: frozenset[str] = frozenset({
+    "citadel.com",
+    "citadelsecurities.com",
+    "smartrecruiters.com",
+    "jobs.smartrecruiters.com",
+    "careers.roblox.com",
+    "www.roblox.com",
+    "amazon.jobs",
+    "www.amazon.jobs",
+    "jobs.apple.com",
+    "careers.google.com",
+    "www.metacareers.com",
+    "jobs.netflix.com",
+    "careers.microsoft.com",
+})
+
+
+def is_known_blocked(url: str) -> bool:
+    """True when this host is known to reject automated checks outright."""
+    if not url:
+        return False
+    host = urlparse(url).netloc.lower().split(":")[0]
+    if host in KNOWN_BLOCKED_DOMAINS:
+        return True
+    # Match the registrable domain too, so any subdomain is covered.
+    parts = host.split(".")
+    for i in range(len(parts) - 1):
+        if ".".join(parts[i:]) in KNOWN_BLOCKED_DOMAINS:
+            return True
+    return False
+
+
 @dataclass(slots=True)
 class LinkResult:
     status: LinkStatus
@@ -210,10 +246,25 @@ def classify(url: str, final_url: str, http_status: int) -> LinkResult:
     return LinkResult(LinkStatus.OK, final_url, http_status)
 
 
-def check(url: str, *, timeout: float = 12.0, session: requests.Session | None = None) -> LinkResult:
-    """Follow redirects and classify where the link actually lands."""
+def check(
+    url: str,
+    *,
+    timeout: float = 12.0,
+    session: requests.Session | None = None,
+    skip_known_blocked: bool = True,
+) -> LinkResult:
+    """Follow redirects and classify where the link actually lands.
+
+    Known bot-protected domains are not contacted at all - the answer is
+    always `blocked`, so the request is pure cost and the verdict is noise.
+    """
     if not url:
         return LinkResult(LinkStatus.DEAD, None, None, "no URL")
+
+    if skip_known_blocked and is_known_blocked(url):
+        return LinkResult(
+            LinkStatus.BLOCKED, url, None, "known bot-protected domain, not checked"
+        )
 
 
     session = session or requests.Session()

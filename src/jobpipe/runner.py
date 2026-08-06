@@ -34,6 +34,9 @@ from jobpipe.triage import prefilter, provisional
 from jobpipe.triage.eligibility import EligibilityProfile, evaluate as evaluate_eligibility
 
 EXPIRY_ABSENT_HOURS = 48
+# Hard cap on the pre-push link check. It sits in the critical path of a
+# notification, so it fails open rather than delaying a push.
+NOTIFY_LINK_TIMEOUT_S = 2.5
 RETENTION_DAYS = 90
 ZERO_YIELD_HOURS = 12
 
@@ -95,6 +98,7 @@ class RunReport:
     dry_run: bool = False
     baseline_size: int = 0
     excluded_recorded: int = 0
+    suppressed_by_baseline: int = 0
     expired: int = 0
     retired: int = 0
     healthcheck_ok: bool = False
@@ -119,6 +123,7 @@ class RunReport:
             "dry_run": self.dry_run,
             "baseline_size": self.baseline_size,
             "excluded_recorded": self.excluded_recorded,
+            "suppressed_by_baseline": self.suppressed_by_baseline,
             "expired": self.expired,
             "retired": self.retired,
             "healthcheck_ok": self.healthcheck_ok,
@@ -220,7 +225,7 @@ def run(
                         f"{sr.term_unknown_rate:.0%} of postings (>10%)"
                     )
 
-            accepted, baselined = _apply_cutover(postings, baseline, cfg, store)
+            accepted, baselined = _apply_cutover(postings, baseline, cfg, store, clock)
             sr.baselined = baselined
             seen_ids_by_source[source.name] = {p.id for p in postings}
 
@@ -241,7 +246,9 @@ def run(
             report.expired = len(store.expire_stale(absent_hours=EXPIRY_ABSENT_HOURS, now=clock))
             report.retired = len(store.retire_long_expired(days=RETENTION_DAYS, now=clock))
             store.prune_exclusions(days=14)
+            store.prune_suppressions(days=30)
 
+        report.suppressed_by_baseline = sum(s.baselined for s in report.sources)
         report.backlog_unapplied = store.backlog_unapplied()
         report.baseline_size = store.baseline_count()
         report.links_by_source = store.link_status_counts()
@@ -329,7 +336,8 @@ def _normalize(
 
 
 def _apply_cutover(
-    postings: list[Posting], baseline: set[str], cfg: Config, store: SqliteStore
+    postings: list[Posting], baseline: set[str], cfg: Config, store: SqliteStore,
+    clock: datetime | None = None,
 ) -> tuple[list[Posting], int]:
     """Drop anything already known at cutover, unless it is a genuine relist.
 
@@ -341,7 +349,7 @@ def _apply_cutover(
         return postings, 0
 
     accepted: list[Posting] = []
-    baselined = 0
+    suppressed: list[dict[str, Any]] = []
     for posting in postings:
         if posting.id not in baseline:
             accepted.append(posting)
@@ -352,8 +360,22 @@ def _apply_cutover(
             baseline.discard(posting.id)
             accepted.append(posting)
             continue
-        baselined += 1
-    return accepted, baselined
+        # Suppressed by the baseline. Recorded rather than dropped silently:
+        # a genuinely new posting that normalizes onto a baselined id would
+        # otherwise vanish with no row, no push and no trace, which looks
+        # exactly like a quiet day.
+        suppressed.append({
+            "baseline_id": posting.id,
+            "title": posting.title,
+            "source": posting.source,
+            "company": posting.company,
+            "posted_at": posting.posted_at.isoformat() if posting.posted_at else None,
+            "title_norm": posting.title_norm,
+        })
+
+    if suppressed and not cfg.dry_run:
+        store.record_suppressions(suppressed, now=clock)
+    return accepted, len(suppressed)
 
 
 def _persist(
@@ -487,12 +509,19 @@ def _notify(
     sent = 0
     for posting, priority in result.to_send:
         try:
-            # Re-check tier 1 immediately before pushing. One request is cheap
-            # next to being sent to a dead link from a lock screen. A failed
-            # check does not cancel the push - it annotates it.
+            # Re-check tier 1 immediately before pushing, but on a short leash.
+            # This is now an HTTP request in the critical path of a push, so it
+            # fails open: a slow careers page must never delay or drop a
+            # notification. Only real evidence the req is gone (dead, or
+            # redirected to an index) annotates the body - a `blocked` verdict
+            # on every Citadel push would train the warning into invisibility.
             if posting.tier is Tier.INTERRUPTING:
-                recheck = check_link(posting.apply_url)
-                if not recheck.usable:
+                try:
+                    recheck = check_link(posting.apply_url, timeout=NOTIFY_LINK_TIMEOUT_S)
+                except Exception as exc:
+                    recheck = None
+                    log.warn("notify.link_check_failed", posting=posting.id, error=str(exc))
+                if recheck is not None and recheck.is_expiry_signal:
                     store.set_link_status(
                         posting.id, recheck.status.value, recheck.final_url, checked_at=clock
                     )

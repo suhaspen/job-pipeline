@@ -23,7 +23,7 @@ from jobpipe.models import Disqualifier, Posting, Status, Tier, iso, utcnow
 from jobpipe.linkcheck import prefer_url
 from jobpipe.store import UpsertResult
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 _SCHEMA_TABLES = """
 CREATE TABLE IF NOT EXISTS postings (
@@ -108,6 +108,29 @@ CREATE TABLE IF NOT EXISTS excluded (
     PRIMARY KEY (id, filter_version)
 );
 
+-- Every posting the cutover baseline suppressed.
+--
+-- Post-cutover, over-collapse changes character: a genuinely new posting that
+-- normalizes onto a baselined id is dropped with no row, no notification and
+-- no trace, which is indistinguishable from "no new jobs today". This table is
+-- the only way that failure is measurable.
+--
+-- Keyed by (baseline_id, title, source) rather than appended per run, so the
+-- same posting seen every 30 minutes is one row with a counter - and so
+-- COUNT(DISTINCT title) per baseline_id directly exposes over-collapse.
+CREATE TABLE IF NOT EXISTS suppressions (
+    baseline_id TEXT NOT NULL,
+    title       TEXT NOT NULL,
+    source      TEXT NOT NULL,
+    company     TEXT,
+    posted_at   TEXT,
+    title_norm  TEXT,
+    first_at    TEXT NOT NULL,
+    last_at     TEXT NOT NULL,
+    times_seen  INTEGER NOT NULL DEFAULT 1,
+    PRIMARY KEY (baseline_id, title, source)
+);
+
 -- Per-posting absence tracking for the expiry rule. Only successful runs in
 -- which the source returned data are counted, so one flaky source cannot
 -- expire its whole catalogue.
@@ -146,6 +169,8 @@ CREATE INDEX IF NOT EXISTS idx_runs_started ON runs(started_at);
 CREATE INDEX IF NOT EXISTS idx_notifications_sent ON notifications(sent_at);
 CREATE INDEX IF NOT EXISTS idx_excluded_seen   ON excluded(seen_at);
 CREATE INDEX IF NOT EXISTS idx_excluded_reason ON excluded(filter_reason);
+CREATE INDEX IF NOT EXISTS idx_suppressions_last ON suppressions(last_at);
+CREATE INDEX IF NOT EXISTS idx_suppressions_base ON suppressions(baseline_id);
 """
 
 
@@ -504,6 +529,62 @@ class SqliteStore:
         except Exception:
             self.conn.execute("ROLLBACK")
             raise
+
+    def record_suppressions(
+        self, rows: Iterable[dict[str, Any]], *, now: datetime | None = None
+    ) -> int:
+        """Record postings the baseline swallowed. Repeat sightings increment."""
+        stamp = iso(now or utcnow())
+        payload = [
+            (
+                r["baseline_id"], r["title"], r["source"], r.get("company"),
+                r.get("posted_at"), r.get("title_norm"), stamp, stamp,
+            )
+            for r in rows
+        ]
+        if not payload:
+            return 0
+        self.conn.executemany(
+            "INSERT INTO suppressions(baseline_id, title, source, company, posted_at, "
+            "title_norm, first_at, last_at) VALUES (?,?,?,?,?,?,?,?) "
+            "ON CONFLICT(baseline_id, title, source) DO UPDATE SET "
+            "last_at=excluded.last_at, times_seen=times_seen+1",
+            payload,
+        )
+        return len(payload)
+
+    def recent_suppressions(self, limit: int = 50, *, since: datetime | None = None):
+        sql = "SELECT * FROM suppressions"
+        params: list[Any] = []
+        if since is not None:
+            sql += " WHERE last_at >= ?"
+            params.append(iso(since))
+        sql += " ORDER BY last_at DESC LIMIT ?"
+        params.append(limit)
+        return [dict(r) for r in self.conn.execute(sql, params)]
+
+    def suppression_collapse(self, limit: int = 20) -> list[dict[str, Any]]:
+        """Baseline ids absorbing several distinct titles - the over-collapse
+        signature. One id soaking up six different job titles means the dedupe
+        key is too coarse, not that a company reposted six times."""
+        rows = self.conn.execute(
+            "SELECT baseline_id, COUNT(DISTINCT title) n_titles, SUM(times_seen) hits, "
+            "GROUP_CONCAT(DISTINCT title) titles "
+            "FROM suppressions GROUP BY baseline_id "
+            "ORDER BY n_titles DESC, hits DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def suppression_count(self) -> int:
+        row = self.conn.execute("SELECT COUNT(*) n FROM suppressions").fetchone()
+        return int(row["n"])
+
+    def prune_suppressions(self, days: int = 30) -> int:
+        cutoff = iso(utcnow() - timedelta(days=days))
+        return self.conn.execute(
+            "DELETE FROM suppressions WHERE last_at < ?", (cutoff,)
+        ).rowcount
 
     # ------------------------------------------------------------------
     # Exclusions
