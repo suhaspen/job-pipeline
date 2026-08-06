@@ -30,7 +30,8 @@ from jobpipe.models import Posting, RawPosting, Status, Tier, utcnow
 from jobpipe.notify import NotifyContext, NtfyClient, gate, ping_healthcheck, redact
 from jobpipe.sources import HttpClient, build_sources
 from jobpipe.store import SqliteStore
-from jobpipe.triage import prefilter, provisional
+from jobpipe.triage import discipline, prefilter
+from jobpipe.triage.scorer import Scorer
 from jobpipe.triage.eligibility import EligibilityProfile, evaluate as evaluate_eligibility
 
 EXPIRY_ABSENT_HOURS = 48
@@ -105,6 +106,7 @@ class RunReport:
     links: dict[str, int] = field(default_factory=dict)
     links_by_source: dict[str, dict[str, int]] = field(default_factory=dict)
     url_upgrades: int = 0
+    scorer: dict[str, Any] = field(default_factory=dict)
     scheduled_for: str | None = None
     schedule_delay_s: float | None = None
     dry_seen_ids: set[str] = field(default_factory=set, repr=False)
@@ -130,6 +132,7 @@ class RunReport:
             "links": self.links,
             "links_by_source": self.links_by_source,
             "url_upgrades": self.url_upgrades,
+            "scorer": self.scorer,
             "scheduled_for": self.scheduled_for,
             "schedule_delay_s": self.schedule_delay_s,
         }
@@ -203,7 +206,12 @@ def run(
             sr.ok = bool(raw_postings) or not stats.errors or stats.not_modified
 
             strict = getattr(source, "strict_prefilter", False)
-            kept, reasons = prefilter.apply(raw_postings, strict=strict)
+            eligible, reasons = prefilter.apply(raw_postings, strict=strict)
+            # Level gate, then field gate. Separate questions: "Governance,
+            # Risk and Compliance Intern (Fall 2026)" passes eligibility and
+            # fails discipline.
+            kept, disc_reasons = discipline.apply(eligible)
+            reasons.update(disc_reasons)
             sr.raw_fetched = len(raw_postings)
             sr.fetched = len(kept)
             sr.filtered_out = len(raw_postings) - len(kept)
@@ -229,8 +237,11 @@ def run(
             sr.baselined = baselined
             seen_ids_by_source[source.name] = {p.id for p in postings}
 
-            sr.new = _persist(store, accepted, report, cfg, source, run_id, kept)
-            fresh_ids.extend(p.id for p in accepted)
+            new_ids = _persist(store, accepted, report, cfg, source, run_id, kept)
+            sr.new = len(new_ids)
+            # Only genuinely-new ids are scored. Extending this with every
+            # accepted posting would re-score existing rows on every run.
+            fresh_ids.extend(new_ids)
 
             report.sources.append(sr)
             log.info(
@@ -300,6 +311,9 @@ def _record_exclusions(
         if id(raw) in kept_ids:
             continue
         result = prefilter.evaluate(raw, strict=strict)
+        if result.keep:
+            # Passed the level gate, so it must have been the field gate.
+            result = discipline.evaluate(raw)
         try:
             posting = raw.normalize()
             pid, term = posting.id, posting.term.value
@@ -381,9 +395,10 @@ def _apply_cutover(
 def _persist(
     store: SqliteStore, postings: list[Posting], report: RunReport, cfg: Config,
     source: Any, run_id: str, kept_raw: list[RawPosting],
-) -> int:
+) -> list[str]:
+    """Upsert one source's batch and return the ids that were genuinely new."""
     if cfg.dry_run:
-        new = 0
+        new: list[str] = []
         for posting in postings:
             if posting.id in report.dry_seen_ids:
                 report.deduped_out += 1
@@ -392,7 +407,7 @@ def _persist(
             if store.seen(posting.id):
                 report.deduped_out += 1
             else:
-                new += 1
+                new.append(posting.id)
         return new
 
     result = store.upsert(postings)
@@ -412,7 +427,7 @@ def _persist(
             for r in kept_raw
         ],
     )
-    return len([p for p in result.new if p.id in accepted_ids])
+    return [p.id for p in result.new if p.id in accepted_ids]
 
 
 def _triage(
@@ -422,10 +437,10 @@ def _triage(
 ) -> None:
     """Assign disqualifiers, score and tier.
 
-    PROVISIONAL: `triage.provisional` is a placeholder rule, not a fit score.
-    The real scorer replaces it behind this same call.
+    Only `fresh_ids` are scored - postings accepted by this run. The backlog
+    never reaches here, so baselined rows never cost a token.
     """
-    targets = cfg.target_companies
+    scorer = Scorer(cfg, store, profile)
     for posting_id in fresh_ids:
         posting = store.get(posting_id)
         if posting is None:
@@ -435,15 +450,25 @@ def _triage(
             apply_url=posting.apply_url, location=posting.location,
         )
         disqualifiers = evaluate_eligibility(probe, profile, term=posting.term)
-        score, tier, rationale = provisional.score_and_tier(
-            posting, disqualifiers, target_companies=targets, profile=profile
-        )
+        result = scorer.score(posting, probe, disqualifiers)
         store.update_triage(
-            posting_id, tier=tier, score=score, rationale=rationale,
-            disqualifiers=disqualifiers,
+            posting_id, tier=result.tier, score=result.score,
+            rationale=result.rationale, disqualifiers=result.disqualifiers,
+            tier_source=result.tier_source,
         )
-        report.tiers[str(int(tier))] = report.tiers.get(str(int(tier)), 0) + 1
-    log.info("triage.done", scored=len(fresh_ids), tiers=report.tiers)
+        report.tiers[str(int(result.tier))] = report.tiers.get(str(int(result.tier)), 0) + 1
+
+    report.scorer = scorer.stats.to_dict()
+    if scorer.stats.fallbacks:
+        report.warnings.append(
+            f"scorer unavailable for {scorer.stats.fallbacks} posting(s); "
+            f"heuristic fallback used and they were notified anyway"
+        )
+    log.info(
+        "triage.done", scored=len(fresh_ids), tiers=report.tiers,
+        llm_calls=scorer.stats.calls, cached=scorer.stats.cached,
+        fallbacks=scorer.stats.fallbacks,
+    )
 
 
 def _update_sightings(

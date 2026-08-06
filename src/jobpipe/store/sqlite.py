@@ -23,7 +23,7 @@ from jobpipe.models import Disqualifier, Posting, Status, Tier, iso, utcnow
 from jobpipe.linkcheck import prefer_url
 from jobpipe.store import UpsertResult
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 _SCHEMA_TABLES = """
 CREATE TABLE IF NOT EXISTS postings (
@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS postings (
     source_url         TEXT,
     final_url          TEXT,
     link_status        TEXT NOT NULL DEFAULT 'unchecked',
-    link_checked_at    TEXT
+    link_checked_at    TEXT,
+    tier_source        TEXT NOT NULL DEFAULT 'heuristic'
 );
 
 -- Raw source payloads, so `--replay <run-id>` can re-score without refetching.
@@ -151,6 +152,18 @@ CREATE TABLE IF NOT EXISTS http_cache (
     fetched_at    TEXT NOT NULL
 );
 
+-- Scores, cached by posting id, PERMANENTLY. Never pruned: re-scoring a
+-- posting costs real money and always returns the same answer, so --replay
+-- must be able to re-run tiering without re-billing a single token.
+CREATE TABLE IF NOT EXISTS score_cache (
+    posting_id  TEXT PRIMARY KEY,
+    score       INTEGER NOT NULL,
+    rationale   TEXT NOT NULL,
+    tier_source TEXT NOT NULL,
+    scored_at   TEXT NOT NULL,
+    model       TEXT
+);
+
 CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
@@ -208,6 +221,7 @@ class SqliteStore:
             "final_url": "TEXT",
             "link_status": "TEXT NOT NULL DEFAULT 'unchecked'",
             "link_checked_at": "TEXT",
+            "tier_source": "TEXT NOT NULL DEFAULT 'heuristic'",
         }
         for column, decl in additions.items():
             if column not in existing:
@@ -362,14 +376,17 @@ class SqliteStore:
         score: int,
         rationale: str,
         disqualifiers: list[Disqualifier],
+        tier_source: str = "heuristic",
     ) -> None:
         self.conn.execute(
-            "UPDATE postings SET tier=?, score=?, score_rationale=?, disqualifiers=? WHERE id=?",
+            "UPDATE postings SET tier=?, score=?, score_rationale=?, disqualifiers=?, "
+            "tier_source=? WHERE id=?",
             (
                 int(tier),
                 int(score),
                 rationale,
                 json.dumps([d.value for d in disqualifiers]),
+                tier_source,
                 posting_id,
             ),
         )
@@ -580,6 +597,28 @@ class SqliteStore:
         row = self.conn.execute("SELECT COUNT(*) n FROM suppressions").fetchone()
         return int(row["n"])
 
+    def cache_score(
+        self, posting_id: str, score: int, rationale: str, tier_source: str,
+        *, model: str | None = None,
+    ) -> None:
+        self.conn.execute(
+            "INSERT INTO score_cache(posting_id, score, rationale, tier_source, "
+            "scored_at, model) VALUES (?,?,?,?,?,?) "
+            "ON CONFLICT(posting_id) DO NOTHING",
+            (posting_id, int(score), rationale, tier_source, iso(utcnow()), model),
+        )
+
+    def get_cached_score(self, posting_id: str) -> dict[str, Any] | None:
+        row = self.conn.execute(
+            "SELECT * FROM score_cache WHERE posting_id = ?", (posting_id,)
+        ).fetchone()
+        return dict(row) if row else None
+
+    def score_cache_size(self) -> int:
+        return int(
+            self.conn.execute("SELECT COUNT(*) n FROM score_cache").fetchone()["n"]
+        )
+
     def prune_suppressions(self, days: int = 30) -> int:
         cutoff = iso(utcnow() - timedelta(days=days))
         return self.conn.execute(
@@ -765,5 +804,5 @@ _COLUMNS = [
     "tier", "score", "score_rationale", "disqualifiers", "recruiter_name",
     "recruiter_title", "recruiter_linkedin", "draft_note", "status",
     "applied_at", "company_norm", "title_norm", "location_norm", "source_id",
-    "source_url", "final_url", "link_status", "link_checked_at",
+    "source_url", "final_url", "link_status", "link_checked_at", "tier_source",
 ]

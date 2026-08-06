@@ -149,6 +149,10 @@ class Posting:
     final_url: str | None = None
     link_status: str = "unchecked"
     link_checked_at: datetime | None = None
+    # Which path produced score/tier: llm | heuristic | heuristic-fallback |
+    # cached | disqualified. A fallback means the scorer was unavailable and
+    # the posting notified anyway rather than being silently dropped.
+    tier_source: str = "heuristic"
 
     def to_row(self) -> dict[str, Any]:
         """Flatten to the SQLite column layout."""
@@ -183,6 +187,7 @@ class Posting:
             "final_url": self.final_url,
             "link_status": self.link_status,
             "link_checked_at": iso(self.link_checked_at),
+            "tier_source": self.tier_source,
         }
 
     @classmethod
@@ -221,6 +226,7 @@ class Posting:
             final_url=row["final_url"] if "final_url" in row.keys() else None,
             link_status=(row["link_status"] if "link_status" in row.keys() else None) or "unchecked",
             link_checked_at=dt(row["link_checked_at"]) if "link_checked_at" in row.keys() else None,
+            tier_source=(row["tier_source"] if "tier_source" in row.keys() else None) or "heuristic",
         )
 
     def as_dict(self) -> dict[str, Any]:
