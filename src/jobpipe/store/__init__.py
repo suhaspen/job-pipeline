@@ -1,0 +1,84 @@
+"""Storage abstraction.
+
+Sources, triage and notification all talk to `Store` and never to SQLite
+directly, so swapping in Airtable or Postgres later is a single new class rather
+than a rewrite. `upsert` / `seen` / `recent` are the core three; the rest exist
+because later phases genuinely need persistence across runs (notification rate
+caps and the zero-yield alarm cannot work off in-memory state when every run is
+a fresh GitHub Actions container).
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Iterable, Protocol, runtime_checkable
+
+from jobpipe.models import Disqualifier, Posting, Status, Tier
+
+
+@dataclass(slots=True)
+class UpsertResult:
+    """Outcome of one `upsert` batch."""
+
+    new: list[Posting] = field(default_factory=list)
+    updated: list[Posting] = field(default_factory=list)
+    # Rows collapsed onto an id already present *within this same batch* - i.e.
+    # two sources reporting the same job in one run. Tracked separately from
+    # `updated` because cross-source overlap is a metric EVAL.md reports on.
+    collisions: int = 0
+
+    @property
+    def new_count(self) -> int:
+        return len(self.new)
+
+    @property
+    def deduped_out(self) -> int:
+        return len(self.updated) + self.collisions
+
+
+@runtime_checkable
+class Store(Protocol):
+    # --- core ---
+    def upsert(self, postings: Iterable[Posting]) -> UpsertResult: ...
+    def seen(self, id_or_key: str) -> bool: ...
+    def recent(
+        self,
+        limit: int = 50,
+        *,
+        since: datetime | None = None,
+        status: Status | None = None,
+        tier: Tier | None = None,
+    ) -> list[Posting]: ...
+
+    # --- triage + lifecycle ---
+    def get(self, posting_id: str) -> Posting | None: ...
+    def update_triage(
+        self,
+        posting_id: str,
+        *,
+        tier: Tier,
+        score: int,
+        rationale: str,
+        disqualifiers: list[Disqualifier],
+    ) -> None: ...
+    def set_status(
+        self, posting_id: str, status: Status, *, applied_at: datetime | None = None
+    ) -> bool: ...
+    def backlog_unapplied(self) -> int: ...
+
+    # --- run bookkeeping ---
+    def record_raw(self, run_id: str, source: str, payload: Any) -> None: ...
+    def get_raw(self, run_id: str) -> list[tuple[str, Any]]: ...
+    def record_run(self, report: dict[str, Any]) -> None: ...
+    def runs(self, *, since: datetime | None = None) -> list[dict[str, Any]]: ...
+    def record_notification(
+        self, posting_id: str, tier: Tier, *, sent_at: datetime | None = None
+    ) -> None: ...
+    def notifications_since(self, since: datetime, *, tier: Tier | None = None) -> int: ...
+    def last_new_posting_at(self) -> datetime | None: ...
+
+
+from jobpipe.store.sqlite import SqliteStore  # noqa: E402
+
+__all__ = ["Store", "SqliteStore", "UpsertResult"]

@@ -1,0 +1,18 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Run logs are ephemeral; the committed source of truth is data/postings.db
+# and data/run-report.json. Keep the directory, drop the contents.
+logs/*.jsonl
+
+# SQLite sidecar files must never be committed - they cause merge conflicts
+# and can corrupt the committed .db when replayed out of order.
+data/postings.db-wal
+data/postings.db-shm
+data/postings.db-journal

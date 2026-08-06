@@ -1,0 +1,244 @@
+{
+  "_comment": "Dedupe fixtures. Every posting inside a `must_collapse` group has to produce one identical id; every posting inside a `must_not_collapse` group has to produce a distinct id. Shapes here are drawn from how Greenhouse, Lever, Ashby and the Simplify/speedyapply repos actually word the same req.",
+
+  "must_collapse": [
+    {
+      "why": "Classic repost: req closed and relisted. Legal suffix, comma-vs-dash separator, parenthetical Co-op, and South SF vs SF all differ.",
+      "postings": [
+        {
+          "source": "greenhouse",
+          "company": "Stripe, Inc.",
+          "title": "Software Engineer Intern, Fall 2026 (Co-op)",
+          "location": "South San Francisco, CA",
+          "apply_url": "https://boards.greenhouse.io/stripe/jobs/1111",
+          "source_id": "1111"
+        },
+        {
+          "source": "simplify",
+          "company": "Stripe",
+          "title": "Software Engineer, Co-Op - Fall 2026",
+          "location": "San Francisco, CA",
+          "apply_url": "https://boards.greenhouse.io/stripe/jobs/2222",
+          "source_id": "2222"
+        }
+      ]
+    },
+    {
+      "why": "New-grad req seen by three sources with different grad wording, a start-date parenthetical, and a spelled-out state.",
+      "postings": [
+        {
+          "source": "greenhouse",
+          "company": "NVIDIA Corporation",
+          "title": "Software Engineer, New College Graduate - 2027",
+          "location": "Santa Clara, CA",
+          "apply_url": "https://nvidia.com/a"
+        },
+        {
+          "source": "speedyapply-swe",
+          "company": "NVIDIA",
+          "title": "Software Engineer - New Grad (2027 Start)",
+          "location": "Santa Clara, California",
+          "apply_url": "https://nvidia.com/b"
+        },
+        {
+          "source": "simplify",
+          "company": "Nvidia",
+          "title": "Software Engineer (Entry Level), Class of 2027",
+          "location": "Santa Clara, CA, USA",
+          "apply_url": "https://nvidia.com/c"
+        }
+      ]
+    },
+    {
+      "why": "Level suffixes are noise for dedupe: II, L4 and 'Level 4' are the same ladder rung expressed three ways.",
+      "postings": [
+        {
+          "source": "lever",
+          "company": "Databricks",
+          "title": "Software Engineer II",
+          "location": "San Francisco, CA",
+          "apply_url": "https://lever.co/databricks/1",
+          "term_hint": "new-grad"
+        },
+        {
+          "source": "lever",
+          "company": "Databricks",
+          "title": "Software Engineer L4",
+          "location": "Mountain View, CA",
+          "apply_url": "https://lever.co/databricks/2",
+          "term_hint": "new-grad"
+        },
+        {
+          "source": "lever",
+          "company": "Databricks",
+          "title": "Software Engineer, Level 4",
+          "location": "Bay Area",
+          "apply_url": "https://lever.co/databricks/3",
+          "term_hint": "new-grad"
+        }
+      ]
+    },
+    {
+      "why": "Vocabulary collapse: SWE / SDE / Software Development Engineer / Software Developer are one role, and Internship == Intern == Co-op.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Anthropic",
+          "title": "SWE Internship - Winter 2027",
+          "location": "San Francisco, CA",
+          "apply_url": "https://x/1"
+        },
+        {
+          "source": "b",
+          "company": "Anthropic",
+          "title": "Software Development Engineer Intern, Winter 2027",
+          "location": "SF",
+          "apply_url": "https://x/2"
+        },
+        {
+          "source": "c",
+          "company": "Anthropic",
+          "title": "Software Developer Co-op (Winter 2027)",
+          "location": "San Francisco",
+          "apply_url": "https://x/3"
+        }
+      ]
+    },
+    {
+      "why": "Requisition ids and boilerplate must not enter the key.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Snowflake",
+          "title": "Machine Learning Engineer - New Grad (Req #48210)",
+          "location": "Menlo Park, CA",
+          "apply_url": "https://y/1"
+        },
+        {
+          "source": "b",
+          "company": "Snowflake Inc.",
+          "title": "ML Engineer, University Graduate",
+          "location": "Menlo Park, CA",
+          "apply_url": "https://y/2"
+        }
+      ]
+    },
+    {
+      "why": "Company aliases: the same employer publishes under two names.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Facebook",
+          "title": "Software Engineer, University Grad",
+          "location": "Menlo Park, CA",
+          "apply_url": "https://z/1"
+        },
+        {
+          "source": "b",
+          "company": "Meta Platforms, Inc.",
+          "title": "Software Engineer - New Grad",
+          "location": "Menlo Park, CA",
+          "apply_url": "https://z/2"
+        }
+      ]
+    }
+  ],
+
+  "must_not_collapse": [
+    {
+      "why": "Meaningful parentheticals distinguish genuinely different reqs. Over-collapsing here silently loses a posting, which is the worse failure.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "OpenAI",
+          "title": "Software Engineer Intern (Backend), Spring 2027",
+          "location": "San Francisco, CA",
+          "apply_url": "https://o/1"
+        },
+        {
+          "source": "a",
+          "company": "OpenAI",
+          "title": "Software Engineer Intern (Machine Learning), Spring 2027",
+          "location": "San Francisco, CA",
+          "apply_url": "https://o/2"
+        }
+      ]
+    },
+    {
+      "why": "Same role, different metro - two applications, two rows.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Datadog",
+          "title": "Software Engineer, New Grad",
+          "location": "New York, NY",
+          "apply_url": "https://d/1"
+        },
+        {
+          "source": "a",
+          "company": "Datadog",
+          "title": "Software Engineer, New Grad",
+          "location": "Seattle, WA",
+          "apply_url": "https://d/2"
+        }
+      ]
+    },
+    {
+      "why": "Same role and metro, different hiring cycle.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Airbnb",
+          "title": "Software Engineer Intern, Fall 2026",
+          "location": "San Francisco, CA",
+          "apply_url": "https://ab/1"
+        },
+        {
+          "source": "a",
+          "company": "Airbnb",
+          "title": "Software Engineer Intern, Spring 2027",
+          "location": "San Francisco, CA",
+          "apply_url": "https://ab/2"
+        }
+      ]
+    },
+    {
+      "why": "Seattle must never bucket as DC just because Washington is a state name.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Amazon",
+          "title": "Software Engineer, New Grad",
+          "location": "Seattle, Washington",
+          "apply_url": "https://am/1"
+        },
+        {
+          "source": "a",
+          "company": "Amazon",
+          "title": "Software Engineer, New Grad",
+          "location": "Arlington, VA",
+          "apply_url": "https://am/2"
+        }
+      ]
+    },
+    {
+      "why": "Different disciplines at the same company, cycle and metro.",
+      "postings": [
+        {
+          "source": "a",
+          "company": "Figma",
+          "title": "Frontend Engineer, New Grad",
+          "location": "San Francisco, CA",
+          "apply_url": "https://f/1"
+        },
+        {
+          "source": "a",
+          "company": "Figma",
+          "title": "Machine Learning Engineer, New Grad",
+          "location": "San Francisco, CA",
+          "apply_url": "https://f/2"
+        }
+      ]
+    }
+  ]
+}
