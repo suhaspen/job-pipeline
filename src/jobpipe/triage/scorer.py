@@ -118,6 +118,52 @@ _PREFERRED_METROS = {"sf-bay": 12, "seattle": 10, "orange-county": 12, "la": 8, 
 _ACCEPTABLE_METROS = {"nyc": 6, "san-diego": 6, "austin": 5, "boston": 5}
 
 
+def heuristic_signals(
+    posting: Posting, *, target_companies: set[str], profile: EligibilityProfile
+) -> dict[str, int]:
+    """The individual signals and their point contributions.
+
+    Exposed separately from the score so `make eval` can answer "what is
+    actually deciding tier 1" - which matters more while scoring is
+    heuristic-only and there is no LLM layer catching marginal matches.
+    """
+    signals: dict[str, int] = {}
+    signals[f"term:{posting.term.value}"] = _TERM_POINTS.get(posting.term, 10)
+
+    title = posting.title_norm or posting.title.lower()
+    for pattern, points, label in _DISCIPLINE_POINTS:
+        if pattern.search(title):
+            signals[f"discipline:{label}"] = points
+            break
+
+    if posting.company_norm in target_companies:
+        signals["target-company"] = 20
+
+    metro = _PREFERRED_METROS.get(posting.location_norm) or _ACCEPTABLE_METROS.get(
+        posting.location_norm, 0
+    )
+    if metro:
+        signals[f"metro:{posting.location_norm}"] = metro
+    if posting.remote:
+        signals["remote"] = 4
+
+    if posting.posted_at:
+        from jobpipe.models import utcnow
+
+        age_days = (utcnow() - posting.posted_at).days
+        if age_days <= 2:
+            signals["recency:<2d"] = 8
+        elif age_days <= 7:
+            signals["recency:<1w"] = 4
+        elif age_days > 45:
+            signals["recency:stale"] = -8
+
+    wanted = profile.wanted_terms.get(posting.term.value, True) if profile.wanted_terms else True
+    if not wanted:
+        signals["term-not-wanted"] = -40
+    return signals
+
+
 def heuristic_score(
     posting: Posting, *, target_companies: set[str], profile: EligibilityProfile
 ) -> tuple[int, str]:

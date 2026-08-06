@@ -1,0 +1,35 @@
+name: keepalive
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Force a commit if the repo has been quiet for 45 days
+        run: |
+          # GitHub silently disables scheduled workflows after 60 days of
+          # repository inactivity - no error, no log entry, they just stop.
+          # The skip-commit-when-unchanged rule in the poll workflow makes that
+          # reachable during a quiet stretch, so this pre-empts it at 45 days.
+          # The dead-man's switch would catch it regardless; this stops it
+          # happening in the first place.
+          LAST=$(git log -1 --format=%ct)
+          AGE=$(( ( $(date -u +%s) - LAST ) / 86400 ))
+          echo "days since last commit: $AGE"
+          if [ "$AGE" -lt 45 ]; then echo "repo is active; nothing to do"; exit 0; fi
+          git config user.name  "jobpipe[bot]"
+          git config user.email "jobpipe@users.noreply.github.com"
+          date -u +%Y-%m-%dT%H:%MZ > .keepalive
+          git add .keepalive
+          git commit -m "keepalive: prevent scheduled-workflow auto-disable"
+          git push

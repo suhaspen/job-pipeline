@@ -20,3 +20,8 @@ data/postings.db-journal
 # Gitignored personal eligibility facts (Part A answers)
 profile/local.yml
 data/backlog-review.csv
+
+# The database is a rebuildable cache. data/postings.jsonl and
+# data/baseline.txt are the committed source of truth: SQLite rewrites a
+# multi-MB blob on every commit even for a one-row change.
+data/postings.db

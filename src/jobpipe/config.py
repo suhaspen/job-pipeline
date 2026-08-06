@@ -20,6 +20,9 @@ DEFAULT_COMPANIES = REPO_ROOT / "companies.json"
 LOG_DIR = REPO_ROOT / "logs"
 RUN_REPORT_PATH = REPO_ROOT / "data" / "run-report.json"
 INDEX_PATH = REPO_ROOT / "INDEX.md"
+# Committed source of truth. The SQLite file is a rebuildable cache.
+EXPORT_PATH = REPO_ROOT / "data" / "postings.jsonl"
+BASELINE_PATH = REPO_ROOT / "data" / "baseline.txt"
 CANDIDATE_COMPANIES_PATH = REPO_ROOT / "data" / "candidate-companies.csv"
 
 # Everything first seen before this instant is baseline: known, but never
@@ -82,6 +85,11 @@ def write_cutover_date(when: datetime, path: Path | None = None) -> None:
 @dataclass(slots=True)
 class Config:
     db_path: Path = DEFAULT_DB
+    # Paths are config, not constants, so tests never restore production data
+    # into a temporary database.
+    export_path: Path = EXPORT_PATH
+    baseline_path: Path = BASELINE_PATH
+    index_path: Path = INDEX_PATH
     cutover_date: datetime | None = None
     companies: list[ATSCompany] = field(default_factory=list)
 

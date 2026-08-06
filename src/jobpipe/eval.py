@@ -161,6 +161,70 @@ def render(
     for run in runs:
         for key, value in (run.get("notifications") or {}).items():
             notif[key] += value or 0
+    # --- tier volume ---
+    tier_rows = collections.Counter()
+    for run in runs:
+        started = run.get("started_at")
+        if not started:
+            continue
+        day = datetime.fromisoformat(started).date().isoformat()
+        for tier, n in (run.get("tiers") or {}).items():
+            tier_rows[(day, tier)] += n or 0
+    days = sorted({d for d, _ in tier_rows})
+    lines += [
+        "## Tier volume per day",
+        "",
+        "Tier 1 interrupts (capped at 3/hour). Tier 2 and 3 are digest-only —",
+        "tier 2 stopped pushing after 30 notifications landed in a single run.",
+        "",
+        "| Day | tier 1 | tier 2 | tier 3 |",
+        "|---|---|---|---|",
+    ]
+    for day in days:
+        lines.append(
+            f"| {day} | {tier_rows[(day, '1')]} | {tier_rows[(day, '2')]} "
+            f"| {tier_rows[(day, '3')]} |"
+        )
+    lines.append("")
+
+    # --- what drives tier 1 ---
+    tier1_live = [p for p in postings if p.tier is Tier.INTERRUPTING]
+    lines += ["## What is driving tier 1", ""]
+    if not tier1_live:
+        lines += ["No tier-1 postings yet.", ""]
+    else:
+        try:
+            from jobpipe.config import load_config
+            from jobpipe.triage.eligibility import EligibilityProfile
+            from jobpipe.triage.scorer import heuristic_signals
+
+            cfg = load_config()
+            profile = EligibilityProfile.load()
+            counts: collections.Counter = collections.Counter()
+            totals: collections.Counter = collections.Counter()
+            for p in tier1_live:
+                for signal, points in heuristic_signals(
+                    p, target_companies=cfg.target_companies, profile=profile
+                ).items():
+                    counts[signal] += 1
+                    totals[signal] += points
+            lines += [
+                f"{len(tier1_live)} tier-1 posting(s). Signals below are the "
+                "deterministic contributions; scoring is heuristic-only until an "
+                "API key is configured.",
+                "",
+                "| signal | postings | share | mean points |",
+                "|---|---|---|---|",
+            ]
+            for signal, n in counts.most_common():
+                lines.append(
+                    f"| `{signal}` | {n} | {n / len(tier1_live):.0%} "
+                    f"| {totals[signal] / n:+.0f} |"
+                )
+            lines.append("")
+        except Exception as exc:  # pragma: no cover - reporting must not fail
+            lines += [f"_signal attribution unavailable: {exc}_", ""]
+
     lines += [
         "## Notifications",
         "",

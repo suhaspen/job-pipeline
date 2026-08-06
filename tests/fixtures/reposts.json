@@ -1,6 +1,5 @@
 {
   "_comment": "Dedupe fixtures. Every posting inside a `must_collapse` group has to produce one identical id; every posting inside a `must_not_collapse` group has to produce a distinct id. Shapes here are drawn from how Greenhouse, Lever, Ashby and the Simplify/speedyapply repos actually word the same req.",
-
   "must_collapse": [
     {
       "why": "Classic repost: req closed and relisted. Legal suffix, comma-vs-dash separator, parenthetical Co-op, and South SF vs SF all differ.",
@@ -50,12 +49,12 @@
       ]
     },
     {
-      "why": "Level suffixes are noise for dedupe: II, L4 and 'Level 4' are the same ladder rung expressed three ways.",
+      "why": "Spellings of one ladder rung still collapse: L4, 'Level 4' and 'Level IV' are the same level written three ways. Real level differences no longer collapse - see must_not_collapse.",
       "postings": [
         {
           "source": "lever",
           "company": "Databricks",
-          "title": "Software Engineer II",
+          "title": "Software Engineer L4",
           "location": "San Francisco, CA",
           "apply_url": "https://lever.co/databricks/1",
           "term_default": "new-grad"
@@ -63,7 +62,7 @@
         {
           "source": "lever",
           "company": "Databricks",
-          "title": "Software Engineer L4",
+          "title": "Software Engineer, Level 4",
           "location": "Mountain View, CA",
           "apply_url": "https://lever.co/databricks/2",
           "term_default": "new-grad"
@@ -71,7 +70,7 @@
         {
           "source": "lever",
           "company": "Databricks",
-          "title": "Software Engineer, Level 4",
+          "title": "Software Engineer Level IV",
           "location": "Bay Area",
           "apply_url": "https://lever.co/databricks/3",
           "term_default": "new-grad"
@@ -143,7 +142,6 @@
       ]
     }
   ],
-
   "must_not_collapse": [
     {
       "why": "Meaningful parentheticals distinguish genuinely different reqs. Over-collapsing here silently loses a posting, which is the worse failure.",
@@ -237,6 +235,35 @@
           "title": "Machine Learning Engineer, New Grad",
           "location": "San Francisco, CA",
           "apply_url": "https://f/2"
+        }
+      ]
+    },
+    {
+      "why": "Numeric levels are real distinctions post-cutover. If SWE 2 reaches the baseline first, SWE 1 - the one worth applying to - becomes invisible.",
+      "postings": [
+        {
+          "source": "ats",
+          "company": "Acme",
+          "title": "Software Engineer 1",
+          "location": "San Francisco, CA",
+          "apply_url": "https://a/1",
+          "term_default": "new-grad"
+        },
+        {
+          "source": "ats",
+          "company": "Acme",
+          "title": "Software Engineer 2",
+          "location": "San Francisco, CA",
+          "apply_url": "https://a/2",
+          "term_default": "new-grad"
+        },
+        {
+          "source": "ats",
+          "company": "Acme",
+          "title": "Software Engineer III",
+          "location": "San Francisco, CA",
+          "apply_url": "https://a/3",
+          "term_default": "new-grad"
         }
       ]
     }

@@ -8,7 +8,7 @@ Decision order matters and is deliberate:
 
     1. baseline / already-notified  -> never send (nothing is "new" twice)
     2. disqualified or tier 3       -> digest only
-    3. backpressure                 -> suppress tier 2 entirely
+    3. tier 2                       -> digest, always (it never pushes)
     4. quiet hours                  -> downgrade tier 1 to silent, never drop
     5. rate cap                     -> overflow rolls to digest, never queues
 
@@ -36,7 +36,7 @@ DIGEST_HOUR = 7
 
 class Decision(str, enum.Enum):
     INTERRUPT = "interrupt"          # tier 1, audible push
-    SILENT = "silent"                # delivered, no sound
+    SILENT = "silent"                # delivered without sound (quiet-hours tier 1)
     DIGEST = "digest"                # rolled into the daily digest
     SKIP = "skip"                    # never send
 
@@ -91,12 +91,16 @@ def decide(posting: Posting, ctx: NotifyContext, *, sent_this_run: int = 0) -> N
         return NotifyDecision(Decision.DIGEST, "tier 3")
 
     if posting.tier is Tier.SILENT:
+        # Tier 2 no longer pushes at all. 30 notifications in a single run was
+        # notification fatigue arriving early, and at ~70 new postings a day it
+        # only gets worse. Tier 2 is a digest tier; tier 1 keeps the interrupt.
         if ctx.backpressure:
             return NotifyDecision(
                 Decision.DIGEST,
-                f"backpressure: {ctx.backlog_unapplied} unapplied > {BACKPRESSURE_THRESHOLD}",
+                f"tier 2 digest-only; backpressure "
+                f"({ctx.backlog_unapplied} unapplied > {BACKPRESSURE_THRESHOLD})",
             )
-        return NotifyDecision(Decision.SILENT, "tier 2", priority=2)
+        return NotifyDecision(Decision.DIGEST, "tier 2 digest-only")
 
     # --- tier 1 ---
     if ctx.quiet:

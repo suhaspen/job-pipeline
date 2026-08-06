@@ -63,6 +63,7 @@ class Disqualifier(str, enum.Enum):
     CITIZENSHIP = "citizenship"
     GRAD_DATE_MISMATCH = "grad-date-mismatch"
     PHD_REQUIRED = "phd-required"
+    MASTERS_REQUIRED = "masters-required"
     SUMMER_ONLY = "summer-only"
     NO_SPONSORSHIP = "no-sponsorship"
 

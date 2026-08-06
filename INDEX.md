@@ -1,6 +1,6 @@
 # Live postings
 
-1 open · regenerated every run · last updated 2026-08-06 19:07 UTC
+1 open · regenerated every run · last updated 2026-08-06 19:47 UTC
 
 `index!` means the link resolves to a careers page rather than the req; `dead!` means it does not resolve at all. Both are treated as expiry signals.
 

@@ -102,23 +102,76 @@ _SEASON_YEAR_RE = re.compile(
     r"\b(fall|autumn|winter|spring|summer)\s*(?:of\s*)?"
     r"(?:'|20)?(\d{2})(?:\s*[-/]\s*(?:'|20)?\d{2})?\b"
 )
+# Reversed order: "2027 Summer", "2026 Internship - Fall". Seen across TikTok
+# and Red Bull postings, and previously undetected because the season-first
+# pattern could not match it.
+_YEAR_SEASON_RE = re.compile(
+    r"\b20(\d{2})\b[^.|]{0,24}?\b(fall|autumn|winter|spring|summer)\b"
+)
 _BARE_YEAR_RE = re.compile(r"\b20(2[4-9]|3[0-9])\b")
 _CLASS_OF_RE = re.compile(r"\bclass of\s*(?:'|20)?\d{2}\b")
 
 # Requisition ids: "req-12345", "#4821", "job id 9912", "(R-10422)".
 _REQ_ID_RE = re.compile(r"\b(?:req(?:uisition)?|job)?\s*(?:id|#)?\s*[-#]?\s*r?\d{3,}\b")
 
-# Trailing level markers. Roman numerals up to VII, and the ladder shorthands
-# ("L4", "E3", "T5", "IC3", "SDE 2", "Level 4", or a bare trailing digit).
+# Trailing level markers, captured rather than discarded.
+#
+# Before the cutover these were stripped outright, so "Software Engineer 1" and
+# "Software Engineer 2" shared a key. That was the right trade then - it
+# collapsed reposts. It is the wrong one now: whichever variant reaches the
+# baseline first makes the other invisible forever, and the entry rung is
+# exactly the one worth applying to.
+#
+# Spelling variants still collapse; real levels do not. "1", "I", "One" and
+# "Level 0" are all the entry rung, and so is a title with no level at all.
 _LEVEL_TAIL_RE = re.compile(
     r"\s+(?:"
-    r"(?:level|lvl|grade|band)\s*\d{1,2}"
-    r"|[lept]\s?\d{1,2}"
-    r"|ic\s?\d{1,2}"
-    r"|i{1,3}|iv|vi{0,2}"
-    r"|\d{1,2}"
+    r"(?:level|lvl|grade|band)\s*(?P<lw>i{1,3}|iv|vi{0,2}|\d{1,2})"
+    r"|(?:ic|[lept])\s?(?P<lc>\d{1,2})"
+    r"|(?P<lr>i{1,3}|iv|vi{0,2})"
+    r"|(?P<ln>\d{1,2})"
+    r"|(?P<lt>one|two|three|four|five|six|seven)"
     r")$"
 )
+
+_ROMAN_LEVELS = {"i": 1, "ii": 2, "iii": 3, "iv": 4, "v": 5, "vi": 6, "vii": 7}
+_WORD_LEVELS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+}
+# Level 0 and Level 1 are the same entry rung, and so is an unlevelled title.
+ENTRY_LEVEL = 1
+
+
+def _level_value(match: re.Match[str]) -> int | None:
+    for group in ("lw", "lc", "lr", "ln", "lt"):
+        token = match.group(group)
+        if not token:
+            continue
+        if token.isdigit():
+            return int(token)
+        return _ROMAN_LEVELS.get(token) or _WORD_LEVELS.get(token)
+    return None
+
+
+def split_level(title_norm: str) -> tuple[str, int | None]:
+    """Peel trailing level markers off, returning the stem and the level.
+
+    The outermost marker wins for "Engineer II L4": that is the one the source
+    put last, and mixing two ladders in one title is rare enough that guessing
+    the trailing one is the safe read.
+    """
+    level: int | None = None
+    stem = title_norm
+    while True:
+        match = _LEVEL_TAIL_RE.search(stem)
+        if not match:
+            break
+        value = _level_value(match)
+        if level is None:
+            level = value
+        stem = stem[: match.start()].strip()
+    return stem, level
+
 
 # Tokens that carry no distinguishing information for a dedupe key. Term-bearing
 # words go here because `term` is already a separate key component - leaving
@@ -223,11 +276,9 @@ def normalize_title(title: str | None) -> str:
     tokens = [t for t in s.split() if t not in _NOISE_TOKENS and t not in _SEASONS]
     s = " ".join(tokens)
 
-    # Levels sit at the tail; strip repeatedly for "Engineer II L4".
-    prev = None
-    while prev != s:
-        prev = s
-        s = _LEVEL_TAIL_RE.sub("", s).strip()
+    # Levels sit at the tail. The rung is kept in the key so entry-level and
+    # mid-level reqs at the same company stay distinct.
+    s, level = split_level(s)
 
     # Collapse duplicate adjacent tokens introduced by the phrase map
     # ("engineer engineer" from "Software Engineering Engineer").
@@ -235,7 +286,13 @@ def normalize_title(title: str | None) -> str:
     for t in s.split():
         if not out or out[-1] != t:
             out.append(t)
-    return " ".join(out)
+    stem = " ".join(out)
+
+    # Entry rung is the default, so an unlevelled title and an explicit
+    # "1" / "I" / "One" / "Level 0" all key identically.
+    if level is not None and level > ENTRY_LEVEL:
+        return f"{stem} l{level}"
+    return stem
 
 
 # --------------------------------------------------------------------------
@@ -541,6 +598,12 @@ _NEW_GRAD_MARKERS = (
     "early in career", "early talent",
 )
 
+# "Graduate Trader", "Graduate Hardware Engineer" - the word leads the title and
+# names the cohort, not a degree requirement. Distinct from "Graduate Research
+# Intern", which is an internship, so the intern check has to win.
+_GRADUATE_PREFIX_RE = re.compile(r"^graduate\s+(?!research\b)")
+_INTERN_RE = re.compile(r"\b(intern|internship|co op|coop)\b")
+
 
 def infer_term(
     title: str | None, description: str | None = None, default: str | None = None
@@ -566,10 +629,19 @@ def infer_term(
             term = _SEASON_TO_TERM.get((season, year))
             if term:
                 return term
+        for m in _YEAR_SEASON_RE.finditer(s):
+            year = 2000 + int(m.group(1))
+            term = _SEASON_TO_TERM.get((m.group(2), year))
+            if term:
+                return term
         if any(marker in s for marker in _NEW_GRAD_MARKERS):
             return Term.NEW_GRAD
         # "Class of 2027" / bare "2027" alongside grad wording.
         if re.search(r"\bclass of (?:'|20)?27\b", s):
+            return Term.NEW_GRAD
+        # A title that opens with "Graduate " and is not an internship is a
+        # new-grad req, whatever else it says.
+        if _GRADUATE_PREFIX_RE.search(s) and not _INTERN_RE.search(s):
             return Term.NEW_GRAD
 
     if default:

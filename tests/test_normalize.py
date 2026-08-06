@@ -57,20 +57,47 @@ class TestCompany:
 
 class TestTitle:
     @pytest.mark.parametrize(
-        "raw,expected",
+        "raw",
         [
-            ("Software Engineer II", "software engineer"),
-            ("Software Engineer L4", "software engineer"),
-            ("Software Engineer, Level 4", "software engineer"),
-            ("Software Engineer III", "software engineer"),
-            ("Software Engineer IV", "software engineer"),
-            ("Software Engineer E5", "software engineer"),
-            ("Software Engineer, IC3", "software engineer"),
-            ("Software Engineer II L4", "software engineer"),
+            "Software Engineer",
+            "Software Engineer 1",
+            "Software Engineer I",
+            "Software Engineer One",
+            "Software Engineer - Level 0",
+            "Software Engineer, Level 1",
         ],
     )
-    def test_level_suffixes_stripped(self, raw, expected):
+    def test_entry_rung_spellings_all_collapse(self, raw):
+        """Spellings of the entry rung are one key, including no level at all."""
+        assert normalize_title(raw) == "software engineer"
+
+    @pytest.mark.parametrize(
+        "raw,expected",
+        [
+            ("Software Engineer 2", "software engineer l2"),
+            ("Software Engineer II", "software engineer l2"),
+            ("Software Engineer Two", "software engineer l2"),
+            ("Software Engineer, Level 2", "software engineer l2"),
+            ("Software Engineer 3", "software engineer l3"),
+            ("Software Engineer III", "software engineer l3"),
+            ("Software Engineer L4", "software engineer l4"),
+            ("Software Engineer, Level 4", "software engineer l4"),
+            ("Software Engineer Level IV", "software engineer l4"),
+            ("Software Engineer, IC3", "software engineer l3"),
+            ("Software Engineer E5", "software engineer l5"),
+        ],
+    )
+    def test_real_levels_are_distinguished(self, raw, expected):
+        """Post-cutover this matters: if SWE 2 baselines the key first, SWE 1 -
+        the one actually worth applying to - would be invisible forever."""
         assert normalize_title(raw) == expected
+
+    def test_entry_and_mid_level_do_not_collapse(self):
+        assert normalize_title("Software Engineer 1") != normalize_title("Software Engineer 2")
+        assert normalize_title("Software Engineer") != normalize_title("Software Engineer II")
+
+    def test_outermost_level_wins_for_mixed_ladders(self):
+        assert normalize_title("Software Engineer II L4") == "software engineer l4"
 
     @pytest.mark.parametrize(
         "raw",

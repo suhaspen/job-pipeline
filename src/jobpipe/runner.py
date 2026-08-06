@@ -21,8 +21,11 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from jobpipe.config import FILTER_VERSION, INDEX_PATH, RUN_REPORT_PATH, Config
+from jobpipe.config import (
+    BASELINE_PATH, EXPORT_PATH, FILTER_VERSION, INDEX_PATH, RUN_REPORT_PATH, Config,
+)
 from jobpipe.health import STALE_304_DAYS, evaluate_all
+from jobpipe import export as jsonl_export
 from jobpipe import index_md
 from jobpipe.linkcheck import LinkStatus, check as check_link
 from jobpipe.logging_ import RunLogger
@@ -107,6 +110,7 @@ class RunReport:
     links_by_source: dict[str, dict[str, int]] = field(default_factory=dict)
     url_upgrades: int = 0
     scorer: dict[str, Any] = field(default_factory=dict)
+    export_changed: bool = False
     scheduled_for: str | None = None
     schedule_delay_s: float | None = None
     dry_seen_ids: set[str] = field(default_factory=set, repr=False)
@@ -133,6 +137,7 @@ class RunReport:
             "links_by_source": self.links_by_source,
             "url_upgrades": self.url_upgrades,
             "scorer": self.scorer,
+            "export_changed": self.export_changed,
             "scheduled_for": self.scheduled_for,
             "schedule_delay_s": self.schedule_delay_s,
         }
@@ -170,6 +175,11 @@ def run(
 
     log.info("run.start", dry_run=cfg.dry_run, ntfy=redact(cfg.ntfy_topic))
     store = SqliteStore(cfg.db_path)
+    # A CI container starts with no database; the committed JSONL is the record.
+    if not store.recent(limit=1) and not store.baseline_count():
+        restored = jsonl_export.restore(store, cfg.export_path, cfg.baseline_path)
+        if restored:
+            log.info("restore.from_jsonl", postings=restored)
     http = HttpClient(store=None if cfg.dry_run else store)
     profile = EligibilityProfile.load()
     baseline = store.baseline_ids()
@@ -273,7 +283,12 @@ def run(
         if not cfg.dry_run:
             _notify(store, cfg, report, fresh_ids, log, clock, notifier)
             report.healthcheck_ok = ping_healthcheck(cfg.healthcheck_url)
-            index_md.write(store.recent(limit=10**6), INDEX_PATH, now=clock)
+            live = store.recent(limit=10**6)
+            index_md.write(live, cfg.index_path, now=clock)
+            report.export_changed = jsonl_export.write(live, cfg.export_path)
+            report.export_changed |= jsonl_export.write_baseline(
+                store.baseline_ids(), cfg.baseline_path
+            )
             store.prune_raw(keep_runs=3)
             store.record_run(report.to_dict())
             store.vacuum()

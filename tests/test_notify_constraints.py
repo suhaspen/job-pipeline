@@ -134,18 +134,43 @@ class TestRateCap:
         result = C.gate(batch, ctx(now=pt(hour=10)))
         assert [p.id for p in result.interrupting] == ["high", "mid", "low"]
 
-    def test_tier2_is_not_rate_capped(self):
+    def test_tier2_is_not_rate_capped_because_it_never_pushes(self):
         batch = [posting(f"p{i}", tier=Tier.SILENT) for i in range(10)]
         result = C.gate(batch, ctx(now=pt(hour=10), interrupting=3))
-        assert len(result.silent) == 10
+        assert len(result.digest) == 10
+        assert result.suppressed_rate_cap == 0
+
+
+class TestTier2IsDigestOnly:
+    """Tier 2 never pushes.
+
+    30 notifications in one run was fatigue arriving early; at ~70 new postings
+    a day it only gets worse. Tier 1 keeps the interrupt and the 3/hour cap.
+    """
+
+    @pytest.mark.parametrize("hour", [3, 10, 23])
+    @pytest.mark.parametrize("backlog", [0, 100])
+    def test_never_sends_under_any_conditions(self, hour, backlog):
+        d = C.decide(posting(tier=Tier.SILENT), ctx(now=pt(hour=hour), backlog=backlog))
+        assert d.decision is C.Decision.DIGEST
+        assert d.sends_now is False
+
+    def test_a_hundred_tier2_postings_produce_zero_pushes(self):
+        batch = [posting(f"p{i}", tier=Tier.SILENT) for i in range(100)]
+        result = C.gate(batch, ctx(now=pt(hour=10)))
+        assert result.interrupting == []
+        assert result.silent == []
+        assert len(result.digest) == 100
+
+    def test_tier2_does_not_consume_rate_cap_slots(self):
+        batch = [posting(f"t2-{i}", tier=Tier.SILENT) for i in range(10)]
+        batch += [posting("t1", tier=Tier.INTERRUPTING)]
+        result = C.gate(batch, ctx(now=pt(hour=10)))
+        assert len(result.interrupting) == 1
 
 
 class TestBackpressure:
-    def test_below_threshold_tier2_sends(self):
-        d = C.decide(posting(tier=Tier.SILENT), ctx(backlog=15))
-        assert d.decision is C.Decision.SILENT
-
-    def test_above_threshold_tier2_suppressed(self):
+    def test_backpressure_is_noted_for_tier2(self):
         d = C.decide(posting(tier=Tier.SILENT), ctx(backlog=16))
         assert d.decision is C.Decision.DIGEST
         assert "backpressure" in d.reason

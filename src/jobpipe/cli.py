@@ -101,6 +101,109 @@ def _cmd_recent(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_digest(args: argparse.Namespace) -> int:
+    """Daily 07:00 PT digest: everything from the last 24h that did not push."""
+    from datetime import timedelta
+
+    from jobpipe.index_md import TERM_HEADING, TERM_ORDER
+    from jobpipe.models import Status, Tier, utcnow
+    from jobpipe.notify import BACKPRESSURE_THRESHOLD, NtfyClient
+
+    cfg = load_config()
+    since = utcnow() - timedelta(hours=args.hours)
+    with SqliteStore(cfg.db_path) as store:
+        rows = [
+            p for p in store.recent(limit=10**6, since=since)
+            if p.status not in (Status.EXPIRED, Status.SKIPPED)
+        ]
+        backlog = store.backlog_unapplied()
+        report = (store.runs(since=since) or [{}])[-1]
+
+    by_tier: dict[int, list] = {1: [], 2: [], 3: []}
+    for p in rows:
+        by_tier[int(p.tier)].append(p)
+
+    lines = [f"{len(rows)} new in the last {args.hours}h"]
+    for tier in (1, 2, 3):
+        group = sorted(by_tier[tier], key=lambda p: -p.score)
+        if not group:
+            continue
+        label = {1: "TIER 1", 2: "TIER 2", 3: "digest"}[tier]
+        lines.append(f"\n{label} ({len(group)})")
+        for p in group[: args.limit]:
+            lines.append(f"  {p.score:>3} {p.company[:18]} - {p.title[:40]} [{p.term.value}]")
+        if len(group) > args.limit:
+            lines.append(f"  ...and {len(group) - args.limit} more - see INDEX.md")
+
+    notif = report.get("notifications") or {}
+    suppressed = sum(v for k, v in notif.items() if k.startswith("suppressed"))
+    if suppressed:
+        lines.append(
+            f"\nsuppressed: {notif.get('suppressed_rate_cap', 0)} rate-cap, "
+            f"{notif.get('suppressed_quiet_hours', 0)} quiet-hours, "
+            f"{notif.get('suppressed_backpressure', 0)} backpressure"
+        )
+    lines.append(f"backlog: {backlog} unapplied")
+    if backlog > BACKPRESSURE_THRESHOLD:
+        lines.append(f"BACKPRESSURE ACTIVE (> {BACKPRESSURE_THRESHOLD}) - tier 2 suppressed")
+    bad = [p for p in rows if p.link_status in ("dead", "redirected_to_index")]
+    if bad:
+        lines.append(f"{len(bad)} posting(s) with a dead or index-redirected link")
+    lines.append("\nMark applied: jobpipe applied <id>")
+
+    body = "\n".join(lines)
+    if args.stdout or not cfg.ntfy_topic:
+        print(body)
+        return 0
+    NtfyClient(cfg).send_text(
+        f"Daily digest - {len(rows)} new", body, priority=2, tags=["newspaper"]
+    )
+    print("digest sent")
+    return 0
+
+
+def _cmd_migrate_levels(args: argparse.Namespace) -> int:
+    """Re-key the corpus after splitting numeric levels out of the dedupe key."""
+    from jobpipe.migrate import migrate
+
+    cfg = load_config()
+    csv_path = REPO_ROOT / "data" / "backlog-review.csv"
+    if not csv_path.exists():
+        print(f"STOP: {csv_path} is missing.", file=sys.stderr)
+        print("Baseline ids cannot be re-derived without it - the baseline stores",
+              file=sys.stderr)
+        print("ids only. Restore the file before migrating.", file=sys.stderr)
+        return 2
+
+    with SqliteStore(cfg.db_path) as store:
+        report = migrate(store, csv_path, write=args.write)
+
+    print(f"{'APPLIED' if args.write else 'DRY RUN'}\n")
+    print(f"  csv rows read              {report.csv_rows}")
+    print(f"  distinct ids from csv      {len(report.csv_ids)}")
+    print(f"  suppression ids carried    {len(report.suppression_ids)}")
+    print(f"  old baseline               {report.old_baseline}")
+    print(f"  old ids not re-derivable   {report.retained_unmapped}  (retained, not notified)")
+    print(f"  new baseline               {report.new_baseline}")
+    print(f"  delta                      {report.delta:+d}")
+    print(f"  live postings re-keyed     {report.postings_id_changed} of {report.postings_remapped}")
+
+    if report.collisions:
+        print("\nABORTED - a finer key can only split rows, never merge them:", file=sys.stderr)
+        for c in report.collisions[:10]:
+            print(f"    {c}", file=sys.stderr)
+        return 1
+    for e in report.errors[:10]:
+        print(f"  error: {e}", file=sys.stderr)
+
+    if report.new_baseline < report.old_baseline:
+        print("\nWARNING: baseline shrank. Some ids would stop suppressing.", file=sys.stderr)
+        return 1
+    if not args.write:
+        print("\nRe-run with --write to apply.")
+    return 0
+
+
 def _cmd_audit_exclusions(args: argparse.Namespace) -> int:
     """Random sample of what the eligibility gate rejected.
 
@@ -530,6 +633,16 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser(
         "cutover", help="export backlog, collapse to baseline, start forward-only"
     ).set_defaults(func=_cmd_cutover)
+
+    dig = sub.add_parser("digest", help="send the daily digest")
+    dig.add_argument("--hours", type=int, default=24)
+    dig.add_argument("--limit", type=int, default=12)
+    dig.add_argument("--stdout", action="store_true", help="print instead of pushing")
+    dig.set_defaults(func=_cmd_digest)
+
+    mig = sub.add_parser("migrate-levels", help="re-key after splitting numeric levels")
+    mig.add_argument("--write", action="store_true", help="apply (default is a dry run)")
+    mig.set_defaults(func=_cmd_migrate_levels)
 
     exc = sub.add_parser(
         "audit-exclusions", help="sample what the eligibility gate rejected"

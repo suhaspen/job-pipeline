@@ -102,6 +102,34 @@ _YEARS_RE = re.compile(
 MAX_YEARS_EXPERIENCE = 3
 
 
+# Titles that are new-grad-eligible but carry no level marker a seniority rule
+# can read. Measured against the excluded set: 80 "Member of Technical Staff"
+# postings were being rejected as senior-level purely because the phrase
+# contains the word "staff".
+#
+# Allowlisted phrases are removed before the seniority check rather than
+# bypassing it, so "Senior Member of Technical Staff" is still rejected on the
+# "senior" that remains.
+UNCONVENTIONAL_TITLES = (
+    "member of technical staff", "mts",
+    "research engineer", "research scientist",
+    "residency", "resident", "fellowship", "fellow",
+    "apprentice", "rotational", "early career", "early careers",
+    "associate software engineer", "engineer i", "engineer 1",
+    "co op student", "coop student", "industrial placement",
+    "placement student", "6 month intern", "12 month intern",
+    "intern 6 month", "intern 12 month",
+)
+_ALLOWLIST_RE = re.compile(
+    "|".join(rf"\b{re.escape(p)}\b" for p in UNCONVENTIONAL_TITLES)
+)
+# Seniority that still rejects an allowlisted title.
+_EXPLICIT_SENIOR_RE = re.compile(
+    r"\b(?:senior|sr|principal|distinguished|director|vp|vice president|head of|"
+    r"chief|postdoc|postdoctoral|manager|supervisor|iii|iv|lead)\b"
+)
+
+
 @dataclass(slots=True)
 class PrefilterResult:
     keep: bool
@@ -148,6 +176,15 @@ def evaluate(posting: RawPosting, *, strict: bool = False) -> PrefilterResult:
 
     if early:
         return PrefilterResult(True, "early-career")
+
+    # Unconventional but new-grad-eligible titles. The phrase is removed before
+    # the seniority check so "Member of Technical Staff" survives while
+    # "Senior Member of Technical Staff" does not.
+    if _ALLOWLIST_RE.search(title):
+        residue = _ALLOWLIST_RE.sub(" ", title)
+        if not _EXPLICIT_SENIOR_RE.search(residue):
+            return PrefilterResult(True, "allowlist-title")
+        return PrefilterResult(False, "senior-level")
 
     if _SENIOR_RE.search(title):
         return PrefilterResult(False, "senior-level")

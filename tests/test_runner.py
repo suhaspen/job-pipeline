@@ -41,7 +41,13 @@ def posting(title="Software Engineer, New Grad", company="Acme", location="San F
 
 @pytest.fixture
 def cfg(tmp_path):
-    return Config(db_path=tmp_path / "t.db", companies=[])
+    return Config(
+        db_path=tmp_path / "t.db",
+        export_path=tmp_path / "postings.jsonl",
+        baseline_path=tmp_path / "baseline.txt",
+        index_path=tmp_path / "INDEX.md",
+        companies=[],
+    )
 
 
 @pytest.fixture
@@ -138,7 +144,10 @@ class TestPrefilterIntegration:
         lenient = _run(cfg, [StubSource("a", list(unleveled))], report_path, monkeypatch)
         assert lenient.sources[0].fetched == 1
 
-        cfg2 = Config(db_path=cfg.db_path.parent / "t2.db")
+        cfg2 = Config(db_path=cfg.db_path.parent / "t2.db",
+                      export_path=cfg.db_path.parent / "e2.jsonl",
+                      baseline_path=cfg.db_path.parent / "b2.txt",
+                      index_path=cfg.db_path.parent / "I2.md")
         strict = _run(cfg2, [StubSource("a", list(unleveled), strict=True)], report_path, monkeypatch)
         assert strict.sources[0].fetched == 0
 
@@ -171,7 +180,10 @@ class TestDryRun:
         cfg.dry_run = True
         dry = _run(cfg, [StubSource("a", list(made))], report_path, monkeypatch)
 
-        cfg2 = Config(db_path=tmp_path / "real.db")
+        cfg2 = Config(db_path=tmp_path / "real.db",
+                      export_path=tmp_path / "real.jsonl",
+                      baseline_path=tmp_path / "realb.txt",
+                      index_path=tmp_path / "realI.md")
         real = _run(cfg2, [StubSource("a", list(made))], report_path, monkeypatch)
         assert dry.total_new == real.total_new
 
@@ -409,10 +421,12 @@ class TestSuppressionLogging:
         self._cutover(cfg, report_path, monkeypatch,
                       [posting(company="Acme", title="Software Engineer")])
 
+        # Spellings of one rung, which still share a key. Real level
+        # differences no longer collapse, so they cannot be used here.
         variants = [
             posting(company="Acme", title="Software Engineer 1"),
-            posting(company="Acme", title="Software Engineer II"),
-            posting(company="Acme", title="Software Engineer, Level 3"),
+            posting(company="Acme", title="Software Engineer I"),
+            posting(company="Acme", title="Software Engineer - Level 0"),
         ]
         _run(cfg, [StubSource("a", variants)], report_path, monkeypatch)
 

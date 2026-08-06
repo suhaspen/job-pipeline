@@ -124,6 +124,20 @@ _PHD_REQUIRED = re.compile(
     re.IGNORECASE,
 )
 
+# A Master's requirement is disqualifying for a BS candidate, but only when a
+# Bachelor's is NOT also accepted. "Bachelor's or Master's" is the common
+# phrasing and is perfectly open to them.
+_MASTERS_REQUIRED = re.compile(
+    r"\b(?:master'?s?|m\.?s\.?|msc|m\.?eng)\b[^.]{0,60}?\b(?:required|require[sd]?|"
+    r"must\s+have|minimum)\b"
+    r"|\b(?:require[sd]?|must\s+have|minimum\s+of)\b[^.]{0,60}?"
+    r"\b(?:master'?s?|m\.?s\.?|msc|m\.?eng)\b",
+    re.IGNORECASE,
+)
+_BACHELORS_OK = re.compile(
+    r"\b(?:bachelor'?s?|b\.?s\.?|b\.?a\.?|undergraduate)\b", re.IGNORECASE
+)
+
 _WINDOW = 140
 
 
@@ -205,11 +219,19 @@ def evaluate(
         if _NO_SPONSORSHIP.search(text) or sponsorship == "Does Not Offer Sponsorship":
             out.append(Disqualifier.NO_SPONSORSHIP)
 
-    # --- PhD. The structured field is authoritative when present.
-    if degrees and set(degrees) == {"PhD"}:
-        out.append(Disqualifier.PHD_REQUIRED)
-    elif not degrees and _PHD_REQUIRED.search(text):
-        out.append(Disqualifier.PHD_REQUIRED)
+    # --- degree ceiling. The structured field is authoritative when present.
+    degree_set = set(degrees)
+    if degree_set:
+        if degree_set == {"PhD"}:
+            out.append(Disqualifier.PHD_REQUIRED)
+        elif "Bachelor's" not in degree_set and "Associate's" not in degree_set:
+            # Master's-and-above only: out of reach for a BS candidate.
+            out.append(Disqualifier.MASTERS_REQUIRED)
+    else:
+        if _PHD_REQUIRED.search(text):
+            out.append(Disqualifier.PHD_REQUIRED)
+        elif _MASTERS_REQUIRED.search(text) and not _BACHELORS_OK.search(text):
+            out.append(Disqualifier.MASTERS_REQUIRED)
 
     # --- term the candidate is not hiring for
     if term is not None and profile.wanted_terms:
