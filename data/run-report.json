@@ -1,22 +1,22 @@
 {
-  "run_id": "20260807T200614Z",
-  "started_at": "2026-08-07T20:06:14.610187+00:00",
-  "duration_s": 66.34,
+  "run_id": "20260807T210904Z",
+  "started_at": "2026-08-07T21:09:04.717638+00:00",
+  "duration_s": 53.87,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
       "fetched": 1270,
-      "raw_fetched": 1884,
+      "raw_fetched": 1883,
       "new": 0,
       "errors": [],
-      "latency_ms": 504,
+      "latency_ms": 232,
       "not_modified": false,
-      "filtered_out": 614,
+      "filtered_out": 613,
       "baselined": 1171,
       "term_unknown_rate": 0.0,
       "warnings": [
-        "18204 records, 15607 inactive, 713 off-category, 1884 kept"
+        "18204 records, 15608 inactive, 713 off-category, 1883 kept"
       ]
     },
     {
@@ -26,7 +26,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 97,
+      "latency_ms": 53,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -40,7 +40,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 159,
+      "latency_ms": 92,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,19 +50,19 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 132,
-      "raw_fetched": 7712,
+      "fetched": 241,
+      "raw_fetched": 11171,
       "new": 0,
       "errors": [],
-      "latency_ms": 38021,
+      "latency_ms": 14345,
       "not_modified": false,
-      "filtered_out": 7580,
-      "baselined": 55,
-      "term_unknown_rate": 0.644,
+      "filtered_out": 10930,
+      "baselined": 92,
+      "term_unknown_rate": 0.697,
       "warnings": []
     }
   ],
-  "deduped_out": 176,
+  "deduped_out": 248,
   "tiers": {
     "1": 0,
     "2": 0,
@@ -76,12 +76,12 @@
   },
   "backlog_unapplied": 31,
   "warnings": [
-    "ats: term unknown for 64% of postings (>10%)"
+    "ats: term unknown for 70% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2528,
-  "excluded_recorded": 8194,
-  "suppressed_by_baseline": 1226,
+  "excluded_recorded": 11543,
+  "suppressed_by_baseline": 1263,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -118,7 +118,7 @@
       "unchecked": 10
     }
   },
-  "url_upgrades": 10,
+  "url_upgrades": 12,
   "scorer": {
     "calls": 0,
     "cached": 0,
