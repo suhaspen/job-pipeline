@@ -290,3 +290,45 @@ against the previous file before committing.
 The fixture populates every field with a distinguishable value on purpose: a
 round-trip test whose fixture leaves fields at `None` passes whether or not
 they survive, which is how the original drift went unnoticed.
+
+---
+
+## Phase D — the two index views
+
+### D1 — Date-primary ordering was already the behaviour
+The brief asked to change `INDEX.md` from score-first to date-first. It was
+already `(posted_at, score)` descending, in both `index_md.render` and
+`jobpipe list`. What made it look score-blind was the display: `posted_age`
+collapses everything from the last hour into "just posted", so a correct
+date-descending sort shows a score of 0 above a score of 70 with nothing
+visible to explain it.
+
+The fix was therefore a column, not a sort. `INDEX.md` now carries the posted
+date *and* the age, and the ordering is auditable from the page. This is the
+same lesson the Sheets mirror encodes by storing a real date value rather than
+a rendered string, for the same underlying reason: a rendered age cannot be
+ordered, compared or checked.
+
+### D2 — The 48-hour section requires a real `posted_at`
+Never falls back to `first_seen_at`. That fallback would put every backfilled
+req into "posted in the last 48 hours" on the day it was discovered, which is
+exactly the claim the section exists to make. All 422 live postings currently
+carry a `posted_at`, so nothing is lost to this today.
+
+### D3 — The fresh section follows each file's sort, and says so
+Flat across terms in both files, newest-first in `INDEX.md` and
+highest-score-first in `INDEX-by-score.md`, with the ordering named in the
+header line of each. The alternative — pinning it to newest-first in both —
+makes the by-score file disagree with its own heading.
+
+### D4 — Term grouping survives both sorts
+Off-cycle co-ops stay above new grad in both files and in `jobpipe list
+--sort score`. They are scarce enough that the grouping is the point; a
+higher-scoring new grad req must not bury a fall 2026 co-op.
+
+### D5 — Two files rather than one sortable table
+The consumer is GitHub's markdown renderer, which does not sort. `write_both`
+writes them together so a caller cannot update one and leave the other
+disagreeing about what is live, and `tests/test_workflows.py` asserts every
+regenerated path is in the workflow's `git add` line — a generated file that
+is never staged looks green and stays stale.

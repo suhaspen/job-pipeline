@@ -39,6 +39,7 @@ def cfg(tmp_path):
         export_path=tmp_path / "postings.jsonl",
         baseline_path=tmp_path / "baseline.txt",
         index_path=tmp_path / "INDEX.md",
+        index_by_score_path=tmp_path / "INDEX-by-score.md",
         companies=[ATSCompany(name="Anthropic", ats="greenhouse", token="a", target=True)],
     )
 

@@ -179,7 +179,8 @@ export is a live record of where you are applying.
 | `data/postings.jsonl` | Source of truth. Sorted by id, stable key order, diffs line-by-line |
 | `data/baseline.txt` | Ids seen before cutover; one per line |
 | `data/run-report.json` | Latest run outcome |
-| `INDEX.md` | Human view of live postings |
+| `INDEX.md` | Live postings, newest first (score breaks ties) |
+| `INDEX-by-score.md` | The same rows ordered by fit |
 
 `data/postings.db` is **not** committed — it is a rebuildable cache. SQLite
 rewrites a multi-megabyte blob on every commit even for a one-row change, so

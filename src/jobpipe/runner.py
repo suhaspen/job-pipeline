@@ -312,7 +312,9 @@ def run(
             _notify(store, cfg, report, fresh_ids, log, clock, notifier)
             report.healthcheck_ok = ping_healthcheck(cfg.healthcheck_url)
             live = store.recent(limit=10**6)
-            index_md.write(live, cfg.index_path, now=clock)
+            index_md.write_both(
+                live, cfg.index_path, cfg.index_by_score_path, now=clock
+            )
             report.export_changed = jsonl_export.write(live, cfg.export_path)
             report.export_changed |= jsonl_export.write_baseline(
                 store.baseline_ids(), cfg.baseline_path

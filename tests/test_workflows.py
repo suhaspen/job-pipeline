@@ -167,3 +167,28 @@ class TestActionVersions:
                 assert int(ref[1:].split(".")[0]) >= floor, (
                     f"{name}: {uses} still ships a Node 20 entrypoint"
                 )
+
+
+class TestCommitCoverage:
+    """Every file the pipeline regenerates has to be in the `git add` line.
+
+    A generated file that is written but never staged is invisible: the run
+    looks green, the repo never changes, and the omission surfaces as "why is
+    this file always stale" weeks later.
+    """
+
+    def test_every_regenerated_path_is_staged(self):
+        from jobpipe import config as cfg
+
+        wf = load("poll.yml")
+        commit = [
+            s for s in wf["jobs"]["poll"]["steps"]
+            if "git add" in (s.get("run") or "")
+        ][0]["run"]
+        regenerated = [
+            cfg.EXPORT_PATH, cfg.BASELINE_PATH, cfg.RUN_REPORT_PATH,
+            cfg.INDEX_PATH, cfg.INDEX_BY_SCORE_PATH,
+        ]
+        for path in regenerated:
+            rel = path.relative_to(cfg.REPO_ROOT).as_posix()
+            assert rel in commit, f"{rel} is regenerated every run but never staged"

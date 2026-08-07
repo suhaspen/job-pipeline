@@ -47,6 +47,7 @@ def cfg(tmp_path):
         export_path=tmp_path / "postings.jsonl",
         baseline_path=tmp_path / "baseline.txt",
         index_path=tmp_path / "INDEX.md",
+        index_by_score_path=tmp_path / "INDEX-by-score.md",
         companies=[],
     )
 
@@ -149,7 +150,8 @@ class TestPrefilterIntegration:
                       http_cache_path=cfg.db_path.parent / "hc2.db",
                       export_path=cfg.db_path.parent / "e2.jsonl",
                       baseline_path=cfg.db_path.parent / "b2.txt",
-                      index_path=cfg.db_path.parent / "I2.md")
+                      index_path=cfg.db_path.parent / "I2.md",
+                      index_by_score_path=cfg.db_path.parent / "I2s.md")
         strict = _run(cfg2, [StubSource("a", list(unleveled), strict=True)], report_path, monkeypatch)
         assert strict.sources[0].fetched == 0
 
@@ -186,7 +188,8 @@ class TestDryRun:
                       http_cache_path=tmp_path / "real-hc.db",
                       export_path=tmp_path / "real.jsonl",
                       baseline_path=tmp_path / "realb.txt",
-                      index_path=tmp_path / "realI.md")
+                      index_path=tmp_path / "realI.md",
+                      index_by_score_path=tmp_path / "realIs.md")
         real = _run(cfg2, [StubSource("a", list(made))], report_path, monkeypatch)
         assert dry.total_new == real.total_new
 

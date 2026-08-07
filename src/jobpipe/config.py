@@ -26,6 +26,10 @@ DEFAULT_COMPANIES = REPO_ROOT / "companies.json"
 LOG_DIR = REPO_ROOT / "logs"
 RUN_REPORT_PATH = REPO_ROOT / "data" / "run-report.json"
 INDEX_PATH = REPO_ROOT / "INDEX.md"
+# Same rows, ordered by fit rather than recency. Two files rather than one
+# sortable table because the consumer is GitHub's markdown renderer, which
+# does not sort.
+INDEX_BY_SCORE_PATH = REPO_ROOT / "INDEX-by-score.md"
 # Committed source of truth. The SQLite file is a rebuildable cache.
 EXPORT_PATH = REPO_ROOT / "data" / "postings.jsonl"
 BASELINE_PATH = REPO_ROOT / "data" / "baseline.txt"
@@ -97,6 +101,7 @@ class Config:
     export_path: Path = EXPORT_PATH
     baseline_path: Path = BASELINE_PATH
     index_path: Path = INDEX_PATH
+    index_by_score_path: Path = INDEX_BY_SCORE_PATH
     cutover_date: datetime | None = None
     companies: list[ATSCompany] = field(default_factory=list)
 

@@ -1,15 +1,22 @@
-"""INDEX.md - the human view of every live posting.
+"""The human view of every live posting, in two orderings.
 
 Regenerated on every run and committed, so the repo itself answers "what am I
-supposed to be applying to" without a database client. Grouped by term with
-the terms that matter first, newest within each group.
+supposed to be applying to" without a database client.
 
-Expired and applied rows are excluded: this is a to-do list, not an archive.
+`INDEX.md` is ordered by posted date, newest first, because being early is most
+of the advantage in this search - a mediocre req opened an hour ago is a better
+use of an evening than a strong one that has been collecting applicants for a
+week. `INDEX-by-score.md` carries the same rows ordered by fit, for the other
+question. Both keep the term grouping: off-cycle co-ops are scarce enough to
+belong above new grad regardless of what the sort is doing inside each group.
+
+Expired and applied rows are excluded from both: this is a to-do list, not an
+archive.
 """
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from jobpipe.linkcheck import LinkStatus
 from jobpipe.models import Posting, Status, Term, utcnow
@@ -45,40 +52,127 @@ _LINK_BADGE = {
 
 _HIDDEN = {Status.EXPIRED, Status.SKIPPED}
 
+SORT_DATE = "date"
+SORT_SCORE = "score"
+SORTS = (SORT_DATE, SORT_SCORE)
+
+# The window that decides what goes in the section at the top. Matches the
+# expiry absence window, and roughly the point at which a competitive req has
+# collected the applicants it is going to read.
+FRESH_HOURS = 48
+
+# (heading, alignment) in display order. `Posted` is the date and `Age` is the
+# rendered string; both are here because neither does the other's job.
+_COLUMNS = [
+    ("Company", "---"),
+    ("Title", "---"),
+    ("Location", "---"),
+    ("Posted", "---"),
+    ("Age", "---"),
+    ("Score", "--:"),
+    ("Link", "---"),
+    ("Status", "---"),
+]
+
 
 def _escape(text: str) -> str:
     """Pipes and brackets would break the table or turn into markdown links."""
     return text.replace("|", "\\|").replace("[", "(").replace("]", ")")
 
 
-def _row(posting: Posting, now: datetime) -> str:
-    link = (
-        f"[apply]({posting.apply_url})" if posting.apply_url else "-"
-    )
+def sort_key(mode: str):
+    """Ordering within a group. Both keys are total; only the priority differs.
+
+    Score is the tiebreak under `date` rather than the other way round on
+    purpose. Score alone would bury a fresh req behind a fortnight of
+    better-scoring ones, and the whole point of a 30-minute poll is to be there
+    before the fortnight-old req's applicant count is four figures.
+    """
+    if mode == SORT_SCORE:
+        return lambda p: (p.score, p.posted_at or p.first_seen_at)
+    return lambda p: (p.posted_at or p.first_seen_at, p.score)
+
+
+def _posted_date(posting: Posting) -> str:
+    """The date itself, not just the age.
+
+    The age string collapses every posting from the last hour into "just
+    posted", which makes a correct date-descending sort look arbitrary - a
+    score of 0 above a score of 70 with no visible reason. The same lesson the
+    Sheets mirror encodes by storing a real date value rather than a rendered
+    one, for the same reason: a rendered age cannot be ordered or audited.
+    """
+    when = posting.posted_at
+    return when.strftime("%Y-%m-%d") if when else "-"
+
+
+def _table_head(*, with_term: bool) -> list[str]:
+    columns = ([("Term", "---")] if with_term else []) + _COLUMNS
+    return [
+        "| " + " | ".join(c for c, _ in columns) + " |",
+        "|" + "|".join(a for _, a in columns) + "|",
+    ]
+
+
+def _row(posting: Posting, now: datetime, *, with_term: bool = False) -> str:
+    link = f"[apply]({posting.apply_url})" if posting.apply_url else "-"
     location = posting.location_norm.replace("-", " ")
     if posting.remote:
         location += " / remote"
-    return (
-        f"| {_escape(posting.company)} "
-        f"| {_escape(posting.title)} "
-        f"| {location} "
-        f"| {posted_age(posting, now=now)} "
-        f"| {posting.score} "
-        f"| {link} "
-        f"| {_LINK_BADGE.get(posting.link_status, posting.link_status)} |"
-    )
+    cells = [
+        _escape(posting.company),
+        _escape(posting.title),
+        location,
+        _posted_date(posting),
+        posted_age(posting, now=now),
+        str(posting.score),
+        link,
+        _LINK_BADGE.get(posting.link_status, posting.link_status),
+    ]
+    if with_term:
+        cells.insert(0, TERM_HEADING[posting.term])
+    return "| " + " | ".join(cells) + " |"
 
 
-def render(postings: list[Posting], *, now: datetime | None = None) -> str:
+def _is_fresh(posting: Posting, now: datetime) -> bool:
+    """Only a real `posted_at` counts.
+
+    Falling back to `first_seen_at` would put every backfilled req in the
+    "posted in the last 48 hours" section on the day it was discovered, which
+    is precisely the claim the section exists to make and the one thing it must
+    not get wrong.
+    """
+    if not posting.posted_at:
+        return False
+    return (now - posting.posted_at) <= timedelta(hours=FRESH_HOURS)
+
+
+def render(
+    postings: list[Posting],
+    *,
+    now: datetime | None = None,
+    sort: str = SORT_DATE,
+    counterpart: str | None = None,
+) -> str:
     now = now or utcnow()
     live = [p for p in postings if p.status not in _HIDDEN]
+    key = sort_key(sort)
+    ordering = (
+        "newest first, score as the tiebreak"
+        if sort == SORT_DATE
+        else "highest score first, newest as the tiebreak"
+    )
 
     lines = [
-        "# Live postings",
+        "# Live postings" + (" by score" if sort == SORT_SCORE else ""),
         "",
-        f"{len(live)} open · regenerated every run · "
+        f"{len(live)} open · {ordering} · regenerated every run · "
         f"last updated {now.strftime('%Y-%m-%d %H:%M UTC')}",
         "",
+    ]
+    if counterpart:
+        lines += [counterpart, ""]
+    lines += [
         "`index!` means the link resolves to a careers page rather than the req; "
         "`dead!` means it does not resolve at all. Both are treated as expiry signals.",
         "",
@@ -104,37 +198,70 @@ def render(postings: list[Posting], *, now: datetime | None = None) -> str:
     )
     lines += [counts, ""]
 
+    # The actionable set, flat across every term. Deliberately not grouped:
+    # the question this section answers is "what appeared while I was asleep",
+    # and a term heading between two reqs posted an hour apart obscures it.
+    fresh = sorted((p for p in live if _is_fresh(p, now)), key=key, reverse=True)
+    if fresh:
+        lines += [
+            f"## Posted in the last {FRESH_HOURS} hours ({len(fresh)})",
+            "",
+            "Every term, flat. This is the set where being early still counts.",
+            "",
+        ]
+        lines += _table_head(with_term=True)
+        lines += [_row(p, now, with_term=True) for p in fresh]
+        lines.append("")
+
     for term in TERM_ORDER:
         group = by_term.get(term)
         if not group:
             continue
-        group.sort(
-            key=lambda p: (p.posted_at or p.first_seen_at, p.score), reverse=True
-        )
-        lines += [
-            f"## {TERM_HEADING[term]} ({len(group)})",
-            "",
-            "| Company | Title | Location | Posted | Score | Link | Status |",
-            "|---|---|---|---|---|---|---|",
-        ]
+        group.sort(key=key, reverse=True)
+        lines += [f"## {TERM_HEADING[term]} ({len(group)})", ""]
+        lines += _table_head(with_term=False)
         lines += [_row(p, now) for p in group]
         lines.append("")
 
     return "\n".join(lines)
 
 
-def write(postings: list[Posting], path, *, now: datetime | None = None) -> bool:
-    """Write INDEX.md. Returns True when the content actually changed.
+def write(
+    postings: list[Posting],
+    path,
+    *,
+    now: datetime | None = None,
+    sort: str = SORT_DATE,
+    counterpart: str | None = None,
+) -> bool:
+    """Write one index file. Returns True when the content actually changed.
 
-    The unchanged case matters: an all-304 run must not produce a commit, and
-    a timestamp that moves every run would defeat that.
+    The unchanged case matters: an all-304 run must not produce a commit, and a
+    timestamp that moves every run would defeat that.
     """
-    content = render(postings, now=now)
+    content = render(postings, now=now, sort=sort, counterpart=counterpart)
     previous = path.read_text(encoding="utf-8") if path.exists() else None
     if previous is not None and _body(previous) == _body(content):
         return False
     path.write_text(content, encoding="utf-8")
     return True
+
+
+def write_both(postings: list[Posting], by_date, by_score, *, now: datetime | None = None) -> bool:
+    """Write both orderings. True if either changed.
+
+    Kept together so a caller cannot write one and forget the other, which
+    would leave the two files disagreeing about what is live.
+    """
+    changed = write(
+        postings, by_date, now=now, sort=SORT_DATE,
+        counterpart=f"Ordered by fit instead: [{by_score.name}]({by_score.name})",
+    )
+    changed |= write(
+        postings, by_score, now=now, sort=SORT_SCORE,
+        counterpart=f"Ordered by recency instead: [{by_date.name}]({by_date.name})",
+    )
+    return changed
 
 
 def _body(text: str) -> str:

@@ -50,9 +50,11 @@ def _no_writes_to_repo_data():
     the production export with its own two-row store. That happened once and
     was only caught by noticing the file had shrunk.
     """
-    from jobpipe.config import BASELINE_PATH, EXPORT_PATH, INDEX_PATH
+    from jobpipe.config import (
+        BASELINE_PATH, EXPORT_PATH, INDEX_BY_SCORE_PATH, INDEX_PATH,
+    )
 
-    watched = [EXPORT_PATH, BASELINE_PATH, INDEX_PATH]
+    watched = [EXPORT_PATH, BASELINE_PATH, INDEX_PATH, INDEX_BY_SCORE_PATH]
     before = {p: (p.read_bytes() if p.exists() else None) for p in watched}
     yield
     for path in watched:

@@ -13,6 +13,7 @@ import sys
 from datetime import timedelta
 
 from jobpipe.config import DEFAULT_COMPANIES, REPO_ROOT, load_config
+from jobpipe.index_md import SORT_DATE, SORTS
 from jobpipe.models import RawPosting, Status, Tier, utcnow
 from jobpipe.normalize import (
     infer_term,
@@ -281,7 +282,7 @@ def _cmd_audit_suppressions(args: argparse.Namespace) -> int:
 
 def _cmd_list(args: argparse.Namespace) -> int:
     """Show live postings, optionally filtered by term."""
-    from jobpipe.index_md import TERM_HEADING, TERM_ORDER
+    from jobpipe.index_md import TERM_HEADING, TERM_ORDER, sort_key
     from jobpipe.models import Term
     from jobpipe.notify.ntfy import posted_age
 
@@ -304,23 +305,30 @@ def _cmd_list(args: argparse.Namespace) -> int:
     for p in rows:
         by_term.setdefault(p.term, []).append(p)
 
+    # Term grouping survives both sorts: off-cycle co-ops are scarce enough to
+    # stay above new grad whatever the ordering inside each group is.
+    key = sort_key(args.sort)
     for term in TERM_ORDER:
         group = by_term.get(term)
         if not group:
             continue
-        group.sort(key=lambda p: (p.posted_at or p.first_seen_at, p.score), reverse=True)
+        group.sort(key=key, reverse=True)
         print(f"\n{TERM_HEADING[term]}  ({len(group)})")
-        print("-" * 100)
+        print("-" * 108)
         for p in group:
             flag = {"ok": " ", "redirected_to_index": "!", "dead": "X"}.get(p.link_status, "?")
+            posted = p.posted_at.strftime("%Y-%m-%d") if p.posted_at else "    -     "
             print(
                 f" {flag} t{int(p.tier)} {p.score:>3}  {p.company[:20]:<20} "
                 f"{p.title[:44]:<44} {p.location_norm[:12]:<12} "
-                f"{posted_age(p):<12} {p.status.value}"
+                f"{posted}  {posted_age(p):<12} {p.status.value}"
             )
             if args.urls:
                 print(f"        {p.apply_url}")
-    print(f"\n{len(rows)} posting(s).  ! = link resolves to an index, X = dead link")
+    print(
+        f"\n{len(rows)} posting(s), sorted by {args.sort}.  "
+        f"! = link resolves to an index, X = dead link"
+    )
     return 0
 
 
@@ -665,6 +673,10 @@ def build_parser() -> argparse.ArgumentParser:
         "fall-2026", "winter-2027", "spring-2027", "summer-2027", "new-grad", "unknown",
     ])
     lst.add_argument("--tier", type=int, choices=[1, 2, 3])
+    lst.add_argument(
+        "--sort", choices=list(SORTS), default=SORT_DATE,
+        help="date: newest first, score as tiebreak (default). score: the reverse.",
+    )
     lst.add_argument("--urls", action="store_true", help="print apply URLs")
     lst.add_argument("--all", action="store_true", help="include expired and skipped")
     lst.set_defaults(func=_cmd_list)
