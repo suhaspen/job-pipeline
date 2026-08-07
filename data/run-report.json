@@ -1,94 +1,96 @@
 {
-  "run_id": "20260807T110021Z",
-  "started_at": "2026-08-07T11:00:21.777779+00:00",
-  "duration_s": 63.89,
+  "run_id": "20260807T141002Z",
+  "started_at": "2026-08-07T14:10:02.378212+00:00",
+  "duration_s": 87.48,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1288,
-      "raw_fetched": 1905,
-      "new": 8,
+      "fetched": 1284,
+      "raw_fetched": 1897,
+      "new": 1,
       "errors": [],
-      "latency_ms": 203,
+      "latency_ms": 173,
       "not_modified": false,
-      "filtered_out": 617,
-      "baselined": 1187,
+      "filtered_out": 613,
+      "baselined": 1183,
       "term_unknown_rate": 0.0,
       "warnings": [
-        "18284 records, 15659 inactive, 720 off-category, 1905 kept"
+        "18276 records, 15662 inactive, 717 off-category, 1897 kept"
       ]
     },
     {
       "name": "speedyapply-swe",
       "ok": true,
-      "fetched": 0,
-      "raw_fetched": 0,
-      "new": 0,
+      "fetched": 802,
+      "raw_fetched": 814,
+      "new": 38,
       "errors": [],
-      "latency_ms": 16,
-      "not_modified": true,
-      "filtered_out": 0,
-      "baselined": 0,
-      "term_unknown_rate": 0.0,
+      "latency_ms": 26,
+      "not_modified": false,
+      "filtered_out": 12,
+      "baselined": 658,
+      "term_unknown_rate": 0.14,
       "warnings": []
     },
     {
       "name": "speedyapply-ai",
       "ok": true,
-      "fetched": 0,
-      "raw_fetched": 0,
-      "new": 0,
+      "fetched": 508,
+      "raw_fetched": 608,
+      "new": 16,
       "errors": [],
-      "latency_ms": 15,
-      "not_modified": true,
-      "filtered_out": 0,
-      "baselined": 0,
-      "term_unknown_rate": 0.0,
+      "latency_ms": 55,
+      "not_modified": false,
+      "filtered_out": 100,
+      "baselined": 424,
+      "term_unknown_rate": 0.299,
       "warnings": []
     },
     {
       "name": "ats",
       "ok": true,
-      "fetched": 293,
-      "raw_fetched": 12638,
+      "fetched": 188,
+      "raw_fetched": 10122,
       "new": 0,
       "errors": [],
-      "latency_ms": 16190,
+      "latency_ms": 37188,
       "not_modified": false,
-      "filtered_out": 12345,
-      "baselined": 180,
-      "term_unknown_rate": 0.614,
+      "filtered_out": 9934,
+      "baselined": 88,
+      "term_unknown_rate": 0.511,
       "warnings": []
     }
   ],
-  "deduped_out": 206,
+  "deduped_out": 374,
   "tiers": {
     "1": 0,
-    "2": 7,
-    "3": 1
+    "2": 22,
+    "3": 33
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 7
+    "suppressed_backpressure": 22
   },
   "backlog_unapplied": 31,
   "warnings": [
-    "ats: term unknown for 61% of postings (>10%)"
+    "speedyapply-swe: term unknown for 14% of postings (>10%)",
+    "speedyapply-ai: term unknown for 30% of postings (>10%)",
+    "ats: term unknown for 51% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2528,
-  "excluded_recorded": 12962,
-  "suppressed_by_baseline": 1367,
+  "excluded_recorded": 10659,
+  "suppressed_by_baseline": 2353,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
     "blocked": 8,
-    "ok": 427,
-    "unchecked": 19,
+    "ok": 476,
+    "unchecked": 25,
     "unreachable": 1,
     "redirected_to_index": 1,
     "dead": 1
@@ -102,28 +104,28 @@
     },
     "simplify-newgrad": {
       "blocked": 1,
-      "ok": 87,
+      "ok": 88,
       "redirected_to_index": 1,
       "unchecked": 4
     },
     "speedyapply-ai": {
-      "blocked": 2,
+      "blocked": 1,
       "dead": 1,
-      "ok": 65,
-      "unchecked": 2
+      "ok": 79,
+      "unchecked": 5
     },
     "speedyapply-swe": {
-      "blocked": 3,
-      "ok": 79,
-      "unchecked": 7
+      "blocked": 4,
+      "ok": 113,
+      "unchecked": 10
     }
   },
-  "url_upgrades": 17,
+  "url_upgrades": 52,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 8,
+    "heuristic_only": 55,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
