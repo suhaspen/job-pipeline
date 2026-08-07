@@ -2,9 +2,29 @@
 
 ## Schedule
 
-`*/30 * * * *` on the default branch. **Do not go below this.** GitHub enforces
-a 5-minute floor, recommends no more often than 15 minutes on the free tier,
-and the GitHub-sourced feeds only update daily — polling faster buys nothing.
+Time-windowed, on the default branch, all entries in `America/Los_Angeles`:
+
+| When | Cadence | Runs |
+|---|---|---|
+| Weekdays 06:00–19:00 | every 30 min | 27/day |
+| Weekdays, the rest (23:00, 03:00) | every 4 h | 2/day |
+| Weekends (03:00 → 23:00) | every 4 h | 6/day |
+
+**157 runs/week, ~683/month.** Uniform `*/30` was 48/day; the overnight and
+weekend slots were buying nothing, because US reqs do not go up at 03:00 on a
+Sunday. **Do not go below 30 minutes in the window.** GitHub enforces a
+5-minute floor, recommends no more often than 15 minutes on the free tier, and
+the GitHub-sourced feeds only update daily — polling faster buys nothing.
+
+Two rules the schedule has to keep, both asserted in `tests/test_workflows.py`:
+
+- **No two entries may match the same minute.** GitHub fires the workflow once
+  per matching entry. The concurrency group serialises them instead of merging
+  them, so the second is a full duplicate run, billed. This is why the weekday
+  off-hours entry is `0 3,23` rather than `0 */4` — `09/13/17` would collide
+  with the in-window entry.
+- **Nothing between 01:00 and 03:00 local.** That hour repeats on the fall-back
+  night and does not exist on spring-forward.
 
 ### Scheduled runs are not punctual
 
@@ -22,11 +42,16 @@ jq -r '[.scheduled_for, .schedule_delay_s] | @tsv' data/run-report.json
 
 ### Timezone
 
-The digest workflow uses a `cron` entry evaluated in UTC. **07:00 America/
-Los_Angeles is what matters**, so if GitHub's `timezone:` field is available on
-your plan, set it next to the cron entry rather than hand-offsetting UTC — a
-fixed offset drifts by an hour twice a year at DST boundaries. The 30-minute
-poll does not care; the digest does.
+`timezone:` next to the cron entry is a real field as of March 2026, and every
+entry in this repo uses it. Never hand-offset from UTC — a fixed offset drifts
+by an hour twice a year at DST boundaries.
+
+This was live for the digest: the entry was a bare `0 7 * * *` under a comment
+claiming it meant 07:00 America/Los_Angeles. It meant 07:00 UTC, so the daily
+tier 2 roundup arrived at midnight PT. Fixed, and pinned by a test.
+
+On spring-forward GitHub advances a schedule that lands in a skipped hour to
+the next valid time; nothing here is scheduled there anyway.
 
 ### Default branch only
 
@@ -54,20 +79,56 @@ stretch produces no commits at all. Two independent guards:
 
 Private repos get **2,000 free Linux minutes/month**.
 
-| | |
-|---|---|
-| Mean run | ~25s (warm, mostly 304s) to ~60s (cold) |
-| Runs/day | 48 |
-| Projected | ~550 min/month |
-| Headroom | ~3.5x |
+Billing rounds **each job** up to the nearest minute, so the run count matters
+more than the seconds.
 
-Billing rounds each job up to the nearest minute, so 48 runs/day is closer to
-**~1,440 billed minutes/month** in the worst case. That is still inside the
-allowance but the headroom is thinner than the raw seconds suggest. `make eval`
-warns above a projected 1,200 min/month.
+| | poll | digest | keepalive | total |
+|---|--:|--:|--:|--:|
+| Runs/month | 683 | 30 | 4 | 717 |
+| At 1 billed min | 683 | 30 | 4 | **717** |
+| At 2 billed min | 1,366 | 30 | 4 | **1,400** |
+
+Both fit 2,000. For comparison, the uniform `*/30` schedule was ~1,461 poll
+runs/month, which at the 6 billed minutes the first live run actually cost is
+~8,766 — four times the allowance. `make eval` warns above a projected 1,200
+min/month.
+
+### Where the time goes
+
+Measured on the first live run (`run_id: 20260807T014406Z`):
+
+| | |
+|---|--:|
+| Wall clock | 350s |
+| Pipeline (`duration_s`) | 324.6s |
+| — four source fetches | 22.6s |
+| — link validation, 300 postings, serial | ~302s |
+| Setup: checkout + Python + install + artifact | ~25s |
+
+Setup was never the problem. Two changes followed:
+
+- **Link validation fans out 8 wide, 3 per registrable domain, on a 5s
+  timeout.** That run was a cold start — 308 new postings, so 300 links.
+  Steady state is one or two per run at ~70 new postings/day over 157
+  runs/week, so this is insurance against backfills and cold containers rather
+  than the common case. The per-domain cap is not tuning: `blocked` is not an
+  expiry signal, so a throttled runner IP degrades silently and nothing
+  downstream can detect it.
+- **ETag validators persist across runs.** They used to live in `postings.db`,
+  which is rebuilt from the committed JSONL every run and therefore always
+  started empty in CI — no request was ever conditional, so every run pulled
+  ~12 MB of Simplify listings and all 71 boards in full and re-derived 16k
+  exclusion rows from unchanged payloads. They now live in
+  `data/http-cache.db`, restored by `actions/cache`. **Do not cache
+  `postings.db` instead:** `run()` skips the restore-from-JSONL when the
+  database is non-empty, so the cache would silently become the source of
+  truth.
+
+Every run writes a fetch-vs-everything-else split to the job summary, so the
+next real measurement is one click rather than another profiling session.
 
 If it gets tight: split the ATS source into a fast tier (targets, every run)
-and a slow tier (the rest, hourly). The ~70 boards are ~20s of every run.
+and a slow tier (the rest, hourly). The ~70 boards are ~22s of a cold run.
 
 ## Secrets
 

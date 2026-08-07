@@ -2,11 +2,43 @@ name: poll
 
 on:
   schedule:
-    # Nominal 30 minutes. GitHub does not fire cron punctually: 5-30 minutes
-    # late is routine and there is no SLA, so treat 30-60 as the realistic p50.
-    # Do not go below this - the platform floor is 5 minutes, the free-tier
-    # guidance is 15, and the GitHub-sourced feeds only update daily.
-    - cron: "*/30 * * * *"
+    # Three entries, one 4-hour grid, no overlaps. GitHub fires the workflow
+    # once per matching cron entry, so two entries that share a minute queue a
+    # duplicate run against the concurrency group and bill it twice - which is
+    # why the off-hours grid below skips 09/13/17 on weekdays instead of using
+    # a plain `0 */4`.
+    #
+    # GitHub does not fire cron punctually: 5-30 minutes late is routine and
+    # there is no SLA. Treat 30-60 as the realistic p50 inside the window.
+    # The platform floor is 5 minutes; do not go below 30 here - the
+    # GitHub-sourced feeds only update daily.
+    #
+    # `timezone` is a real field as of March 2026. Before that these had to be
+    # hand-offset from UTC, which drifted an hour twice a year. Spring-forward
+    # skips 02:00-03:00 local and GitHub advances a skipped slot to the next
+    # valid time; nothing here is scheduled in that hour.
+
+    # Weekdays 06:00-19:00 America/Los_Angeles, every 30 minutes. This is when
+    # US postings actually go up, and being early is the entire point.
+    # `*/30 6-18` stops at 18:30, so 19:00 is a separate entry rather than
+    # `6-19`, which would also fire at 19:30.
+    - cron: "*/30 6-18 * * 1-5"
+      timezone: America/Los_Angeles
+    - cron: "0 19 * * 1-5"
+      timezone: America/Los_Angeles
+
+    # Weekday off-hours: every 4 hours, continuing the grid from 19:00.
+    # 03:00 rather than 01:00 on purpose - 01:00-02:00 local occurs twice on
+    # the fall-back night, and 02:00-03:00 does not exist on spring-forward.
+    - cron: "0 3,23 * * 1-5"
+      timezone: America/Los_Angeles
+
+    # Weekends, the same 4-hour grid all day. Friday 23:00 hands off to
+    # Saturday 03:00 and Sunday 23:00 to Monday 03:00, so neither boundary
+    # leaves a seam.
+    - cron: "0 3,7,11,15,19,23 * * 6,0"
+      timezone: America/Los_Angeles
+
   workflow_dispatch:
 
 permissions:
@@ -22,14 +54,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          # The job reads no history, only the tip. Full history is ~8 MB of
+          # clone for nothing, and `git push` works fine from a shallow clone.
+          fetch-depth: 1
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: pyproject.toml
 
-      - run: pip install -e .
+      # The one piece of state carried between runs. Without it every run
+      # starts with an empty ETag table, so nothing is ever a conditional
+      # request: ~12 MB of Simplify listings plus 71 ATS boards re-downloaded
+      # and 16k raw reqs re-parsed each time, purely to rediscover that
+      # nothing changed. The exact key never hits, so every run saves a fresh
+      # entry and `restore-keys` picks up the most recent one.
+      - uses: actions/cache@v6
+        with:
+          path: data/http-cache.db
+          key: jobpipe-http-cache-${{ github.run_id }}
+          restore-keys: |
+            jobpipe-http-cache-
+
+      - run: pip install -e . --disable-pip-version-check
 
       - name: Run pipeline
         env:
@@ -39,9 +89,36 @@ jobs:
           # heuristic-only; add the secret here to enable the LLM path.
         run: python -m jobpipe.cli run
 
-      - name: Upload replay payloads
+      # The minute budget is the constraint now, so make it observable without
+      # opening the run. Step durations are in the UI; what is not is how much
+      # of the job was the pipeline and how much was setup.
+      - name: Budget summary
         if: always()
-        uses: actions/upload-artifact@v4
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          p = pathlib.Path("data/run-report.json")
+          if not p.exists():
+              print("no run report"); raise SystemExit
+          r = json.loads(p.read_text())
+          d = r["duration_s"]
+          print(f"### Pipeline {d:.1f}s  ·  {r['baseline_size']} baseline  ·  new {sum(s['new'] for s in r['sources'])}\n")
+          print("| source | ms | 304 | raw | new |")
+          print("|---|--:|:--:|--:|--:|")
+          for s in r["sources"]:
+              print(f"| {s['name']} | {s['latency_ms']} | {'yes' if s['not_modified'] else 'no'} "
+                    f"| {s['raw_fetched']} | {s['new']} |")
+          fetch = sum(s["latency_ms"] for s in r["sources"]) / 1000
+          print(f"\nfetch {fetch:.1f}s · everything else {d - fetch:.1f}s "
+                f"· links checked {sum(r['links'].values())}")
+          PY
+
+      # Failures only. Uploading a 7 MB database on every green run is ~20
+      # seconds of the budget and 300+ MB/day of retention to hold artifacts
+      # nobody opens. On a red run it is the whole picture.
+      - name: Upload replay payloads
+        if: failure()
+        uses: actions/upload-artifact@v7
         with:
           name: replay-${{ github.run_id }}
           path: |

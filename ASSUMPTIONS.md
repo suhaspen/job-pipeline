@@ -191,3 +191,102 @@ to `unknown` rather than silently landing in `summer-2027`.
 `us-{code}` fallback keys off a US state list. A Canadian province code
 ("Toronto, ON") falls through to city matching, which covers the major metros
 explicitly.
+
+---
+
+## Phase C — free-tier budget
+
+### C1 — The runtime problem was not where the handoff said it was
+The handoff attributed 5m43s of runner time to setup ("5m43s on the runner vs
+23s locally means setup dominates"). The first CI run's own report says
+`duration_s: 324.57` against a 350s wall clock, so setup was ~25s and the
+pipeline was 93% of the job. Within the pipeline, the four source fetches were
+22.6s combined and the remaining ~302s was `_validate_links` resolving 300 new
+postings one at a time. The fix applied is concurrency there, not setup tuning.
+
+**If wrong:** the per-step timings from the next scheduled run will say so —
+the workflow now writes a fetch-vs-everything-else split to the step summary.
+
+### C2 — 5m50s was a cold-start cost, not the steady-state cost
+That run was the first to see the live corpus: 308 new postings, so 300 link
+checks. At ~70 new eligible postings/day over 157 runs/week the steady-state
+batch is roughly one or two postings, and the link phase is seconds. The
+budget projection below assumes steady state and treats the cold start as the
+worst case the 10-minute job timeout has to survive.
+
+### C3 — ETag validators moved out of `postings.db` rather than caching the DB
+`actions/cache` on `data/postings.db` would have been the smaller diff, but
+`run()` only restores from the committed JSONL when the database is empty
+(`runner.py`), so a restored cache would skip the restore and quietly make the
+cache the source of truth — inverting the invariant the whole export exists to
+hold. The validators live in `data/http-cache.db` instead: it is the only file
+the workflow restores, it holds nothing that is not re-derivable from one full
+fetch, and `postings.db` still starts empty and still gets rebuilt from
+`data/postings.jsonl` on every run.
+
+### C4 — Link checks fan out 8 wide
+A batch is spread across many hosts, so 8 in flight is a few connections per
+domain rather than a burst at any one of them. Known bot-protected domains are
+still never contacted. Raise `LINKCHECK_WORKERS` in `runner.py` if a backfill
+needs it; it is not worth making an env var for one number.
+
+### C5 — The poll grid puts nothing between 01:00 and 03:00 local
+`America/Los_Angeles` repeats 01:00–02:00 on the fall-back night and skips
+02:00–03:00 on spring-forward, so a schedule landing there either fires twice
+or not at all, twice a year. The off-hours entries are 03:00 and 23:00, which
+are unambiguous in both directions. Asserted in `tests/test_workflows.py`.
+
+### C6 — Artifacts upload on failure only
+The replay bundle was uploading a 7 MB database on every green run: ~300 MB/day
+of retention and a slice of the minute budget, to hold artifacts nobody opens.
+On a red run it is still the whole picture, and `data/postings.db` is
+reconstructible from the committed export in any case.
+
+**If wrong:** a green-but-suspicious run has no replay bundle. The run report,
+the committed export diff and `logs/*.jsonl` are all still there; only the
+database snapshot is gone.
+
+### C7 — Link checks are capped per registrable domain, not per hostname
+Global fan-out is 8; any one operator sees at most 3. Actions runner IPs are
+shared and widely published, and this pipeline already catalogues the bot
+protection that treats them accordingly. The reason it is a hard cap rather
+than a tuning knob: `blocked` is deliberately not an expiry signal, so a
+throttled runner IP degrades *silently* — validation keeps returning statuses,
+the statuses stop meaning anything, and nothing in the run report goes red.
+Nothing downstream can detect it, so it has to be prevented at the source.
+
+Keyed on the last two labels, so `boards.greenhouse.io`,
+`job-boards.greenhouse.io` and `boards-api.greenhouse.io` share one budget.
+That is wrong for a `.co.uk`-style suffix and right for every host in this
+corpus, and the error direction is safe: over-collapsing only makes the cap
+stricter.
+
+### C8 — Ingest link timeout is 5s, the pre-notification recheck stays 2.5s
+Even fanned out, a 300-posting cold batch at the library's 12s default is
+minutes of worst case, and a board that has not answered in 5 seconds is not
+one to send an application to. `check` may do a HEAD then a GET, so the real
+per-posting ceiling is 10s. The pre-notification recheck is a different
+question — it sits in the critical path of a push — and keeps its own budget.
+
+**If wrong:** a genuinely slow board gets filed `unreachable`. That is not an
+expiry signal, so the posting survives and is rechecked; the cost is a link
+whose status is unknown for a cycle, not a lost req.
+
+### C9 — `restore()` builds its INSERT from `FIELDS`
+It used to carry a second, hand-written column list, and the two had drifted by
+four columns: the recruiter fields were exported and then dropped on every
+restore. Since the database is rebuilt from the export at the start of every
+run, that is not "lost on restore" — it is deleted from the record every 30
+minutes, forever. The recruiter feature would have shipped months from now,
+tested clean locally, and lost every lookup on the first CI run.
+
+`link_checked_at` was the same defect one step earlier: on the model, written
+to the database, and absent from `FIELDS`, so it never reached the export at
+all. Added; the export gained one key and nothing else, verified row-by-row
+against the previous file before committing.
+
+`tests/test_export.py` asserts the round trip in both directions — every
+`FIELDS` entry survives export→restore, and every model field is in `FIELDS`.
+The fixture populates every field with a distinguishable value on purpose: a
+round-trip test whose fixture leaves fields at `None` passes whether or not
+they survive, which is how the original drift went unnoticed.

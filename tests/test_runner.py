@@ -43,6 +43,7 @@ def posting(title="Software Engineer, New Grad", company="Acme", location="San F
 def cfg(tmp_path):
     return Config(
         db_path=tmp_path / "t.db",
+        http_cache_path=tmp_path / "http-cache.db",
         export_path=tmp_path / "postings.jsonl",
         baseline_path=tmp_path / "baseline.txt",
         index_path=tmp_path / "INDEX.md",
@@ -145,6 +146,7 @@ class TestPrefilterIntegration:
         assert lenient.sources[0].fetched == 1
 
         cfg2 = Config(db_path=cfg.db_path.parent / "t2.db",
+                      http_cache_path=cfg.db_path.parent / "hc2.db",
                       export_path=cfg.db_path.parent / "e2.jsonl",
                       baseline_path=cfg.db_path.parent / "b2.txt",
                       index_path=cfg.db_path.parent / "I2.md")
@@ -181,6 +183,7 @@ class TestDryRun:
         dry = _run(cfg, [StubSource("a", list(made))], report_path, monkeypatch)
 
         cfg2 = Config(db_path=tmp_path / "real.db",
+                      http_cache_path=tmp_path / "real-hc.db",
                       export_path=tmp_path / "real.jsonl",
                       baseline_path=tmp_path / "realb.txt",
                       index_path=tmp_path / "realI.md")
@@ -452,3 +455,255 @@ class TestSuppressionLogging:
         assert report.suppressed_by_baseline == 0
         with SqliteStore(cfg.db_path) as store:
             assert store.recent_suppressions() == []
+
+
+class TestLinkValidationFanOut:
+    """The link phase was ~93% of the first live run. It is now concurrent,
+    which changes two things worth pinning: a raise no longer discards the
+    batch, and the writes still happen on the calling thread."""
+
+    def _seed(self, store, n):
+        from jobpipe.runner import _validate_links
+
+        ids = []
+        for i in range(n):
+            p = RawPosting(
+                source="stub", company=f"Co{i}", title="Software Engineer, New Grad",
+                apply_url=f"https://example.invalid/{i}", location="San Francisco, CA",
+            ).normalize()
+            store.upsert([p])
+            ids.append(p.id)
+        return ids, _validate_links
+
+    def test_one_raising_check_does_not_discard_the_batch(self, store, monkeypatch):
+        """Under pool.map a single exception loses every result, not one.
+
+        This is the regression the serial loop could not have: it wrote each
+        row as it went, so a raise cost only the postings after it.
+        """
+        from jobpipe.linkcheck import LinkResult, LinkStatus
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import RunReport
+
+        ids, validate = self._seed(store, 6)
+        boom = ids[2]
+
+        def fake(url, **kw):
+            if url.endswith("/2"):
+                raise ValueError("malformed URL")
+            return LinkResult(LinkStatus.OK, url, 200)
+
+        monkeypatch.setattr("jobpipe.runner.check_link", fake)
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+
+        statuses = {i: store.get(i).link_status for i in ids}
+        assert statuses[boom] == "unreachable"
+        assert all(v == "ok" for k, v in statuses.items() if k != boom)
+
+    def test_a_raise_never_expires_a_posting(self, store, monkeypatch):
+        """`unreachable` is not an expiry signal, and must not become one.
+
+        Filing a checker crash as evidence the req is gone is the worst
+        outcome this phase has.
+        """
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import Status, utcnow
+        from jobpipe.runner import RunReport
+
+        ids, validate = self._seed(store, 3)
+        monkeypatch.setattr(
+            "jobpipe.runner.check_link",
+            lambda url, **kw: (_ for _ in ()).throw(RuntimeError("boom")),
+        )
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+
+        assert all(store.get(i).status != Status.EXPIRED for i in ids)
+
+    def test_results_are_matched_to_the_right_posting(self, store, monkeypatch):
+        """Out-of-order completion must not shuffle statuses onto neighbours."""
+        import time
+
+        from jobpipe.linkcheck import LinkResult, LinkStatus
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import RunReport
+
+        ids, validate = self._seed(store, 8)
+
+        def fake(url, **kw):
+            # Reverse the completion order relative to submission.
+            n = int(url.rsplit("/", 1)[1])
+            time.sleep((8 - n) * 0.005)
+            return LinkResult(LinkStatus.DEAD if n % 2 else LinkStatus.OK, url, 200)
+
+        monkeypatch.setattr("jobpipe.runner.check_link", fake)
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+
+        for i in ids:
+            row = store.get(i)
+            expected = "dead" if int(row.apply_url.rsplit("/", 1)[1]) % 2 else "ok"
+            assert row.link_status == expected
+
+    def test_empty_batch_touches_nothing(self, store, monkeypatch):
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import RunReport
+
+        _, validate = self._seed(store, 0)
+        monkeypatch.setattr(
+            "jobpipe.runner.check_link",
+            lambda *a, **k: pytest.fail("no link should be checked"),
+        )
+        validate(store, [], RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+
+
+class TestLinkValidationPoliteness:
+    """The per-host cap exists because its failure mode is silent.
+
+    `blocked` is deliberately not an expiry signal, so a throttled runner IP
+    keeps producing statuses that no longer mean anything and nothing in the
+    run report goes red. Nothing downstream can detect it, so it has to be
+    prevented here.
+    """
+
+    def _seed(self, store, urls):
+        from jobpipe.runner import _validate_links
+
+        ids = []
+        for i, url in enumerate(urls):
+            p = RawPosting(
+                source="stub", company=f"Co{i}", title="Software Engineer, New Grad",
+                apply_url=url, location="San Francisco, CA",
+            ).normalize()
+            store.upsert([p])
+            ids.append(p.id)
+        return ids, _validate_links
+
+    def test_never_more_than_three_in_flight_to_one_domain(self, store, monkeypatch):
+        import threading
+        import time
+
+        from jobpipe.linkcheck import LinkResult, LinkStatus
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import LINKCHECK_PER_HOST, RunReport
+
+        urls = [f"https://boards.greenhouse.io/acme/jobs/{i}" for i in range(12)]
+        ids, validate = self._seed(store, urls)
+
+        lock = threading.Lock()
+        live = 0
+        peak = 0
+
+        def fake(url, **kw):
+            nonlocal live, peak
+            with lock:
+                live += 1
+                peak = max(peak, live)
+            time.sleep(0.02)
+            with lock:
+                live -= 1
+            return LinkResult(LinkStatus.OK, url, 200)
+
+        monkeypatch.setattr("jobpipe.runner.check_link", fake)
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+        assert peak <= LINKCHECK_PER_HOST, f"{peak} concurrent to one domain"
+
+    def test_subdomains_of_one_operator_share_the_cap(self, store, monkeypatch):
+        """Greenhouse answers on three hostnames. It is still one operator."""
+        import threading
+        import time
+
+        from jobpipe.linkcheck import LinkResult, LinkStatus
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import LINKCHECK_PER_HOST, RunReport
+
+        hosts = ["boards.greenhouse.io", "job-boards.greenhouse.io", "boards-api.greenhouse.io"]
+        urls = [f"https://{hosts[i % 3]}/acme/jobs/{i}" for i in range(12)]
+        ids, validate = self._seed(store, urls)
+
+        lock = threading.Lock()
+        live = 0
+        peak = 0
+
+        def fake(url, **kw):
+            nonlocal live, peak
+            with lock:
+                live += 1
+                peak = max(peak, live)
+            time.sleep(0.02)
+            with lock:
+                live -= 1
+            return LinkResult(LinkStatus.OK, url, 200)
+
+        monkeypatch.setattr("jobpipe.runner.check_link", fake)
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+        assert peak <= LINKCHECK_PER_HOST
+
+    def test_separate_domains_still_run_in_parallel(self, store, monkeypatch):
+        """The per-host cap must not collapse the fan-out to serial."""
+        import threading
+        import time
+
+        from jobpipe.linkcheck import LinkResult, LinkStatus
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import RunReport
+
+        # Distinct registrable domains, not distinct subdomains - `board0.
+        # example.com` and `board1.example.com` collapse to one key, which is
+        # the point of the helper.
+        urls = [f"https://board{i}.test/jobs/{i}" for i in range(8)]
+        ids, validate = self._seed(store, urls)
+
+        lock = threading.Lock()
+        live = 0
+        peak = 0
+
+        def fake(url, **kw):
+            nonlocal live, peak
+            with lock:
+                live += 1
+                peak = max(peak, live)
+            time.sleep(0.05)
+            with lock:
+                live -= 1
+            return LinkResult(LinkStatus.OK, url, 200)
+
+        monkeypatch.setattr("jobpipe.runner.check_link", fake)
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+        assert peak > 3, "distinct domains should not be serialised by the per-host cap"
+
+    def test_ingest_uses_the_short_timeout(self, store, monkeypatch):
+        from jobpipe.linkcheck import LinkResult, LinkStatus
+        from jobpipe.logging_ import RunLogger
+        from jobpipe.models import utcnow
+        from jobpipe.runner import INGEST_LINK_TIMEOUT_S, NOTIFY_LINK_TIMEOUT_S, RunReport
+
+        ids, validate = self._seed(store, ["https://example.invalid/jobs/1"])
+        seen = {}
+
+        def fake(url, **kw):
+            seen.update(kw)
+            return LinkResult(LinkStatus.OK, url, 200)
+
+        monkeypatch.setattr("jobpipe.runner.check_link", fake)
+        validate(store, ids, RunReport(run_id="t", started_at=""), RunLogger("t"), utcnow())
+        assert seen["timeout"] == INGEST_LINK_TIMEOUT_S == 5.0
+        # The pre-notification recheck sits in the critical path of a push and
+        # keeps its own tighter budget.
+        assert NOTIFY_LINK_TIMEOUT_S == 2.5
+
+
+class TestHostKey:
+    def test_registrable_domain(self):
+        from jobpipe.runner import _host
+
+        assert _host("https://boards.greenhouse.io/x") == "greenhouse.io"
+        assert _host("https://job-boards.greenhouse.io/x") == "greenhouse.io"
+        assert _host("https://jobs.lever.co/acme/1") == "lever.co"
+        assert _host("https://example.com/x") == "example.com"
+        assert _host("https://EXAMPLE.com:8443/x") == "example.com"
+        assert _host("https://user:pw@boards.greenhouse.io/x") == "greenhouse.io"

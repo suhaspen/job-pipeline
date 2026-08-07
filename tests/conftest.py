@@ -61,3 +61,28 @@ def _no_writes_to_repo_data():
             f"test wrote to the committed {path.name}. Build Config with "
             f"export_path/baseline_path/index_path under tmp_path."
         )
+
+
+@pytest.fixture(autouse=True)
+def _no_writes_to_repo_databases():
+    """Same guard, for the rebuildable files.
+
+    postings.db and http-cache.db are gitignored so clobbering them costs a
+    refetch rather than data, but a test that silently adopts the developer's
+    working database is the same defect wearing a cheaper consequence - and
+    the consequence stops being cheap the moment one of them is what a run is
+    reading. Checked by mtime+size: hashing a 7 MB file per test is not free.
+    """
+    from jobpipe.config import DEFAULT_DB, DEFAULT_HTTP_CACHE
+
+    def stamp(p: Path):
+        return (p.stat().st_mtime_ns, p.stat().st_size) if p.exists() else None
+
+    watched = [DEFAULT_DB, DEFAULT_HTTP_CACHE]
+    before = {p: stamp(p) for p in watched}
+    yield
+    for path in watched:
+        assert stamp(path) == before[path], (
+            f"test wrote to the repo's {path.name}. Build Config with "
+            f"db_path/http_cache_path under tmp_path."
+        )

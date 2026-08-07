@@ -25,3 +25,12 @@ data/backlog-review.csv
 # data/baseline.txt are the committed source of truth: SQLite rewrites a
 # multi-MB blob on every commit even for a one-row change.
 data/postings.db
+
+# Conditional-request validators (ETag / Last-Modified). Rebuildable at the
+# cost of one full fetch, so never committed - the poll workflow carries the
+# file between runs with actions/cache instead, which is the only reason a CI
+# run ever sends a conditional GET.
+data/http-cache.db
+data/http-cache.db-wal
+data/http-cache.db-shm
+data/http-cache.db-journal

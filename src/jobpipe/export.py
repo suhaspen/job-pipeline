@@ -19,13 +19,20 @@ from typing import Any, Iterable
 from jobpipe.models import Posting
 
 # Fixed key order. Appending here is safe; reordering rewrites every line.
+#
+# This list is the whole contract. `restore()` builds its INSERT from it rather
+# than from a second hand-written column list, because the two drifted: the
+# INSERT was missing the four recruiter fields, so every CI run would have
+# silently dropped whatever the recruiter lookup had found on the run before.
+# A field that is here and nowhere else survives; a field that is elsewhere and
+# not here does not exist as far as the record is concerned.
 FIELDS = [
     "id", "dedupe_key", "company", "title", "term", "location", "location_norm",
     "remote", "apply_url", "source_url", "final_url", "link_status", "source",
     "source_id", "first_seen_at", "last_seen_at", "posted_at", "tier", "score",
     "score_rationale", "tier_source", "disqualifiers", "status", "applied_at",
     "company_norm", "title_norm", "recruiter_name", "recruiter_title",
-    "recruiter_linkedin", "draft_note",
+    "recruiter_linkedin", "draft_note", "link_checked_at",
 ]
 
 
@@ -76,6 +83,21 @@ def read(path: Path) -> list[dict[str, Any]]:
     return out
 
 
+def _row_for_insert(row: dict[str, Any]) -> dict[str, Any]:
+    """One exported line, shaped for the postings table.
+
+    Every key in FIELDS is filled, defaulting to None: a line written before a
+    field was added to FIELDS simply does not carry it, and a named placeholder
+    with no matching key raises rather than degrading.
+    """
+    out = {f: row.get(f) for f in FIELDS}
+    out["remote"] = int(bool(row.get("remote")))
+    out["disqualifiers"] = json.dumps(row.get("disqualifiers") or [])
+    out["link_status"] = row.get("link_status") or "unchecked"
+    out["tier_source"] = row.get("tier_source") or "heuristic"
+    return out
+
+
 def restore(store: Any, postings_path: Path, baseline_path: Path) -> int:
     """Rebuild a database from the committed exports.
 
@@ -84,26 +106,11 @@ def restore(store: Any, postings_path: Path, baseline_path: Path) -> int:
     """
     rows = read(postings_path)
     if rows:
+        columns = ", ".join(FIELDS)
+        placeholders = ", ".join(f":{f}" for f in FIELDS)
         store.conn.executemany(
-            "INSERT OR IGNORE INTO postings "
-            "(id, dedupe_key, company, title, term, location, location_norm, remote, "
-            " apply_url, source_url, final_url, link_status, source, source_id, "
-            " first_seen_at, last_seen_at, posted_at, tier, score, score_rationale, "
-            " tier_source, disqualifiers, status, applied_at, company_norm, title_norm) "
-            "VALUES (:id,:dedupe_key,:company,:title,:term,:location,:location_norm,:remote,"
-            " :apply_url,:source_url,:final_url,:link_status,:source,:source_id,"
-            " :first_seen_at,:last_seen_at,:posted_at,:tier,:score,:score_rationale,"
-            " :tier_source,:disqualifiers,:status,:applied_at,:company_norm,:title_norm)",
-            [
-                {
-                    **r,
-                    "remote": int(bool(r.get("remote"))),
-                    "disqualifiers": json.dumps(r.get("disqualifiers") or []),
-                    "link_status": r.get("link_status") or "unchecked",
-                    "tier_source": r.get("tier_source") or "heuristic",
-                }
-                for r in rows
-            ],
+            f"INSERT OR IGNORE INTO postings ({columns}) VALUES ({placeholders})",
+            [_row_for_insert(r) for r in rows],
         )
     ids = read_baseline(baseline_path)
     if ids:

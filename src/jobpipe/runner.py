@@ -15,19 +15,25 @@ believe you are covered.
 from __future__ import annotations
 
 import json
+import threading
 import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
+from urllib.parse import urlparse
+
+import requests
 
 from jobpipe.config import (
     BASELINE_PATH, EXPORT_PATH, FILTER_VERSION, INDEX_PATH, RUN_REPORT_PATH, Config,
 )
 from jobpipe.health import STALE_304_DAYS, evaluate_all
+from jobpipe.httpcache import HttpCache
 from jobpipe import export as jsonl_export
 from jobpipe import index_md
-from jobpipe.linkcheck import LinkStatus, check as check_link
+from jobpipe.linkcheck import LinkResult, LinkStatus, check as check_link
 from jobpipe.logging_ import RunLogger
 from jobpipe.models import Posting, RawPosting, Status, Tier, utcnow
 from jobpipe.notify import NotifyContext, NtfyClient, gate, ping_healthcheck, redact
@@ -43,6 +49,25 @@ EXPIRY_ABSENT_HOURS = 48
 NOTIFY_LINK_TIMEOUT_S = 2.5
 RETENTION_DAYS = 90
 ZERO_YIELD_HOURS = 12
+# Concurrency for the post-persist link check. Two limits, not one: the global
+# cap bounds the runner, the per-host cap bounds what any single board sees.
+#
+# The per-host cap is the one that matters. Actions runner IPs are shared and
+# widely published, and the bot protection this pipeline already catalogues
+# treats them accordingly. Eight concurrent to boards.greenhouse.io is how a
+# personal tool earns a throttle - and because `blocked` is deliberately not an
+# expiry signal, that throttle degrades silently: validation keeps returning a
+# status, the status stops meaning anything, and nothing in the run report goes
+# red. A cold batch is spread across many hosts, so this costs almost nothing
+# in wall clock and removes the burst entirely.
+LINKCHECK_WORKERS = 8
+LINKCHECK_PER_HOST = 3
+# Ingest-time link check. Shorter than the library default of 12s: even fanned
+# out, a 300-posting cold batch at 12s is minutes of worst case, and a board
+# that has not answered in 5 seconds is not one to send an application to.
+# `check` may do a HEAD then a GET, so the real ceiling per posting is 2x this.
+# The pre-notification recheck keeps its own tighter budget below.
+INGEST_LINK_TIMEOUT_S = 5.0
 
 
 def make_run_id(now: datetime | None = None) -> str:
@@ -180,7 +205,10 @@ def run(
         restored = jsonl_export.restore(store, cfg.export_path, cfg.baseline_path)
         if restored:
             log.info("restore.from_jsonl", postings=restored)
-    http = HttpClient(store=None if cfg.dry_run else store)
+    # Validators live outside the database precisely so they survive the
+    # rebuild-from-JSONL above. See jobpipe/httpcache.py.
+    http_cache = None if cfg.dry_run else HttpCache(cfg.http_cache_path)
+    http = HttpClient(store=http_cache)
     profile = EligibilityProfile.load()
     baseline = store.baseline_ids()
     fresh_ids: list[str] = []
@@ -293,6 +321,8 @@ def run(
             store.record_run(report.to_dict())
             store.vacuum()
     finally:
+        if http_cache is not None:
+            http_cache.close()
         report.duration_s = time.monotonic() - started
         if not cfg.dry_run and report_path is not None:
             report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -588,6 +618,23 @@ def _notify(
     )
 
 
+def _host(url: str) -> str:
+    """Rate-limit key for a URL: the registrable domain, not the hostname.
+
+    `boards.greenhouse.io`, `job-boards.greenhouse.io` and `boards-api.
+    greenhouse.io` are one operator with one opinion about how many
+    connections a shared runner IP should be opening. Keying on the hostname
+    would let a batch open three to each and call it polite.
+
+    Last two labels, which is wrong for a `.co.uk`-style suffix and right for
+    every host in this corpus. The error direction is safe: over-collapsing
+    only makes the cap stricter.
+    """
+    netloc = urlparse(url).netloc.lower().split("@")[-1].split(":")[0]
+    parts = netloc.split(".")
+    return ".".join(parts[-2:]) if len(parts) > 2 else netloc
+
+
 def _validate_links(
     store: SqliteStore, fresh_ids: list[str], report: RunReport,
     log: RunLogger, clock: datetime,
@@ -597,12 +644,54 @@ def _validate_links(
     A dead or index-redirected link is an expiry signal in its own right. The
     req is gone; waiting out the full 48-hour absence window would leave a
     notification pointing at a careers page.
+
+    Checked concurrently, and this is where the run time actually goes. On the
+    first live run 300 new postings were resolved one at a time and the phase
+    took ~300 of the run's 325 seconds - the four source fetches together were
+    23. Steady state is only a couple of links per run, so the fan-out matters
+    for cold starts and backfills rather than the common case; it is what keeps
+    those from blowing the free-tier minute budget on their own.
     """
+    targets = []
     for posting_id in fresh_ids:
         posting = store.get(posting_id)
         if posting is None or not posting.apply_url:
             continue
-        result = check_link(posting.apply_url)
+        targets.append((posting_id, posting.apply_url))
+    if not targets:
+        return
+
+    # Built up front from the known target list rather than on demand, so two
+    # workers cannot race to create the semaphore for the same host.
+    host_limits = {
+        _host(url): threading.Semaphore(LINKCHECK_PER_HOST) for _, url in targets
+    }
+
+    def _check(item: tuple[str, str]) -> tuple[str, str, Any]:
+        # A fresh Session per worker: requests.Session is not thread-safe, and
+        # sharing one across the pool corrupts the connection pool under load.
+        posting_id, url = item
+        try:
+            with host_limits[_host(url)]:
+                return posting_id, url, check_link(
+                    url, timeout=INGEST_LINK_TIMEOUT_S, session=requests.Session()
+                )
+        except Exception as exc:
+            # Fails open, and it has to. `check` swallows RequestException but
+            # not a malformed URL, and under `pool.map` a single raise discards
+            # every result in the batch rather than the one posting - which
+            # would leave the whole batch unwritten. `unreachable` is not an
+            # expiry signal, so the posting survives to be rechecked.
+            log.warn("link.check_failed", posting=posting_id, url=url, error=str(exc))
+            return posting_id, url, LinkResult(LinkStatus.UNREACHABLE, None, None, "check raised")
+
+    workers = min(LINKCHECK_WORKERS, len(targets))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        results = list(pool.map(_check, targets))
+
+    # Writes stay on this thread. The sqlite connection belongs to it, and
+    # serialising the writes keeps the store single-threaded as designed.
+    for posting_id, url, result in results:
         store.set_link_status(
             posting_id, result.status.value, result.final_url, checked_at=clock
         )
@@ -610,7 +699,7 @@ def _validate_links(
             store.set_status(posting_id, Status.EXPIRED)
             log.warn(
                 "link.bad", posting=posting_id, status=result.status.value,
-                url=posting.apply_url, final=result.final_url, note=result.note,
+                url=url, final=result.final_url, note=result.note,
             )
 
 

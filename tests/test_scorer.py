@@ -35,6 +35,7 @@ def posting(company="Anthropic", title="Software Engineer Intern", term=Term.FAL
 def cfg(tmp_path):
     return Config(
         db_path=tmp_path / "t.db",
+        http_cache_path=tmp_path / "http-cache.db",
         export_path=tmp_path / "postings.jsonl",
         baseline_path=tmp_path / "baseline.txt",
         index_path=tmp_path / "INDEX.md",

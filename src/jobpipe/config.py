@@ -16,6 +16,12 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO_ROOT / "data" / "postings.db"
+# Conditional-request validators. Separate from the database on purpose: the
+# database is rebuilt from the committed JSONL every run, which in CI meant the
+# ETag table was always empty and no request was ever conditional. This file is
+# the only thing the workflow restores from actions/cache, so a stale cache can
+# never shadow data/postings.jsonl as the source of truth.
+DEFAULT_HTTP_CACHE = REPO_ROOT / "data" / "http-cache.db"
 DEFAULT_COMPANIES = REPO_ROOT / "companies.json"
 LOG_DIR = REPO_ROOT / "logs"
 RUN_REPORT_PATH = REPO_ROOT / "data" / "run-report.json"
@@ -87,6 +93,7 @@ class Config:
     db_path: Path = DEFAULT_DB
     # Paths are config, not constants, so tests never restore production data
     # into a temporary database.
+    http_cache_path: Path = DEFAULT_HTTP_CACHE
     export_path: Path = EXPORT_PATH
     baseline_path: Path = BASELINE_PATH
     index_path: Path = INDEX_PATH
@@ -156,6 +163,7 @@ def load_config(*, dry_run: bool = False, companies_path: Path | None = None) ->
     ack = os.environ.get("NTFY_ACK_TOPIC") or (f"{topic}-ack" if topic else None)
     return Config(
         db_path=Path(os.environ.get("JOBPIPE_DB", DEFAULT_DB)),
+        http_cache_path=Path(os.environ.get("JOBPIPE_HTTP_CACHE", DEFAULT_HTTP_CACHE)),
         cutover_date=load_cutover_date(),
         companies=load_companies(companies_path),
         ntfy_topic=topic,
