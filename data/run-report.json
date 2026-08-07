@@ -1,22 +1,22 @@
 {
-  "run_id": "20260807T152339Z",
-  "started_at": "2026-08-07T15:23:39.959993+00:00",
-  "duration_s": 96.01,
+  "run_id": "20260807T162246Z",
+  "started_at": "2026-08-07T16:22:46.482546+00:00",
+  "duration_s": 89.66,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1283,
-      "raw_fetched": 1900,
-      "new": 2,
+      "fetched": 1279,
+      "raw_fetched": 1896,
+      "new": 0,
       "errors": [],
-      "latency_ms": 304,
+      "latency_ms": 182,
       "not_modified": false,
       "filtered_out": 617,
-      "baselined": 1182,
+      "baselined": 1178,
       "term_unknown_rate": 0.0,
       "warnings": [
-        "18264 records, 15644 inactive, 720 off-category, 1900 kept"
+        "18257 records, 15642 inactive, 719 off-category, 1896 kept"
       ]
     },
     {
@@ -26,7 +26,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 275,
+      "latency_ms": 104,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -40,7 +40,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 233,
+      "latency_ms": 34,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,23 +50,23 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 251,
-      "raw_fetched": 11030,
+      "fetched": 221,
+      "raw_fetched": 10664,
       "new": 0,
       "errors": [],
-      "latency_ms": 54730,
+      "latency_ms": 41163,
       "not_modified": false,
-      "filtered_out": 10779,
-      "baselined": 157,
-      "term_unknown_rate": 0.542,
+      "filtered_out": 10443,
+      "baselined": 124,
+      "term_unknown_rate": 0.579,
       "warnings": []
     }
   ],
-  "deduped_out": 193,
+  "deduped_out": 198,
   "tiers": {
     "1": 0,
     "2": 0,
-    "3": 2
+    "3": 0
   },
   "notifications": {
     "sent": 0,
@@ -76,12 +76,12 @@
   },
   "backlog_unapplied": 31,
   "warnings": [
-    "ats: term unknown for 54% of postings (>10%)"
+    "ats: term unknown for 58% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2528,
-  "excluded_recorded": 11396,
-  "suppressed_by_baseline": 1339,
+  "excluded_recorded": 11060,
+  "suppressed_by_baseline": 1302,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -123,7 +123,7 @@
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 2,
+    "heuristic_only": 0,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
