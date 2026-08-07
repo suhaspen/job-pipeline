@@ -401,3 +401,48 @@ which would otherwise be the nicer prompt.
 a frozen snapshot with no ids to match on, so it is written as a block — which
 is safe exactly once and would silently re-associate any notes the user had
 added if it were re-run against a different ordering.
+
+---
+
+## Phase F — first warm day
+
+### F1 — The ETag cache broke the health signal for `ats`, and that is fixed
+`ats` is 71 boards behind one source name. Before the validators persisted,
+every board was fetched in full every run and `raw_fetched` was flat — which is
+what the zero-yield alarm was built on ("a healthy feed returns roughly the
+same number of postings regardless of how many are new"). With conditional
+requests working, a board that 304s contributes no rows, so `raw_fetched` now
+tracks *how much changed upstream*, not whether the source works. The first
+warm day ranged **7,712 to 16,031** with nothing wrong, and a run where most
+boards legitimately 304 is indistinguishable from one where most boards died.
+
+The fix is to measure what the alarm was always trying to measure: endpoints
+that answered. `ats` now reports `responding` (boards returning 200 or 304) out
+of `units`, and health uses it when present, falling back to row volume for
+single-endpoint sources where rows are still the right signal. Run reports
+written before the field existed carry no value for it, and a missing key is
+skipped rather than read as zero — otherwise the first run after the upgrade
+looks like a total collapse.
+
+This was a regression introduced by the cache, caught by reading ten runs of
+real data rather than by a test.
+
+### F2 — `simplify-newgrad` has not produced a single 304
+Ten runs, ten 200s, with the row count drifting (1905 → 1883) between them. The
+drift says the file genuinely changes, which would make 200 the correct answer
+and the cache irrelevant for this source. It is not yet proven either way — the
+alternative is that `raw.githubusercontent.com` is returning a validator that
+never matches. Worth one targeted check; not worth guessing at.
+
+### F3 — The backpressure mechanism stays dormant rather than being deleted
+Tier 2 became digest-only by decision, which left `backpressure` reachable in
+`decide()` but with no effect on the outcome. Deleting it would mean re-deriving
+the threshold, the counting rule and the "quiet hours must not consume a slot"
+interaction if tier 2 ever gains a push condition again. It stays wired and
+tested; a test asserts the predicate still flips at the threshold.
+
+What changed is the framing. The unapplied count is now the first line of the
+digest and the first row of the Stats tab, in words — "23 postings you haven't
+decided on" — because it is the one number in either view that is about the
+reader rather than about the pipeline, and "backlog: 23 unapplied" reads as
+instrumentation and gets skimmed past.

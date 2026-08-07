@@ -85,6 +85,10 @@ class SourceReport:
     latency_ms: int = 0
     not_modified: bool = False
     filtered_out: int = 0
+    # Endpoints that answered, for sources that are several behind one name.
+    # None where row volume is still the health signal.
+    responding: int | None = None
+    units: int | None = None
     baselined: int = 0
     term_unknown_rate: float = 0.0
     warnings: list[str] = field(default_factory=list)
@@ -102,6 +106,8 @@ class SourceReport:
             "filtered_out": self.filtered_out,
             "baselined": self.baselined,
             "term_unknown_rate": round(self.term_unknown_rate, 3),
+            "responding": self.responding,
+            "units": self.units,
             "warnings": self.warnings,
         }
 
@@ -245,6 +251,8 @@ def run(
             sr.latency_ms = int((time.monotonic() - t0) * 1000)
             stats = source.stats
             sr.not_modified = stats.not_modified
+            sr.responding = stats.responding
+            sr.units = stats.units
             sr.warnings = list(stats.warnings)
             sr.errors = list(stats.errors)
             sr.ok = bool(raw_postings) or not stats.errors or stats.not_modified
@@ -784,7 +792,10 @@ def _source_health_check(
     same number of postings regardless of how many are new.
     """
     history = store.runs(since=clock - timedelta(days=STALE_304_DAYS + 1))
-    current = [(s.name, s.raw_fetched, s.not_modified) for s in report.sources if s.ok]
+    current = [
+        (s.name, s.raw_fetched, s.not_modified, s.responding)
+        for s in report.sources if s.ok
+    ]
     for health in evaluate_all(current, history, now=clock):
         message = health.message()
         if message:
@@ -793,6 +804,8 @@ def _source_health_check(
                 "source.health",
                 source=health.name,
                 raw_fetched=health.raw_fetched,
+                measured=health.measured,
+                unit=health.unit,
                 median=health.median,
                 volume_drop=health.volume_drop,
                 stale_304=health.stale_304,

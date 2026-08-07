@@ -222,6 +222,15 @@ class ATSSource:
                 f"company moved ATS: {', '.join(sorted(dead))}"
             )
         self.stats.fetched = len(out)
+        # Health is measured on boards that answered, not on rows returned.
+        # Once the ETag cache persists between runs most boards 304 on a quiet
+        # poll, so row volume swings with how much changed upstream rather than
+        # with whether the source works - the first warm day ranged 7,712 to
+        # 16,031. Boards responding is flat unless something is actually wrong.
+        self.stats.responding = sum(
+            1 for r in self.results.values() if r == "304" or r.startswith(("ok:", "empty"))
+        )
+        self.stats.units = len(self.companies)
         return out
 
     @property

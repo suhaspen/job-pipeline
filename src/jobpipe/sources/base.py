@@ -39,6 +39,14 @@ class FetchStats:
     errors: list[str] = field(default_factory=list)
     requests_made: int = 0
     bytes_downloaded: int = 0
+    # For sources that are really N endpoints behind one name. `responding`
+    # counts the ones that answered at all, 200 or 304. It exists because row
+    # volume stopped measuring health once conditional requests started
+    # working: a board that 304s contributes no rows, so a healthy run and a
+    # broken one both look like a volume collapse. None for single-endpoint
+    # sources, where row volume is still the right signal.
+    responding: int | None = None
+    units: int | None = None
 
 
 class Source(Protocol):

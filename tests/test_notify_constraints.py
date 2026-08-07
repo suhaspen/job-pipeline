@@ -285,3 +285,34 @@ class TestInteractions:
                     + len(result.digest) + len(result.skipped)
                 )
                 assert total == len(batch), f"lost a posting at hour={hour} backlog={backlog}"
+
+
+class TestBacklogLine:
+    """Plain language, because the count is the pressure now that nothing
+    downstream acts on it."""
+
+    def test_reads_as_a_sentence(self):
+        from jobpipe.cli import backlog_line
+
+        assert backlog_line(23) == "23 postings you haven't decided on."
+        assert backlog_line(1) == "1 posting you haven't decided on."
+        assert backlog_line(0) == "Nothing waiting on you."
+
+    def test_the_suppression_mechanism_is_still_there(self):
+        """Dormant, not deleted. Tier 2 is digest-only by decision, so
+        `backpressure` is currently unreachable as a *behaviour* - but if tier
+        2 ever gains a push condition it has to still be wired and tested."""
+        from jobpipe.models import utcnow
+        from jobpipe.notify import BACKPRESSURE_THRESHOLD
+        from jobpipe.notify.constraints import NotifyContext
+
+        under = NotifyContext(
+            now=utcnow(), interrupting_last_hour=0,
+            backlog_unapplied=BACKPRESSURE_THRESHOLD,
+        )
+        over = NotifyContext(
+            now=utcnow(), interrupting_last_hour=0,
+            backlog_unapplied=BACKPRESSURE_THRESHOLD + 1,
+        )
+        assert under.backpressure is False
+        assert over.backpressure is True

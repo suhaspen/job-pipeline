@@ -385,12 +385,16 @@ def stats_block(
                 counts[key(posting)] = counts.get(key(posting), 0) + 1
         return [[str(k), v] for k, v in sorted(counts.items(), key=lambda kv: str(kv[0]))]
 
+    # Undecided leads, same as the digest. It is the only number here that is
+    # about the reader rather than about the pipeline.
+    undecided = sum(1 for p in postings if p.id not in statuses)
     rows: list[list[Any]] = [
+        ["You haven't decided on", undecided],
+        ["", ""],
         ["Applied this week", len(this_week)],
         ["Applied, total", len(applied_ids)],
         [f"  of which undated in column {APPLIED_DATE_COLUMN}", undated],
         ["Live postings", len(postings)],
-        ["Awaiting a decision", sum(1 for p in postings if p.id not in statuses)],
         ["", ""],
         ["Applied by term", ""],
     ]

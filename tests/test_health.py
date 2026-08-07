@@ -112,3 +112,69 @@ class TestNewRowCountBlindSpot:
 
         assert quiet_weekend.ok
         assert not broken_source.ok
+
+
+class TestAggregateSources:
+    """`ats` is 71 boards behind one name, and row volume stopped measuring its
+    health the moment the ETag cache started working. The first warm day
+    ranged 7,712 to 16,031 raw rows with nothing wrong - a healthy quiet poll
+    and a source that has lost half its boards look the same in that number."""
+
+    def _runs(self, values, key="responding"):
+        return [
+            {"started_at": "2026-08-07T12:00:00+00:00",
+             "sources": [{"name": "ats", "raw_fetched": 11000, key: v,
+                          "not_modified": False}]}
+            for v in values
+        ]
+
+    def test_row_volume_swings_do_not_alarm_when_boards_are_answering(self):
+        from jobpipe.health import evaluate_source
+        from jobpipe.models import utcnow
+
+        health = evaluate_source(
+            "ats", raw_fetched=7712, not_modified=False,
+            runs=self._runs([71, 71, 71, 70]), now=utcnow(), responding=71,
+        )
+        assert health.ok, health.message()
+
+    def test_boards_falling_over_does_alarm(self):
+        from jobpipe.health import evaluate_source
+        from jobpipe.models import utcnow
+
+        health = evaluate_source(
+            "ats", raw_fetched=11000, not_modified=False,
+            runs=self._runs([71, 71, 71, 70]), now=utcnow(), responding=20,
+        )
+        assert health.volume_drop
+        assert "boards responding" in health.message()
+
+    def test_history_from_before_the_field_existed_is_not_a_collapse(self):
+        """Older run reports carry no `responding`. Reading a missing key as
+        zero would make the first run after the upgrade look catastrophic."""
+        from jobpipe.health import evaluate_source
+        from jobpipe.models import utcnow
+
+        health = evaluate_source(
+            "ats", raw_fetched=11000, not_modified=False,
+            runs=self._runs([11000, 10000, 12000], key="raw_fetched"),
+            now=utcnow(), responding=71,
+        )
+        assert health.ok
+
+    def test_single_endpoint_sources_still_use_row_volume(self):
+        from jobpipe.health import evaluate_source
+        from jobpipe.models import utcnow
+
+        runs = [
+            {"started_at": "2026-08-07T12:00:00+00:00",
+             "sources": [{"name": "simplify-newgrad", "raw_fetched": v,
+                          "not_modified": False}]}
+            for v in (1900, 1895, 1890)
+        ]
+        health = evaluate_source(
+            "simplify-newgrad", raw_fetched=12, not_modified=False,
+            runs=runs, now=utcnow(),
+        )
+        assert health.volume_drop
+        assert "raw postings" in health.message()

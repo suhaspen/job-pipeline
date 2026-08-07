@@ -491,3 +491,14 @@ class TestStatsHeight:
         }
         rows = stats_block(postings, statuses, now=NOW)
         assert len(rows) <= 40, f"stats block is {len(rows)} rows, range holds 40"
+
+
+class TestUndecidedLeads:
+    """The backlog count stopped suppressing anything when tier 2 became
+    digest-only. Its job now is to be read, so it goes first and in words."""
+
+    def test_undecided_is_the_first_row_of_stats(self):
+        postings = [posting(id_=f"{i:016x}") for i in range(5)]
+        statuses = {postings[0].id: {"status": "applied", "applied_on": "2026-08-06"}}
+        rows = stats_block(postings, statuses, now=NOW)
+        assert rows[0] == ["You haven't decided on", 4]

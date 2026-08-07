@@ -103,13 +103,27 @@ def _cmd_recent(args: argparse.Namespace) -> int:
     return 0
 
 
+def backlog_line(count: int) -> str:
+    """The unapplied backlog, as a sentence rather than a field.
+
+    "backlog: 23 unapplied" reads as instrumentation and gets skimmed past.
+    The count is the one number in the digest that is about the reader rather
+    than about the pipeline, so it says what it means and it goes first.
+    """
+    if count == 0:
+        return "Nothing waiting on you."
+    if count == 1:
+        return "1 posting you haven't decided on."
+    return f"{count} postings you haven't decided on."
+
+
 def _cmd_digest(args: argparse.Namespace) -> int:
     """Daily 07:00 PT digest: everything from the last 24h that did not push."""
     from datetime import timedelta
 
     from jobpipe.index_md import TERM_HEADING, TERM_ORDER
     from jobpipe.models import Status, Tier, utcnow
-    from jobpipe.notify import BACKPRESSURE_THRESHOLD, NtfyClient
+    from jobpipe.notify import NtfyClient
 
     cfg = load_config()
     since = utcnow() - timedelta(hours=args.hours)
@@ -125,7 +139,13 @@ def _cmd_digest(args: argparse.Namespace) -> int:
     for p in rows:
         by_tier[int(p.tier)].append(p)
 
-    lines = [f"{len(rows)} new in the last {args.hours}h"]
+    # The backlog count leads, in words. Its job is to tell you something, not
+    # to suppress anything: tier 2 became digest-only by decision, which left
+    # `backpressure` reachable but inert. The mechanism stays where it is,
+    # tested, for whenever tier 2 gains a push condition again - deleting it
+    # and re-adding it later is how a rule loses the reason it existed. In the
+    # meantime the number itself is the pressure.
+    lines = [backlog_line(backlog), "", f"{len(rows)} new in the last {args.hours}h"]
     for tier in (1, 2, 3):
         group = sorted(by_tier[tier], key=lambda p: -p.score)
         if not group:
@@ -145,9 +165,6 @@ def _cmd_digest(args: argparse.Namespace) -> int:
             f"{notif.get('suppressed_quiet_hours', 0)} quiet-hours, "
             f"{notif.get('suppressed_backpressure', 0)} backpressure"
         )
-    lines.append(f"backlog: {backlog} unapplied")
-    if backlog > BACKPRESSURE_THRESHOLD:
-        lines.append(f"BACKPRESSURE ACTIVE (> {BACKPRESSURE_THRESHOLD}) - tier 2 suppressed")
     bad = [p for p in rows if p.link_status in ("dead", "redirected_to_index")]
     if bad:
         lines.append(f"{len(bad)} posting(s) with a dead or index-redirected link")
@@ -158,7 +175,9 @@ def _cmd_digest(args: argparse.Namespace) -> int:
         print(body)
         return 0
     NtfyClient(cfg).send_text(
-        f"Daily digest - {len(rows)} new", body, priority=2, tags=["newspaper"]
+        # The title is what shows on a locked phone, so the backlog goes there
+        # too - it is the part that is about you rather than about the feed.
+        f"{len(rows)} new · {backlog} undecided", body, priority=2, tags=["newspaper"]
     )
     print("digest sent")
     return 0

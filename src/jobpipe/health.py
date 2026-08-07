@@ -36,6 +36,11 @@ TRAILING_WINDOW = 20
 class SourceHealth:
     name: str
     raw_fetched: int
+    # What the volume signal was actually computed on. "rows" for a single
+    # endpoint; "boards" for a source that is N endpoints behind one name,
+    # where rows stopped meaning anything once conditional requests worked.
+    unit: str = "rows"
+    measured: int = 0
     median: float | None = None
     ratio: float | None = None
     volume_drop: bool = False
@@ -48,13 +53,13 @@ class SourceHealth:
 
     def message(self) -> str | None:
         if self.volume_drop:
-            if self.raw_fetched == 0:
+            if self.measured == 0:
                 return (
-                    f"{self.name}: fetched 0 raw postings "
+                    f"{self.name}: 0 {self.unit} "
                     f"(trailing median {self.median:.0f}) - source may be broken"
                 )
             return (
-                f"{self.name}: fetched {self.raw_fetched} raw postings, "
+                f"{self.name}: {self.measured} {self.unit}, "
                 f"{self.ratio:.0%} of trailing median {self.median:.0f}"
             )
         if self.stale_304:
@@ -81,9 +86,21 @@ def evaluate_source(
     runs: list[dict[str, Any]],
     *,
     now: datetime,
+    responding: int | None = None,
 ) -> SourceHealth:
-    """Assess one source against its own trailing history."""
-    health = SourceHealth(name=name, raw_fetched=raw_fetched)
+    """Assess one source against its own trailing history.
+
+    `responding` is the escape hatch for aggregate sources. When a source is
+    really N endpoints behind one name, row volume stopped being a health
+    signal the moment conditional requests started working - a board that 304s
+    returns no rows, so a quiet poll and a dead board look identical. Boards
+    that answered is flat unless something is genuinely wrong.
+    """
+    unit = "boards responding" if responding is not None else "raw postings"
+    measured = responding if responding is not None else raw_fetched
+    health = SourceHealth(
+        name=name, raw_fetched=raw_fetched, unit=unit, measured=measured
+    )
     history = _history(runs, name)
 
     # --- stale 304s -------------------------------------------------------
@@ -105,10 +122,13 @@ def evaluate_source(
         # A 304 means "unchanged", not "empty". It is never a volume drop.
         return health
 
+    key = "responding" if responding is not None else "raw_fetched"
     prior = [
-        entry.get("raw_fetched") or 0
+        entry.get(key) or 0
         for entry in history[-TRAILING_WINDOW:]
-        if not entry.get("not_modified") and entry.get("raw_fetched") is not None
+        # Runs from before this source reported `responding` carry no value for
+        # it. Treating a missing key as zero would read as a total collapse.
+        if not entry.get("not_modified") and entry.get(key) is not None
     ]
     prior = [v for v in prior if v > 0]
     if len(prior) < MIN_RUNS_FOR_MEDIAN:
@@ -116,19 +136,26 @@ def evaluate_source(
 
     median = statistics.median(prior)
     health.median = median
-    health.ratio = raw_fetched / median if median else None
-    if raw_fetched == 0 or (health.ratio is not None and health.ratio < VOLUME_DROP_RATIO):
+    health.ratio = measured / median if median else None
+    if measured == 0 or (health.ratio is not None and health.ratio < VOLUME_DROP_RATIO):
         health.volume_drop = True
     return health
 
 
 def evaluate_all(
-    current: list[tuple[str, int, bool]],
+    current: list[tuple],
     runs: list[dict[str, Any]],
     *,
     now: datetime,
 ) -> list[SourceHealth]:
-    return [
-        evaluate_source(name, raw_fetched, not_modified, runs, now=now)
-        for name, raw_fetched, not_modified in current
-    ]
+    """`current` entries are (name, raw_fetched, not_modified[, responding])."""
+    out = []
+    for entry in current:
+        name, raw_fetched, not_modified = entry[:3]
+        responding = entry[3] if len(entry) > 3 else None
+        out.append(
+            evaluate_source(
+                name, raw_fetched, not_modified, runs, now=now, responding=responding
+            )
+        )
+    return out
