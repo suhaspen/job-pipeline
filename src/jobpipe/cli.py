@@ -11,6 +11,7 @@ import argparse
 import json
 import sys
 from datetime import timedelta
+from pathlib import Path
 
 from jobpipe.config import DEFAULT_COMPANIES, REPO_ROOT, load_config
 from jobpipe.index_md import SORT_DATE, SORTS
@@ -329,6 +330,111 @@ def _cmd_list(args: argparse.Namespace) -> int:
         f"\n{len(rows)} posting(s), sorted by {args.sort}.  "
         f"! = link resolves to an index, X = dead link"
     )
+    return 0
+
+
+def _sheets_or_explain():
+    """(client, cfg) or (None, cfg) with the reason already printed."""
+    cfg = load_config()
+    if not cfg.sheets_mirror_enabled:
+        missing = [
+            name for name, value in
+            (("GOOGLE_SHEET_ID", cfg.sheet_id), ("GOOGLE_SA_KEY", cfg.sheet_key))
+            if not value
+        ]
+        print(f"sheets mirror is off: {', '.join(missing)} unset", file=sys.stderr)
+        return None, cfg
+    from jobpipe.sheets import SheetsClient
+
+    return SheetsClient(cfg.sheet_id, cfg.sheet_key), cfg
+
+
+def _cmd_sheets_doctor(args: argparse.Namespace) -> int:
+    """Read-only. Answers the two questions that actually go wrong: is the key
+    readable, and has the sheet been shared with the service account."""
+    from jobpipe.sheets import SheetsError
+    from jobpipe.sheets.mirror import LIVE, LIVE_HEADERS, check_headers
+
+    client, cfg = _sheets_or_explain()
+    if client is None:
+        return 1
+    try:
+        print(f"service account : {client.service_account_email}")
+    except SheetsError as exc:
+        print(f"key             : UNREADABLE - {exc}", file=sys.stderr)
+        return 1
+    try:
+        tabs = client.tabs()
+    except SheetsError as exc:
+        print(f"spreadsheet     : UNREACHABLE - {exc}", file=sys.stderr)
+        print(
+            "\nIf this says PERMISSION_DENIED, share the sheet with the service "
+            "account address above (Editor).",
+            file=sys.stderr,
+        )
+        return 1
+    print(f"spreadsheet     : ok, tabs {sorted(tabs)}")
+    try:
+        check_headers(client.read(f"'{LIVE}'!A1:H1"))
+        print(f"columns A-H     : ok, {LIVE_HEADERS}")
+    except SheetsError as exc:
+        print(f"columns A-H     : {exc}", file=sys.stderr)
+        return 1
+    statuses = client.read(f"'{LIVE}'!I2:I")
+    print(f"your column I   : {sum(1 for r in statuses if r and r[0].strip())} set")
+    return 0
+
+
+def _cmd_sheets_setup(args: argparse.Namespace) -> int:
+    from jobpipe.sheets.setup import setup, status_legend
+
+    client, cfg = _sheets_or_explain()
+    if client is None:
+        return 1
+    result = setup(client)
+    print(json.dumps(result, indent=2))
+    print(f"\nStatus column (I) understands: {status_legend()}")
+    print("Anything else there is left alone. Columns I onward are yours.")
+    return 0
+
+
+def _cmd_sheets_sync(args: argparse.Namespace) -> int:
+    from jobpipe.sheets import apply_statuses, read_statuses, sync_live, sync_stats
+
+    client, cfg = _sheets_or_explain()
+    if client is None:
+        return 1
+    with SqliteStore(cfg.db_path) as store:
+        live = [p for p in store.recent(limit=10**6) if p.status is not Status.EXPIRED]
+        statuses, source = read_statuses(client, cfg.sheet_status_cache)
+        changed = apply_statuses(store, statuses)
+        counts = sync_live(client, live)
+        sync_stats(client, live, statuses)
+    print(json.dumps({**counts, "read": len(statuses), "read_from": source,
+                      "statuses_applied": changed}, indent=2))
+    return 0
+
+
+def _cmd_sheets_import_backlog(args: argparse.Namespace) -> int:
+    from jobpipe.config import BACKLOG_CSV_PATH
+    from jobpipe.sheets.backlog import TERM_RANK, order, read_csv
+
+    path = args.csv or BACKLOG_CSV_PATH
+    rows = order(read_csv(path))
+    off_cycle = [r for r in rows if TERM_RANK.get((r.get("term") or "").strip(), 9) <= 2]
+    print(f"{len(rows)} rows, {len(off_cycle)} off-cycle, which sort first:")
+    for row in off_cycle[:10]:
+        print(f"  {row['term']:<13} {row['score']:>3}  {row['company'][:28]:<28} {row['title'][:44]}")
+    if not args.write:
+        print("\ndry run. re-run with --write to load the Backlog tab.")
+        return 0
+
+    from jobpipe.sheets.backlog import import_backlog
+
+    client, cfg = _sheets_or_explain()
+    if client is None:
+        return 1
+    print(json.dumps(import_backlog(client, path), indent=2))
     return 0
 
 
@@ -684,6 +790,27 @@ def build_parser() -> argparse.ArgumentParser:
     applied = sub.add_parser("applied", help="mark a posting as applied")
     applied.add_argument("posting_id")
     applied.set_defaults(func=_cmd_applied)
+
+    sheets = sub.add_parser("sheets", help="Google Sheets mirror")
+    sheets_sub = sheets.add_subparsers(dest="sheets_cmd", required=True)
+    sheets_sub.add_parser(
+        "doctor", help="check credentials and column ownership without writing"
+    ).set_defaults(func=_cmd_sheets_doctor)
+    sheets_sub.add_parser(
+        "setup", help="create tabs, headers and conditional formatting (idempotent)"
+    ).set_defaults(func=_cmd_sheets_setup)
+    sheets_sub.add_parser(
+        "sync", help="push columns A-H and refresh Stats"
+    ).set_defaults(func=_cmd_sheets_sync)
+    imp = sheets_sub.add_parser(
+        "import-backlog",
+        help="one-time load of data/backlog-review.csv, off-cycle first (local only)",
+    )
+    imp.add_argument("--csv", type=Path, default=None)
+    imp.add_argument(
+        "--write", action="store_true", help="apply (default prints what would happen)"
+    )
+    imp.set_defaults(func=_cmd_sheets_import_backlog)
 
     return parser
 

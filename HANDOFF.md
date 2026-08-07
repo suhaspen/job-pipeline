@@ -75,12 +75,9 @@ hours late. Of the 135 live tier 2 postings, 43 are `new-grad` — report how
 many of those are at target companies. If under ~8/day, add a tier 1 path for
 them.
 
-**`jobpipe serve` — a local dashboard.** Single-page app on localhost, no auth,
-no hosting. Table of live postings (company, title, term, tier, posted-age,
-clickable apply link), filterable by term and tier. Per-row buttons: Applied /
-Skipped / Interviewing / Rejected. Counters for applied this week and total, by
-term and tier. A follow-up view for anything marked Applied 7+ days ago with no
-change since.
+**`jobpipe serve` — deferred to the backlog, not cancelled.** The Sheets mirror
+covers it: sorting, filtering, mobile and the user's own notes columns, for
+none of the build time. Revisit only if Sheets turns out not to.
 
 **Recruiter surfacing (deferred, low priority).** Three columns only — recruiter
 name, title, LinkedIn profile URL — sourced from the posting body first, then a
@@ -217,6 +214,33 @@ will suggest the opposite in several cases.
   vanish at the DST boundaries.
 - The weekly run count is asserted against the budget projection. If you change
   the schedule, change the number in the test and re-derive the projection.
+
+### The Sheets mirror
+
+- **Columns A-H are the pipeline's. Everything from I is the user's.** No code
+  path writes, clears, reorders or resizes past H. Rows are matched by posting
+  id and updated in place; there is no full-sheet rewrite and no
+  `values.clear` in `jobpipe/sheets/`, because his notes are the only data in
+  this system with no upstream copy.
+- **Rows are never deleted.** An expired posting stops being updated and keeps
+  its row. Deleting it takes the notes beside it.
+- **A reordered header row halts the write.** Writing A-H by position into a
+  sheet whose columns have moved puts a company name wherever B now is.
+- **The extent read is `A:J`, not `A:A`.** Sheets truncates trailing empty rows
+  from a response, so column A alone reports the last row the *pipeline*
+  filled - and an append then lands on top of a user row that has a note in I
+  and nothing in A.
+- **Every text cell is formula-escaped.** `USER_ENTERED` is required for the
+  date column and evaluates anything starting `= + - @`; the titles come from
+  third-party feeds into a spreadsheet he opens.
+- **The read fails open and cannot invent a status.** Outage falls back to
+  `data/sheet-status.json`; no cache means no statuses, which changes nothing.
+  A blank cell is "undecided", never "un-apply".
+- **`SheetsClient._request` is the only network call in the package.** The test
+  guard patches exactly that one function. A second HTTP path defeats it.
+- Grid height is a hard ceiling - Sheets rejects a write past the last row
+  rather than growing. `sheets setup` grows Live with `appendDimension`, which
+  cannot shrink; setting `gridProperties.rowCount` can, and a shrink deletes.
 
 ### Security
 

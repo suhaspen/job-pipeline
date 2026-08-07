@@ -66,6 +66,38 @@ def _no_writes_to_repo_data():
 
 
 @pytest.fixture(autouse=True)
+def _no_sheets_network(monkeypatch):
+    """No test may reach Google Sheets. Same guard class as the export clobber.
+
+    Worse than the local version, in fact: the export can be regenerated from
+    the database, and a test that writes to the live spreadsheet destroys notes
+    that exist nowhere else. Two locks, because either alone has a gap.
+
+    1. The credentials are removed from the environment, so a test that builds
+       a Config from `load_config()` cannot pick up a real sheet from `.env`.
+    2. `SheetsClient._request` - the single network chokepoint in the package -
+       is replaced with a raise. A test that wants Sheets behaviour injects a
+       fake client; there is no way to get a real one.
+
+    If a second HTTP path is ever added to `jobpipe.sheets`, this fixture stops
+    covering it. That is why there is exactly one.
+    """
+    from jobpipe.sheets.client import SheetsClient
+
+    for name in ("GOOGLE_SA_KEY", "GOOGLE_SHEET_ID"):
+        monkeypatch.delenv(name, raising=False)
+
+    def _blocked(self, method, path, **kwargs):
+        raise AssertionError(
+            f"test attempted a live Sheets call: {method} {path}. "
+            f"Inject a fake client instead - the real spreadsheet holds the "
+            f"user's notes, which have no upstream copy."
+        )
+
+    monkeypatch.setattr(SheetsClient, "_request", _blocked)
+
+
+@pytest.fixture(autouse=True)
 def _no_writes_to_repo_databases():
     """Same guard, for the rebuildable files.
 

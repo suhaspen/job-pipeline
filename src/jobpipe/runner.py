@@ -135,6 +135,10 @@ class RunReport:
     links_by_source: dict[str, dict[str, int]] = field(default_factory=dict)
     url_upgrades: int = 0
     scorer: dict[str, Any] = field(default_factory=dict)
+    # Empty when no sheet is configured. `read_from` is the one to watch:
+    # "cache" means the mirror answered from the last known copy, which is
+    # working as designed once but is a fault if it persists.
+    sheets: dict[str, Any] = field(default_factory=dict)
     export_changed: bool = False
     scheduled_for: str | None = None
     schedule_delay_s: float | None = None
@@ -162,6 +166,7 @@ class RunReport:
             "links_by_source": self.links_by_source,
             "url_upgrades": self.url_upgrades,
             "scorer": self.scorer,
+            "sheets": self.sheets,
             "export_changed": self.export_changed,
             "scheduled_for": self.scheduled_for,
             "schedule_delay_s": self.schedule_delay_s,
@@ -214,6 +219,7 @@ def run(
     fresh_ids: list[str] = []
     raw_by_id: dict[str, RawPosting] = {}
     seen_ids_by_source: dict[str, set[str]] = {}
+    sheet_statuses: dict[str, Any] = {}
 
     try:
         sources = build_sources(cfg, http, only)
@@ -296,6 +302,10 @@ def run(
             report.retired = len(store.retire_long_expired(days=RETENTION_DAYS, now=clock))
             store.prune_exclusions(days=14)
             store.prune_suppressions(days=30)
+            # Before the backlog count is taken: the user's status column is
+            # what makes it real, and reading it after would report a number
+            # from before he marked anything applied.
+            sheet_statuses = _sheets_read(cfg, store, report, log)
 
         report.suppressed_by_baseline = sum(s.baselined for s in report.sources)
         report.backlog_unapplied = store.backlog_unapplied()
@@ -315,6 +325,7 @@ def run(
             index_md.write_both(
                 live, cfg.index_path, cfg.index_by_score_path, now=clock
             )
+            _sheets_push(cfg, live, sheet_statuses, report, log, clock)
             report.export_changed = jsonl_export.write(live, cfg.export_path)
             report.export_changed |= jsonl_export.write_baseline(
                 store.baseline_ids(), cfg.baseline_path
@@ -618,6 +629,64 @@ def _notify(
         silent=len(result.silent), digest=len(result.digest),
         quiet_hours=ctx.quiet, backpressure=ctx.backpressure,
     )
+
+
+def _sheets_client(cfg: Config):
+    """None when the mirror is not configured. Not an error: no secret, no mirror."""
+    if not cfg.sheets_mirror_enabled:
+        return None
+    from jobpipe.sheets import SheetsClient
+
+    return SheetsClient(cfg.sheet_id, cfg.sheet_key)
+
+
+def _sheets_read(cfg: Config, store: SqliteStore, report: RunReport, log: RunLogger) -> dict:
+    """Pull the user's status column and fold it into the store.
+
+    Fails open, and the whole design of the failure matters more than the
+    happy path. A Sheets outage falls back to the last known copy; no copy
+    means no statuses, which leaves every posting exactly as the store already
+    has it. Nothing here can invent a status, clear one, or stop the run - a
+    network problem must never be able to suppress a notification.
+    """
+    client = _sheets_client(cfg)
+    if client is None:
+        return {}
+    from jobpipe.sheets import apply_statuses, read_statuses
+
+    try:
+        statuses, source = read_statuses(client, cfg.sheet_status_cache, log)
+        changed = apply_statuses(store, statuses)
+        report.sheets = {"read": len(statuses), "read_from": source, "applied": changed}
+        log.info("sheets.read", statuses=len(statuses), source=source, applied=changed)
+        return statuses
+    except Exception as exc:
+        # `read_statuses` already handles SheetsError. Anything reaching here
+        # is unexpected, and the mirror is still not worth a run.
+        report.warnings.append(f"sheets read failed: {type(exc).__name__}: {exc}")
+        log.error("sheets.read_failed", error=str(exc), traceback=traceback.format_exc())
+        report.sheets = {"read": 0, "read_from": "error", "applied": 0}
+        return {}
+
+
+def _sheets_push(
+    cfg: Config, live: list[Posting], statuses: dict, report: RunReport,
+    log: RunLogger, clock: datetime,
+) -> None:
+    """Push columns A-H and rewrite Stats. Never touches column I onward."""
+    client = _sheets_client(cfg)
+    if client is None:
+        return
+    from jobpipe.sheets import sync_live, sync_stats
+
+    try:
+        counts = sync_live(client, live)
+        sync_stats(client, live, statuses, now=clock)
+        report.sheets = {**(report.sheets or {}), **counts}
+        log.info("sheets.push", **counts)
+    except Exception as exc:
+        report.warnings.append(f"sheets push failed: {type(exc).__name__}: {exc}")
+        log.error("sheets.push_failed", error=str(exc), traceback=traceback.format_exc())
 
 
 def _host(url: str) -> str:

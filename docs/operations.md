@@ -139,6 +139,8 @@ Set these in **Settings → Secrets and variables → Actions**:
 | `NTFY_TOPIC` | yes | Treat as a password — ntfy topics are world-readable |
 | `HEALTHCHECK_URL` | recommended | Dead-man's switch; a *missed* ping is the alarm |
 | `ANTHROPIC_API_KEY` | no | Absent by design. Scoring runs heuristic-only; add it to enable the LLM path |
+| `GOOGLE_SHEET_ID` | no | Sheets mirror. Both this and the key, or neither |
+| `GOOGLE_SA_KEY` | no | Service-account JSON, base64. See below |
 
 `profile/local.yml` is gitignored and therefore **not present in CI**. The
 work-authorization disqualifiers are inert there and postings are scored
@@ -181,6 +183,7 @@ export is a live record of where you are applying.
 | `data/run-report.json` | Latest run outcome |
 | `INDEX.md` | Live postings, newest first (score breaks ties) |
 | `INDEX-by-score.md` | The same rows ordered by fit |
+| `data/sheet-status.json` | Last known copy of your Sheets status column |
 
 `data/postings.db` is **not** committed — it is a rebuildable cache. SQLite
 rewrites a multi-megabyte blob on every commit even for a one-row change, so
@@ -208,3 +211,111 @@ instrument.
 
 **Nothing in INDEX.md after a cutover.** Expected. The table starts empty and
 fills as new postings arrive.
+
+## Google Sheets mirror
+
+Optional. With neither secret set the pipeline does nothing Sheets-related and
+says so in the run report — that is not an error.
+
+### What the pipeline owns
+
+| | |
+|---|---|
+| **A–H**, pipeline | `id`, `company`, `title`, `term`, `tier`, `location`, `posted_date`, `apply_url` |
+| **I onward**, yours | status, date applied, notes, follow-up, referral |
+
+**Nothing in the pipeline writes, clears, reorders or resizes a column past H.**
+Rows are matched by posting id and updated in place; new postings are appended
+below the last used row. There is no full-sheet rewrite and no `values.clear`
+anywhere in `jobpipe/sheets/`, because your notes are the only data in this
+system with no upstream copy — the same reason `data/applications.jsonl` is
+read and never written.
+
+Two things follow from that and should not be "fixed":
+
+- **A reordered header row halts the write.** If A–H are not the eight names
+  above, `sync_live` raises instead of writing, because writing by position
+  into a reordered sheet puts a company name wherever B now is.
+- **Rows are never deleted.** An expired posting stops being updated and keeps
+  its row, notes intact. The tab grows; filter it.
+
+### Setup — you run these, they need your credentials
+
+1. **Create a service account** at
+   `console.cloud.google.com` → IAM & Admin → Service Accounts. No roles are
+   needed; it gets access from the sheet share in step 4, not from IAM.
+2. **Enable the Sheets API** for the project: APIs & Services → Library →
+   Google Sheets API → Enable.
+3. **Create a JSON key** on the service account → Keys → Add key → JSON.
+   Base64 it and put it in the secret. This is the only handling step, and it
+   never leaves your machine:
+
+   ```bash
+   base64 -i ~/Downloads/your-key.json | tr -d '\n' | pbcopy
+   ```
+
+   Paste into **Settings → Secrets and variables → Actions → `GOOGLE_SA_KEY`**.
+   Plain JSON is accepted too, if base64 is more trouble than it is worth.
+
+4. **Share the sheet with the service account address** (Editor). This is the
+   step that is always the problem: without it every call returns
+   `PERMISSION_DENIED` and nothing else is wrong. The address is in the key
+   JSON as `client_email`, and `jobpipe sheets doctor` prints it.
+5. **`GOOGLE_SHEET_ID`** is the id in the sheet URL:
+   `docs.google.com/spreadsheets/d/`**`<this part>`**`/edit`.
+6. Put both in `.env` locally as well, then:
+
+   ```bash
+   jobpipe sheets doctor
+   ```
+
+   ```bash
+   jobpipe sheets setup
+   ```
+
+   `setup` is idempotent: it creates the Live / Backlog / Stats tabs, writes
+   header rows **only into empty ones**, grows the grid, and rebuilds the
+   conditional formatting. Re-running it never overwrites data.
+
+### The backlog import
+
+One-time, local only — `data/backlog-review.csv` is gitignored and therefore
+absent in CI. 2,511 rows, off-cycle first: the 67 fall/winter/spring co-op reqs
+are the reason to look, and sorted any other way they are invisible.
+
+```bash
+jobpipe sheets import-backlog
+```
+
+```bash
+jobpipe sheets import-backlog --write
+```
+
+### Status column
+
+Column I understands **Applied, Interviewing, Rejected, Skipped**,
+case-insensitively. Anything else is left alone and logged — it is your column,
+and an unrecognised word there is a note, not a mistake to correct. There is no
+data validation dropdown for the same reason: adding one would be the pipeline
+modifying a column it does not own.
+
+What it feeds:
+
+- **Applied / Interviewing** clears the posting from the unapplied backlog.
+- **Applied with a date in column J**, seven days ago or more, with nothing
+  since, turns the row pink — the follow-up flag.
+- **Tier 1** rows are highlighted amber.
+
+The read fails open. A Sheets outage falls back to `data/sheet-status.json`,
+the last known copy; no cache means no statuses, which leaves everything
+exactly as the store already has it. **Nothing in the read path can invent a
+status, clear one, or block a run** — `sheets.read_from` in the run report says
+which happened, and a persistent `"cache"` is the thing to look at.
+
+### Grid capacity
+
+Sheets rejects a write past the last grid row rather than growing the tab. A
+new spreadsheet is 1,000 rows, which at ~70 new postings a day is about eight
+days. `sheets setup` grows Live to 20,000, and a run reports `room_low` once
+fewer than 500 rows remain, so the fix is a command run at leisure rather than
+a failed poll.

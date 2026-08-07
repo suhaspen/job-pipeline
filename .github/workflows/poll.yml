@@ -85,6 +85,10 @@ jobs:
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+          # Both unset means no mirror, which is not an error. The pipeline
+          # writes columns A-H of the Live tab and nothing else, ever.
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          GOOGLE_SA_KEY: ${{ secrets.GOOGLE_SA_KEY }}
           # ANTHROPIC_API_KEY is deliberately absent. Scoring runs
           # heuristic-only; add the secret here to enable the LLM path.
         run: python -m jobpipe.cli run
@@ -132,7 +136,7 @@ jobs:
           git config user.name  "jobpipe[bot]"
           git config user.email "jobpipe@users.noreply.github.com"
           git add data/postings.jsonl data/baseline.txt data/run-report.json \
-                  INDEX.md INDEX-by-score.md
+                  data/sheet-status.json INDEX.md INDEX-by-score.md
           # An all-304 run produces a byte-identical export. No diff, no commit -
           # which is what keeps the history readable.
           if git diff --cached --quiet; then

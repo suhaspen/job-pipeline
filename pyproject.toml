@@ -6,6 +6,11 @@ requires-python = ">=3.11"
 dependencies = [
     "requests>=2.32",
     "PyYAML>=6.0",
+    # Credentials only. The Sheets API calls themselves are plain `requests`,
+    # like every other HTTP client here: google-api-python-client would add a
+    # discovery layer and a second HTTP stack for four endpoints. ~32 MB
+    # installed, ~4s cold and near zero against the workflow's pip cache.
+    "google-auth>=2.35",
 ]
 
 [project.optional-dependencies]

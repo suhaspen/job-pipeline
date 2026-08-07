@@ -34,6 +34,12 @@ INDEX_BY_SCORE_PATH = REPO_ROOT / "INDEX-by-score.md"
 EXPORT_PATH = REPO_ROOT / "data" / "postings.jsonl"
 BASELINE_PATH = REPO_ROOT / "data" / "baseline.txt"
 CANDIDATE_COMPANIES_PATH = REPO_ROOT / "data" / "candidate-companies.csv"
+BACKLOG_CSV_PATH = REPO_ROOT / "data" / "backlog-review.csv"
+# Last known copy of the user's status column, so a Sheets outage degrades the
+# backlog count to "stale" rather than to "empty". Never authoritative: the
+# spreadsheet is, and `data/applications.jsonl` remains the local record the
+# pipeline only ever reads.
+SHEET_STATUS_CACHE = REPO_ROOT / "data" / "sheet-status.json"
 
 # Everything first seen before this instant is baseline: known, but never
 # stored, exported or notified on. Set once at cutover and then left alone -
@@ -102,6 +108,7 @@ class Config:
     baseline_path: Path = BASELINE_PATH
     index_path: Path = INDEX_PATH
     index_by_score_path: Path = INDEX_BY_SCORE_PATH
+    sheet_status_cache: Path = SHEET_STATUS_CACHE
     cutover_date: datetime | None = None
     companies: list[ATSCompany] = field(default_factory=list)
 
@@ -113,8 +120,8 @@ class Config:
     triage_model: str = "claude-sonnet-5"
     brave_key: str | None = None
     serper_key: str | None = None
-    gsheets_spreadsheet_id: str | None = None
-    gsheets_service_account_json: str | None = None
+    sheet_id: str | None = None
+    sheet_key: str | None = None
 
     dry_run: bool = False
 
@@ -138,7 +145,7 @@ class Config:
 
     @property
     def sheets_mirror_enabled(self) -> bool:
-        return bool(self.gsheets_spreadsheet_id and self.gsheets_service_account_json)
+        return bool(self.sheet_id and self.sheet_key)
 
 
 def load_companies(path: Path | None = None) -> list[ATSCompany]:
@@ -179,7 +186,7 @@ def load_config(*, dry_run: bool = False, companies_path: Path | None = None) ->
         triage_model=os.environ.get("JOBPIPE_TRIAGE_MODEL", "claude-sonnet-5"),
         brave_key=os.environ.get("BRAVE_SEARCH_API_KEY") or None,
         serper_key=os.environ.get("SERPER_API_KEY") or None,
-        gsheets_spreadsheet_id=os.environ.get("GSHEETS_SPREADSHEET_ID") or None,
-        gsheets_service_account_json=os.environ.get("GSHEETS_SERVICE_ACCOUNT_JSON") or None,
+        sheet_id=os.environ.get("GOOGLE_SHEET_ID") or None,
+        sheet_key=os.environ.get("GOOGLE_SA_KEY") or None,
         dry_run=dry_run,
     )

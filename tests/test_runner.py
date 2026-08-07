@@ -710,3 +710,87 @@ class TestHostKey:
         assert _host("https://example.com/x") == "example.com"
         assert _host("https://EXAMPLE.com:8443/x") == "example.com"
         assert _host("https://user:pw@boards.greenhouse.io/x") == "greenhouse.io"
+
+
+class TestSheetsMirrorInTheRunPath:
+    """The mirror is a convenience view over data that exists elsewhere. The
+    user's notes are not. Neither direction may cost a run."""
+
+    def test_no_sheet_configured_is_not_an_error(self, cfg, report_path, monkeypatch):
+        report = _run(cfg, [StubSource("a", [posting()])], report_path, monkeypatch)
+        assert report.sheets == {}
+        assert report.warnings == []
+
+    def test_a_sheets_outage_does_not_stop_the_run(self, cfg, report_path, monkeypatch):
+        """Explicitly the whole point: a network failure must never block a
+        poll or suppress a notification."""
+        from jobpipe.sheets import SheetsError
+
+        cfg.sheet_id, cfg.sheet_key = "sheet-1", "{}"
+
+        class Exploding:
+            def __getattr__(self, name):
+                def boom(*a, **k):
+                    raise SheetsError("simulated outage")
+                return boom
+
+        monkeypatch.setattr("jobpipe.runner._sheets_client", lambda c: Exploding())
+        report = _run(cfg, [StubSource("a", [posting()])], report_path, monkeypatch)
+        assert report.total_new == 1
+        assert any("sheets" in w for w in report.warnings)
+
+    def test_an_outage_leaves_every_status_alone(self, cfg, report_path, monkeypatch):
+        """No cache must mean "change nothing", never "everything unapplied" -
+        a failed read cannot be allowed to invent backlog."""
+        from jobpipe.sheets import SheetsError
+
+        cfg.sheet_id, cfg.sheet_key = "sheet-1", "{}"
+        cfg.sheet_status_cache = cfg.db_path.parent / "sheet-status.json"
+
+        class Exploding:
+            def __getattr__(self, name):
+                def boom(*a, **k):
+                    raise SheetsError("simulated outage")
+                return boom
+
+        monkeypatch.setattr("jobpipe.runner._sheets_client", lambda c: Exploding())
+        first = _run(cfg, [StubSource("a", [posting()])], report_path, monkeypatch)
+        assert first.backlog_unapplied == 0
+        with SqliteStore(cfg.db_path) as store:
+            assert all(p.status is not Status.APPLIED for p in store.recent(limit=100))
+
+    def test_a_status_in_the_sheet_reaches_the_backlog_count(
+        self, cfg, report_path, monkeypatch
+    ):
+        """`backlog_unapplied` counts postings still at `notified`, so a row
+        marked applied in the sheet has to land in the store or the number only
+        ever grows."""
+        cfg.sheet_id, cfg.sheet_key = "sheet-1", "{}"
+        cfg.sheet_status_cache = cfg.db_path.parent / "sheet-status.json"
+
+        made = posting()
+        first = _run(cfg, [StubSource("a", [made])], report_path, monkeypatch)
+        with SqliteStore(cfg.db_path) as store:
+            stored = store.recent(limit=10)[0]
+            store.set_status(stored.id, Status.NOTIFIED)
+            assert store.backlog_unapplied() == 1
+
+        class Sheet:
+            reads: list = []
+
+            def read(self, a1):
+                if a1.endswith("A1:H1"):
+                    from jobpipe.sheets.mirror import LIVE_HEADERS
+                    return [LIVE_HEADERS]
+                return [[stored.id] + [""] * 7 + ["Applied", "2026-08-06"]]
+
+            def write(self, writes):
+                return 0
+
+            def tab_properties(self):
+                return {"Live": {"sheetId": 0, "rows": 1000}}
+
+        monkeypatch.setattr("jobpipe.runner._sheets_client", lambda c: Sheet())
+        second = _run(cfg, [StubSource("a", [posting()])], report_path, monkeypatch)
+        assert second.sheets["applied"] == 1
+        assert second.backlog_unapplied == 0

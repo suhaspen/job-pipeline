@@ -187,8 +187,25 @@ class TestCommitCoverage:
         ][0]["run"]
         regenerated = [
             cfg.EXPORT_PATH, cfg.BASELINE_PATH, cfg.RUN_REPORT_PATH,
-            cfg.INDEX_PATH, cfg.INDEX_BY_SCORE_PATH,
+            cfg.INDEX_PATH, cfg.INDEX_BY_SCORE_PATH, cfg.SHEET_STATUS_CACHE,
         ]
         for path in regenerated:
             rel = path.relative_to(cfg.REPO_ROOT).as_posix()
             assert rel in commit, f"{rel} is regenerated every run but never staged"
+
+
+class TestSheetsSecrets:
+    def test_the_poll_passes_both_sheets_secrets_or_neither(self):
+        """One without the other silently disables the mirror with no error -
+        `sheets_mirror_enabled` needs both."""
+        wf = load("poll.yml")
+        step = [s for s in wf["jobs"]["poll"]["steps"] if s.get("name") == "Run pipeline"][0]
+        env = step["env"]
+        assert ("GOOGLE_SHEET_ID" in env) == ("GOOGLE_SA_KEY" in env)
+
+    def test_the_service_account_key_is_never_written_to_a_file(self):
+        """It goes in as an env var and stays there. A key echoed into a file
+        in the workspace is one `git add -A` away from being committed."""
+        for name in ("poll.yml", "digest.yml", "keepalive.yml"):
+            body = (WORKFLOWS / name).read_text()
+            assert "GOOGLE_SA_KEY" not in body or ">" not in body.split("GOOGLE_SA_KEY")[1][:80]
