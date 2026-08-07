@@ -40,6 +40,10 @@ BACKLOG_CSV_PATH = REPO_ROOT / "data" / "backlog-review.csv"
 # spreadsheet is, and `data/applications.jsonl` remains the local record the
 # pipeline only ever reads.
 SHEET_STATUS_CACHE = REPO_ROOT / "data" / "sheet-status.json"
+# Sampled evidence from the `excluded` and `suppressions` tables, which live in
+# the rebuildable database and are therefore discarded on every CI run. A few
+# KB a run here is the only durable answer to "is anything real being eaten".
+AUDIT_DIR = REPO_ROOT / "data" / "audit"
 
 # Everything first seen before this instant is baseline: known, but never
 # stored, exported or notified on. Set once at cutover and then left alone -
@@ -109,6 +113,7 @@ class Config:
     index_path: Path = INDEX_PATH
     index_by_score_path: Path = INDEX_BY_SCORE_PATH
     sheet_status_cache: Path = SHEET_STATUS_CACHE
+    audit_dir: Path = AUDIT_DIR
     cutover_date: datetime | None = None
     companies: list[ATSCompany] = field(default_factory=list)
 
@@ -116,6 +121,12 @@ class Config:
     ntfy_ack_topic: str | None = None
     ntfy_server: str = "https://ntfy.sh"
     healthcheck_url: str | None = None
+    # A separate check with a daily period. The digest commits nothing, so a
+    # digest that never fires is indistinguishable from one that fired and had
+    # nothing to say - which is exactly how it ran at midnight PT for its whole
+    # life without anyone noticing. Sharing the poll's check would not help:
+    # the poll pings it every 30 minutes and would keep it green.
+    digest_healthcheck_url: str | None = None
     anthropic_api_key: str | None = None
     triage_model: str = "claude-sonnet-5"
     brave_key: str | None = None
@@ -182,6 +193,7 @@ def load_config(*, dry_run: bool = False, companies_path: Path | None = None) ->
         ntfy_ack_topic=ack,
         ntfy_server=os.environ.get("NTFY_SERVER", "https://ntfy.sh").rstrip("/"),
         healthcheck_url=os.environ.get("HEALTHCHECK_URL") or None,
+        digest_healthcheck_url=os.environ.get("DIGEST_HEALTHCHECK_URL") or None,
         anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY") or None,
         triage_model=os.environ.get("JOBPIPE_TRIAGE_MODEL", "claude-sonnet-5"),
         brave_key=os.environ.get("BRAVE_SEARCH_API_KEY") or None,

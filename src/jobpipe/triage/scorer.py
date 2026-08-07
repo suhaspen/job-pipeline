@@ -38,6 +38,22 @@ from jobpipe.triage.eligibility import EligibilityProfile
 
 TIER1_SCORE = 75
 TIER2_SCORE = 55
+# Second tier-1 path, for new grad roles at target companies.
+#
+# The general rule is unreachable for them, arithmetically rather than by a
+# hair: new-grad 32 + best-case discipline 22 + target company 20 = 74, one
+# short of 75, on the best combination that exists. An off-cycle co-op scores
+# 40 for the term and lands at 82. So the user's primary category could never
+# interrupt, whatever the company or the role - it waited for the 07:00 digest,
+# up to 24 hours late.
+#
+# 60 rather than 65 because target-company membership is what bounds the
+# volume, not the score. Of 75 live tier 2 new-grad postings exactly 1 was at a
+# target company; loosening the score alone would have admitted 22/day.
+# Requiring the company caps it near 1/day at any of these floors, so the lower
+# one buys a good req that scores 63 for incidental reasons and costs nothing.
+# The 3/hour interrupting cap is the backstop either way.
+TIER1_NEWGRAD_TARGET_SCORE = 60
 # Below this the deterministic pass is confident enough that paying for an LLM
 # call adds nothing - it is already destined for the digest.
 LLM_FLOOR = 35
@@ -225,7 +241,14 @@ def assign_tier(score: int, posting: Posting, target_companies: set[str],
                 disqualifiers: list[Disqualifier]) -> Tier:
     if disqualifiers:
         return Tier.DIGEST
-    if score >= TIER1_SCORE and posting.company_norm in target_companies:
+    at_target = posting.company_norm in target_companies
+    if score >= TIER1_SCORE and at_target:
+        return Tier.INTERRUPTING
+    if (
+        posting.term is Term.NEW_GRAD
+        and at_target
+        and score >= TIER1_NEWGRAD_TARGET_SCORE
+    ):
         return Tier.INTERRUPTING
     if score >= TIER2_SCORE:
         return Tier.SILENT

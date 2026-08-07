@@ -29,6 +29,7 @@ import requests
 from jobpipe.config import (
     BASELINE_PATH, EXPORT_PATH, FILTER_VERSION, INDEX_PATH, RUN_REPORT_PATH, Config,
 )
+from jobpipe import audit
 from jobpipe.health import STALE_304_DAYS, evaluate_all
 from jobpipe.httpcache import HttpCache
 from jobpipe import export as jsonl_export
@@ -145,6 +146,7 @@ class RunReport:
     # "cache" means the mirror answered from the last known copy, which is
     # working as designed once but is a fault if it persists.
     sheets: dict[str, Any] = field(default_factory=dict)
+    audit: dict[str, Any] = field(default_factory=dict)
     export_changed: bool = False
     scheduled_for: str | None = None
     schedule_delay_s: float | None = None
@@ -173,6 +175,7 @@ class RunReport:
             "url_upgrades": self.url_upgrades,
             "scorer": self.scorer,
             "sheets": self.sheets,
+            "audit": self.audit,
             "export_changed": self.export_changed,
             "scheduled_for": self.scheduled_for,
             "schedule_delay_s": self.schedule_delay_s,
@@ -308,6 +311,8 @@ def run(
             _update_sightings(store, report, seen_ids_by_source, run_id, clock)
             report.expired = len(store.expire_stale(absent_hours=EXPIRY_ABSENT_HOURS, now=clock))
             report.retired = len(store.retire_long_expired(days=RETENTION_DAYS, now=clock))
+            # Before the pruning below, which is what removes the evidence.
+            report.audit = audit.write(store, run_id, cfg.audit_dir, now=clock)
             store.prune_exclusions(days=14)
             store.prune_suppressions(days=30)
             # Before the backlog count is taken: the user's status column is

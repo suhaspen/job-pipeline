@@ -97,6 +97,34 @@ free half of the feature.
 Each of these was reached by fixing a real bug. A fresh reading of the code
 will suggest the opposite in several cases.
 
+### Budget and performance changes are checked against this list first
+
+**Every optimization in this system so far has removed something an invariant
+depended on.** Not as a mistake in the change — each was a correct, worthwhile
+performance change — but because the thing it removed was load-bearing
+somewhere else, and nothing in a green run says so. Before merging a change
+that makes a run cheaper or faster, read this list and name what it touches.
+
+Two worked examples, both from the same week:
+
+- **Artifacts moved from `always()` to `failure()`** to save ~20s and 300 MB/day
+  per run. The replay bundle was the only thing carrying `excluded` and
+  `suppressions` out of CI — they live in the rebuildable database, so the
+  change silently made the false-negative rate unmeasurable on the deployed
+  system, which is the exact thing those two tables exist for. Fixed by
+  sampling into `data/audit/` instead; the artifact stays failure-only.
+- **The ETag cache started working** and broke the zero-yield alarm for `ats`.
+  That alarm rests on "a healthy feed returns roughly the same volume
+  regardless of how many are new" — true while every one of the 71 boards was
+  fetched in full, false once a board that 304s contributes no rows. Row volume
+  ranged 7,712–16,031 on the first warm day with nothing wrong, and a run where
+  most boards legitimately 304 became indistinguishable from one where most
+  boards died. Fixed by measuring boards responding rather than rows.
+
+The pattern to watch for: a change that makes something *not happen* — not
+fetched, not uploaded, not stored, not run — where an invariant quietly relied
+on it happening.
+
 ### Data safety
 
 - No test may write to committed data files. There's an autouse fixture

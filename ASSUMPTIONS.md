@@ -446,3 +446,39 @@ digest and the first row of the Stats tab, in words — "23 postings you haven't
 decided on" — because it is the one number in either view that is about the
 reader rather than about the pipeline, and "backlog: 23 unapplied" reads as
 instrumentation and gets skimmed past.
+
+### F4 — Simplify never 304s because it genuinely changes every 30 minutes
+Checked directly rather than guessed at. `raw.githubusercontent.com` does serve
+an `ETag` for `listings.json` and does answer 304 to a conditional request, so
+the cache is wired correctly. The commit history explains the 200s: Simplify's
+bot rewrites the file **every 30 minutes**, at :01 and :31 past the hour
+(median gap 30 min over the last 30 commits). Our poll is also every 30
+minutes, so there is nothing to 304 and the 12.4 MB download is unavoidable.
+It costs ~200ms and no billed minutes; there is nothing to fix.
+
+The check did surface something worth fixing. The poll fired at :00 and :30 —
+one minute *before* each publish — so anything Simplify posted waited a full
+cycle. Moved to :05 and :35. GitHub's scheduler lag usually covered the gap by
+accident, which is precisely why it was worth correcting: the punctual case is
+the one where latency is best and where a self-inflicted 29-minute delay costs
+the most. Same run count, same budget.
+
+### F5 — Audit sampling is seeded from the data, not from the clock
+`ORDER BY RANDOM()` every run would mean an otherwise unchanged run still
+produced a diff, and an all-304 run must produce no commit. The sample is
+seeded from a hash of the row identities, so it is fixed while the data is
+fixed and changes as soon as the data does — which is exactly when a fresh
+sample is worth having. Roughly 5 KB a run, one file per UTC day, pruned at 30
+days; git history keeps the rest.
+
+### F6 — The tier 1 new grad floor is 60, and the volume bound is the company
+Of 75 live tier 2 new-grad postings, exactly **1** was at a target company.
+Loosening the score alone would have admitted 22/day and drowned the 3/hour
+interrupting cap; requiring target-company membership caps it near 1/day at any
+floor between 60 and 70. So the floor is set low enough to catch a good req
+that scores 63 for incidental reasons rather than tuned to admit exactly the
+one posting visible on the day.
+
+A test asserts the *premise* as well as the behaviour: if term or discipline
+weights ever change so a new grad role can clear 75 unaided, the dedicated path
+is redundant and the test says so.

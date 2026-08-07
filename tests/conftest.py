@@ -107,16 +107,21 @@ def _no_writes_to_repo_databases():
     the consequence stops being cheap the moment one of them is what a run is
     reading. Checked by mtime+size: hashing a 7 MB file per test is not free.
     """
-    from jobpipe.config import DEFAULT_DB, DEFAULT_HTTP_CACHE
+    from jobpipe.config import AUDIT_DIR, DEFAULT_DB, DEFAULT_HTTP_CACHE
 
     def stamp(p: Path):
+        if p.is_dir():
+            # A directory the run appends to, so the guard has to look inside
+            # it: the directory's own mtime does not move when a file in it
+            # grows, only when one is created or removed.
+            return sorted((f.name, f.stat().st_size) for f in p.iterdir())
         return (p.stat().st_mtime_ns, p.stat().st_size) if p.exists() else None
 
-    watched = [DEFAULT_DB, DEFAULT_HTTP_CACHE]
+    watched = [DEFAULT_DB, DEFAULT_HTTP_CACHE, AUDIT_DIR]
     before = {p: stamp(p) for p in watched}
     yield
     for path in watched:
         assert stamp(path) == before[path], (
             f"test wrote to the repo's {path.name}. Build Config with "
-            f"db_path/http_cache_path under tmp_path."
+            f"db_path/http_cache_path/audit_dir under tmp_path."
         )

@@ -174,6 +174,12 @@ def _cmd_digest(args: argparse.Namespace) -> int:
     if args.stdout or not cfg.ntfy_topic:
         print(body)
         return 0
+
+    # Pinged before the send, not after: the check answers "did this job run",
+    # and a failed ntfy call is a different alarm on a different path.
+    from jobpipe.notify import ping_healthcheck
+
+    ping_healthcheck(cfg.digest_healthcheck_url)
     NtfyClient(cfg).send_text(
         # The title is what shows on a locked phone, so the backlog goes there
         # too - it is the part that is about you rather than about the feed.

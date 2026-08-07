@@ -44,6 +44,7 @@ def cfg(tmp_path):
     return Config(
         db_path=tmp_path / "t.db",
         http_cache_path=tmp_path / "http-cache.db",
+        audit_dir=tmp_path / "audit",
         export_path=tmp_path / "postings.jsonl",
         baseline_path=tmp_path / "baseline.txt",
         index_path=tmp_path / "INDEX.md",
@@ -148,6 +149,7 @@ class TestPrefilterIntegration:
 
         cfg2 = Config(db_path=cfg.db_path.parent / "t2.db",
                       http_cache_path=cfg.db_path.parent / "hc2.db",
+                      audit_dir=cfg.db_path.parent / "audit2",
                       export_path=cfg.db_path.parent / "e2.jsonl",
                       baseline_path=cfg.db_path.parent / "b2.txt",
                       index_path=cfg.db_path.parent / "I2.md",
@@ -186,6 +188,7 @@ class TestDryRun:
 
         cfg2 = Config(db_path=tmp_path / "real.db",
                       http_cache_path=tmp_path / "real-hc.db",
+                      audit_dir=tmp_path / "audit3",
                       export_path=tmp_path / "real.jsonl",
                       baseline_path=tmp_path / "realb.txt",
                       index_path=tmp_path / "realI.md",

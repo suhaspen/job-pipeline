@@ -101,11 +101,14 @@ class TestPollSchedule:
 
     def test_the_working_window_polls_every_30_minutes(self, poll_crons):
         monday = [w for w, _ in fire_times(poll_crons, days=1)]
-        in_window = [w for w in monday if 6 <= w.hour < 19 or (w.hour == 19 and w.minute == 0)]
+        in_window = [w for w in monday if 6 <= w.hour < 19 or (w.hour == 19 and w.minute == 5)]
         assert len(in_window) == 27
-        assert in_window[0].hour == 6 and in_window[0].minute == 0
-        assert in_window[-1].hour == 19 and in_window[-1].minute == 0
-        assert {w.minute for w in in_window} == {0, 30}
+        assert in_window[0].hour == 6 and in_window[0].minute == 5
+        assert in_window[-1].hour == 19 and in_window[-1].minute == 5
+        # :05 and :35, offset from Simplify's :01/:31 publish cadence. Moving
+        # these back to the hour re-introduces a full cycle of latency on the
+        # largest feed whenever GitHub happens to be punctual.
+        assert {w.minute for w in in_window} == {5, 35}
 
     def test_no_gap_longer_than_four_hours(self, poll_crons):
         times = [w for w, _ in fire_times(poll_crons)]
@@ -188,6 +191,7 @@ class TestCommitCoverage:
         regenerated = [
             cfg.EXPORT_PATH, cfg.BASELINE_PATH, cfg.RUN_REPORT_PATH,
             cfg.INDEX_PATH, cfg.INDEX_BY_SCORE_PATH, cfg.SHEET_STATUS_CACHE,
+            cfg.AUDIT_DIR,
         ]
         for path in regenerated:
             rel = path.relative_to(cfg.REPO_ROOT).as_posix()

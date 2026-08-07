@@ -36,6 +36,7 @@ def cfg(tmp_path):
     return Config(
         db_path=tmp_path / "t.db",
         http_cache_path=tmp_path / "http-cache.db",
+        audit_dir=tmp_path / "audit",
         export_path=tmp_path / "postings.jsonl",
         baseline_path=tmp_path / "baseline.txt",
         index_path=tmp_path / "INDEX.md",
@@ -314,3 +315,78 @@ class TestPromptTemplate:
         body = S.PROMPT_PATH.read_text()
         for token in ("{{RESUME}}", "{{TARGETS}}", "{{POSTING}}", "{{HEURISTIC}}"):
             assert token in body
+
+
+class TestNewGradTargetTier1:
+    """The general tier 1 rule is unreachable for new grad roles by
+    arithmetic, not by a hair: 32 (term) + 22 (best discipline) + 20 (target)
+    = 74 against a threshold of 75. The user's primary category could never
+    interrupt, whatever the company or the role."""
+
+    def _posting(self, **kw):
+        from jobpipe.models import Posting, Status, Term, Tier, utcnow
+
+        base = dict(
+            id="a" * 16, dedupe_key="k", company="Cohere", company_norm="cohere",
+            title="Research Engineer", title_norm="research engineer",
+            term=Term.NEW_GRAD, location="SF", location_norm="sf-bay", remote=False,
+            apply_url="https://example.test/1", source="stub",
+            first_seen_at=utcnow(), last_seen_at=utcnow(), posted_at=utcnow(),
+            tier=Tier.DIGEST, score=0, status=Status.NEW, link_status="ok",
+        )
+        base.update(kw)
+        return Posting(**base)
+
+    def test_the_old_rule_really_was_unreachable(self):
+        """Guards the premise. If term or discipline weights change so that a
+        new grad role can clear 75 on its own, this path is redundant."""
+        from jobpipe.triage.scorer import _DISCIPLINE_POINTS, _TERM_POINTS, TIER1_SCORE
+        from jobpipe.models import Term
+
+        best = (
+            _TERM_POINTS[Term.NEW_GRAD]
+            + max(points for _, points, _ in _DISCIPLINE_POINTS)
+            + 20  # target company
+        )
+        assert best < TIER1_SCORE, (
+            f"a new grad role can now reach {best} >= {TIER1_SCORE} unaided; "
+            f"the dedicated path may no longer be needed"
+        )
+
+    def test_new_grad_at_a_target_company_interrupts_at_the_floor(self):
+        from jobpipe.models import Tier
+        from jobpipe.triage.scorer import TIER1_NEWGRAD_TARGET_SCORE, assign_tier
+
+        p = self._posting()
+        assert assign_tier(TIER1_NEWGRAD_TARGET_SCORE, p, {"cohere"}, []) is Tier.INTERRUPTING
+
+    def test_below_the_floor_stays_tier_2(self):
+        from jobpipe.models import Tier
+        from jobpipe.triage.scorer import TIER1_NEWGRAD_TARGET_SCORE, assign_tier
+
+        p = self._posting()
+        assert assign_tier(TIER1_NEWGRAD_TARGET_SCORE - 1, p, {"cohere"}, []) is Tier.SILENT
+
+    def test_a_non_target_company_never_takes_this_path(self):
+        """Target-company membership is what bounds the volume. Loosening the
+        score alone would have admitted 22 postings a day."""
+        from jobpipe.models import Tier
+        from jobpipe.triage.scorer import assign_tier
+
+        p = self._posting(company="ByteDance", company_norm="bytedance")
+        assert assign_tier(74, p, {"cohere"}, []) is Tier.SILENT
+
+    def test_another_term_never_takes_this_path(self):
+        from jobpipe.models import Tier, Term
+        from jobpipe.triage.scorer import assign_tier
+
+        p = self._posting(term=Term.SUMMER_2027)
+        assert assign_tier(65, p, {"cohere"}, []) is Tier.SILENT
+
+    def test_a_disqualifier_still_wins(self):
+        from jobpipe.models import Disqualifier, Tier
+        from jobpipe.triage.scorer import assign_tier
+
+        p = self._posting()
+        dq = [list(Disqualifier)[0]]
+        assert assign_tier(90, p, {"cohere"}, dq) is Tier.DIGEST

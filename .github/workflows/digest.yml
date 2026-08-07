@@ -31,4 +31,8 @@ jobs:
       - name: Send daily digest
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          # Its own check, daily period. This job commits nothing, so without a
+          # ping there is no way to tell a digest that ran from one that never
+          # fired - which is how the midnight-PT bug survived unnoticed.
+          DIGEST_HEALTHCHECK_URL: ${{ secrets.DIGEST_HEALTHCHECK_URL }}
         run: python -m jobpipe.cli digest

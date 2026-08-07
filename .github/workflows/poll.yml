@@ -20,11 +20,18 @@ on:
 
     # Weekdays 06:00-19:00 America/Los_Angeles, every 30 minutes. This is when
     # US postings actually go up, and being early is the entire point.
-    # `*/30 6-18` stops at 18:30, so 19:00 is a separate entry rather than
-    # `6-19`, which would also fire at 19:30.
-    - cron: "*/30 6-18 * * 1-5"
+    # `5,35 6-18` stops at 18:35, so 19:05 is a separate entry rather than
+    # `6-19`, which would also fire at 19:35.
+    #
+    # :05 and :35, not :00 and :30. Simplify's bot commits listings.json at
+    # :01 and :31 past the hour, every 30 minutes, and it is the largest feed
+    # here. Polling on the hour meant arriving a minute before the new data
+    # every time, so anything it published waited a full cycle. GitHub's
+    # scheduler lag usually covers that by accident; this makes the punctual
+    # case - the one where latency is best and matters most - correct too.
+    - cron: "5,35 6-18 * * 1-5"
       timezone: America/Los_Angeles
-    - cron: "0 19 * * 1-5"
+    - cron: "5 19 * * 1-5"
       timezone: America/Los_Angeles
 
     # Weekday off-hours: every 4 hours, continuing the grid from 19:00.
@@ -136,7 +143,7 @@ jobs:
           git config user.name  "jobpipe[bot]"
           git config user.email "jobpipe@users.noreply.github.com"
           git add data/postings.jsonl data/baseline.txt data/run-report.json \
-                  data/sheet-status.json INDEX.md INDEX-by-score.md
+                  data/sheet-status.json data/audit INDEX.md INDEX-by-score.md
           # An all-304 run produces a byte-identical export. No diff, no commit -
           # which is what keeps the history readable.
           if git diff --cached --quiet; then
