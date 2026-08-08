@@ -253,7 +253,7 @@ export is a live record of where you are applying.
 | `data/postings.jsonl` | Source of truth. Sorted by id, stable key order, diffs line-by-line |
 | `data/baseline.txt` | Ids seen before cutover; one per line |
 | `data/run-report.json` | Latest run outcome |
-| `INDEX.md` | Live postings, newest first (score breaks ties) |
+| `INDEX.md` | Live postings, newest **date** first, then tier, then score |
 | `INDEX-by-score.md` | The same rows ordered by fit |
 | `data/sheet-status.json` | Last known copy of your Sheets status column |
 

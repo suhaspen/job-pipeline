@@ -27,7 +27,7 @@ import re
 from datetime import timedelta
 from typing import Any, Iterator
 
-from jobpipe.models import RawPosting, utcnow
+from jobpipe.models import PostedPrecision, RawPosting, utcnow
 from jobpipe.sources.base import FetchStats, HttpClient
 
 RAW_BASE = "https://raw.githubusercontent.com/speedyapply/{repo}/main/{path}"
@@ -192,6 +192,7 @@ class SpeedyApplySource:
                     location=location,
                     term_default=term_default,
                     posted_at=_posted_at(cells[i_age]) if i_age is not None else None,
+                    posted_precision=PostedPrecision.AGE_DERIVED,
                     raw={"file": path, "salary": _text(cells[header.index("salary")])
                          if "salary" in header and len(cells) > header.index("salary") else None},
                 )

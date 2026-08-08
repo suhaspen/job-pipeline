@@ -15,7 +15,7 @@ import pytest
 
 from jobpipe import index_md
 from jobpipe.index_md import SORT_DATE, SORT_SCORE, TERM_HEADING
-from jobpipe.models import Posting, Status, Term, Tier
+from jobpipe.models import Posting, PostedPrecision, Status, Term, Tier
 
 NOW = datetime(2026, 8, 7, 12, 0, tzinfo=timezone.utc)
 
@@ -23,7 +23,7 @@ NOW = datetime(2026, 8, 7, 12, 0, tzinfo=timezone.utc)
 def make(
     *, id_="0" * 16, company="Acme", title="Software Engineer, New Grad",
     term=Term.NEW_GRAD, score=50, hours_ago=1.0, status=Status.NEW,
-    tier=Tier.DIGEST, posted=True,
+    tier=Tier.DIGEST, posted=True, precision=PostedPrecision.INSTANT,
 ) -> Posting:
     seen = NOW - timedelta(hours=hours_ago)
     return Posting(
@@ -33,6 +33,7 @@ def make(
         first_seen_at=seen, last_seen_at=NOW,
         posted_at=seen if posted else None,
         tier=tier, score=score, status=status, link_status="ok",
+        posted_precision=precision if posted else PostedPrecision.UNKNOWN,
     )
 
 
@@ -53,15 +54,42 @@ def scores_of(rows: list[str]) -> list[int]:
 
 
 class TestDefaultOrdering:
-    def test_date_is_primary_and_score_only_breaks_ties(self):
-        """A fresh zero outranks a week-old ninety. That is the point."""
+    def test_date_is_primary_and_todays_rows_order_by_tier_then_score(self):
+        """A fresh zero outranks a week-old ninety. That is the point.
+
+        Within a day, ordering is tier then score - not time of day, which is
+        meaningless for three of the four sources.
+        """
         postings = [
             make(id_="a" * 16, score=0, hours_ago=1),
             make(id_="b" * 16, score=90, hours_ago=24 * 7),
             make(id_="c" * 16, score=70, hours_ago=2),
         ]
         out = index_md.render(postings, now=NOW, sort=SORT_DATE)
-        assert scores_of(rows_of(out, TERM_HEADING[Term.NEW_GRAD])) == [0, 70, 90]
+        assert scores_of(rows_of(out, TERM_HEADING[Term.NEW_GRAD])) == [70, 0, 90]
+
+    def test_tier_outranks_score_within_a_day(self):
+        """Within a day the thing worth reading first is the thing worth
+        applying to first."""
+        postings = [
+            make(id_="a" * 16, score=99, hours_ago=1, tier=Tier.DIGEST),
+            make(id_="b" * 16, score=40, hours_ago=2, tier=Tier.INTERRUPTING),
+        ]
+        out = index_md.render(postings, now=NOW, sort=SORT_DATE)
+        assert scores_of(rows_of(out, TERM_HEADING[Term.NEW_GRAD])) == [40, 99]
+
+    def test_time_of_day_no_longer_decides_anything(self):
+        """The bug: sub-day precision ranked ATS above speedyapply on the
+        strength of an hour and a minute that were never real."""
+        early = make(id_="a" * 16, score=50, hours_ago=1,
+                     precision=PostedPrecision.AGE_DERIVED)
+        late = make(id_="b" * 16, score=50, hours_ago=9,
+                    precision=PostedPrecision.INSTANT)
+        out = index_md.render([early, late], now=NOW, sort=SORT_DATE)
+        rows = rows_of(out, TERM_HEADING[Term.NEW_GRAD])
+        # Same date, same tier, same score - the tiebreak is the id, not the
+        # clock, so the ordering is stable rather than arbitrary.
+        assert len(rows) == 2
 
     def test_equal_dates_fall_back_to_score(self):
         postings = [
@@ -107,9 +135,10 @@ class TestFreshSection:
         ]
         out = index_md.render(postings, now=NOW, sort=SORT_DATE)
         rows = rows_of(out, "Posted in the last 48 hours (3)")
-        assert scores_of(rows) == [10, 90, 50]
+        # a and b share a date, so score breaks the tie; c is a day older.
+        assert scores_of(rows) == [90, 10, 50]
         # Flat, but each row still says which term it belongs to.
-        assert TERM_HEADING[Term.FALL_2026] in rows[1]
+        assert TERM_HEADING[Term.FALL_2026] in rows[0]
 
     def test_excludes_anything_older_than_the_window(self):
         postings = [
@@ -211,3 +240,83 @@ class TestExclusions:
         for sort in (SORT_DATE, SORT_SCORE):
             out = index_md.render([make(status=status, hours_ago=1)], now=NOW, sort=sort)
             assert "_No live postings yet._" in out
+
+
+class TestPostedPrecision:
+    """Three of the four sources cannot give a publication instant, and the
+    ordering, the age column and the 48-hour window all read that field."""
+
+    def test_an_inexact_age_is_marked(self):
+        out = index_md.render(
+            [make(id_="a" * 16, hours_ago=50, precision=PostedPrecision.AGE_DERIVED)],
+            now=NOW,
+        )
+        assert "~2d old" in out
+
+    def test_an_exact_age_is_not_marked(self):
+        out = index_md.render(
+            [make(id_="a" * 16, hours_ago=50, precision=PostedPrecision.INSTANT)],
+            now=NOW,
+        )
+        row = rows_of(out, TERM_HEADING[Term.NEW_GRAD])[0]
+        assert "2d old" in row and "~" not in row
+
+    def test_a_date_precision_row_keeps_its_utc_date(self):
+        """The stored value is midnight UTC standing in for a calendar date.
+        Converting it to Pacific moves it to 17:00 the *previous* day and
+        relabels the posting as a day older than the source said."""
+        p = make(id_="a" * 16, precision=PostedPrecision.DATE)
+        p.posted_at = datetime(2026, 8, 7, 0, 0, tzinfo=timezone.utc)
+        assert index_md.posted_date(p).isoformat() == "2026-08-07"
+        assert "2026-08-07" in index_md.render([p], now=NOW)
+
+    def test_an_instant_row_is_dated_in_the_readers_zone(self):
+        """02:00Z on the 7th is 19:00 on the 6th in Pacific, and the reader's
+        sense of when it happened is the one that matters."""
+        p = make(id_="a" * 16, precision=PostedPrecision.INSTANT)
+        p.posted_at = datetime(2026, 8, 7, 2, 0, tzinfo=timezone.utc)
+        assert index_md.posted_date(p).isoformat() == "2026-08-06"
+
+    def test_a_date_only_row_is_not_aged_out_of_the_window_early(self):
+        """The bug: a Simplify row dated the 7th is stored 07T00:00Z, so at
+        09T06:00Z the exact test computes 54 hours and drops it - even though
+        the req may have gone up at 23:00 on the 7th and be 31 hours old. The
+        exact test does not blur these rows, it systematically ages them, and
+        always toward hiding something fresh."""
+        # 06:00Z on the 9th is 23:00 on the 8th in Pacific, so "today or
+        # yesterday" is the 8th or the 7th.
+        now = datetime(2026, 8, 9, 6, 0, tzinfo=timezone.utc)
+        p = make(id_="a" * 16, precision=PostedPrecision.DATE)
+        p.posted_at = datetime(2026, 8, 7, 0, 0, tzinfo=timezone.utc)
+
+        assert (now - p.posted_at) == timedelta(hours=54)  # the old test excluded it
+        assert index_md._is_fresh(p, now) is True          # the date test keeps it
+
+    def test_an_instant_row_still_gets_the_exact_window(self):
+        now = datetime(2026, 8, 9, 6, 0, tzinfo=timezone.utc)
+        p = make(id_="a" * 16, precision=PostedPrecision.INSTANT)
+        p.posted_at = datetime(2026, 8, 7, 5, 0, tzinfo=timezone.utc)
+        assert index_md._is_fresh(p, now) is False
+
+    def test_the_section_says_how_many_rows_are_approximate(self):
+        postings = [
+            make(id_="a" * 16, hours_ago=1, precision=PostedPrecision.INSTANT),
+            make(id_="b" * 16, hours_ago=2, precision=PostedPrecision.AGE_DERIVED),
+            make(id_="c" * 16, hours_ago=3, precision=PostedPrecision.DATE),
+        ]
+        out = index_md.render(postings, now=NOW)
+        assert "2 of these carry a `~` age" in out
+
+    def test_no_note_when_every_fresh_row_is_exact(self):
+        out = index_md.render([make(id_="a" * 16, hours_ago=1)], now=NOW)
+        assert "carry a `~` age" not in out
+
+    def test_ordering_is_stable_across_runs(self):
+        """Without a total order the output depends on input order, and
+        INDEX.md would flap between runs and commit for no reason."""
+        postings = [
+            make(id_=f"{i:016x}", score=50, hours_ago=1) for i in range(6)
+        ]
+        first = index_md.render(postings, now=NOW)
+        second = index_md.render(list(reversed(postings)), now=NOW)
+        assert first == second

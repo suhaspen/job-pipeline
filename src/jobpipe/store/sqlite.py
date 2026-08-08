@@ -39,6 +39,10 @@ CREATE TABLE IF NOT EXISTS postings (
     first_seen_at      TEXT NOT NULL,
     last_seen_at       TEXT NOT NULL,
     posted_at          TEXT,
+    -- How much of posted_at is real: instant | date | age_derived | unknown.
+    -- Three of the four sources cannot give a publication instant, and the
+    -- ordering and the freshness window both read this.
+    posted_precision   TEXT NOT NULL DEFAULT 'unknown',
     tier               INTEGER NOT NULL DEFAULT 3,
     score              INTEGER NOT NULL DEFAULT 0,
     score_rationale    TEXT DEFAULT '',
@@ -222,6 +226,7 @@ class SqliteStore:
             "link_status": "TEXT NOT NULL DEFAULT 'unchecked'",
             "link_checked_at": "TEXT",
             "tier_source": "TEXT NOT NULL DEFAULT 'heuristic'",
+            "posted_precision": "TEXT NOT NULL DEFAULT 'unknown'",
         }
         for column, decl in additions.items():
             if column not in existing:
@@ -805,4 +810,5 @@ _COLUMNS = [
     "recruiter_title", "recruiter_linkedin", "draft_note", "status",
     "applied_at", "company_norm", "title_norm", "location_norm", "source_id",
     "source_url", "final_url", "link_status", "link_checked_at", "tier_source",
+    "posted_precision",
 ]

@@ -35,7 +35,7 @@ of applicants within 48 hours.
 > they move in a way that does not make sense.
 
 Read `FEEDBACK.md` for build history, `ASSUMPTIONS.md` for judgment calls
-A1–A12, B1–B10, C1–C9, D1–D5, E1–E9 and F1–F7, `docs/sources.md` for every
+A1–A12, B1–B10, C1–C9, D1–D5, E1–E9, F1–F9 and G1–G4, `docs/sources.md` for every
 endpoint and schema, `docs/operations.md` for the runbook.
 
 ## Immediate task — done
@@ -145,6 +145,36 @@ Two worked examples, both from the same week:
 The pattern to watch for: a change that makes something *not happen* — not
 fetched, not uploaded, not stored, not run — where an invariant quietly relied
 on it happening.
+
+### `posted_at` is not the same kind of number in every row
+
+`posted_precision` says which: **instant** (ATS `first_published` /
+`createdAt` / `publishedAt`), **date** (Simplify — a calendar date stored as
+midnight UTC), **age_derived** (speedyapply — a stated whole-day age, stamped
+at fetch time). Set per source, and every consumer of `posted_at` has to read
+it.
+
+- **Sort by date, never by raw timestamp.** Sub-day ordering is meaningless for
+  three of the four sources, and sorting on the instant ranked ATS above
+  speedyapply on the strength of an hour and a minute that were never real.
+  The key is date, then tier, then score, then id — the last for a total order,
+  so INDEX.md cannot flap between runs and commit for nothing.
+- **The date is not `posted_at.date()`.** A DATE row is a *UTC* calendar date
+  and must not be shifted into another zone; an INSTANT row is a real moment
+  and belongs in Pacific. `models.posted_date` is the single answer, shared by
+  INDEX.md and the Sheets mirror so they cannot disagree.
+- **The freshness window reads precision too.** The exact 48-hour test applied
+  to a DATE row does not blur it, it *systematically* ages it by up to a day
+  and always toward hiding something fresh. INSTANT rows get the exact test;
+  everything else is compared by date.
+- **The `~` in the age column is load-bearing.** It marks a number that is as
+  good as the source allows and no better. Removing it makes an approximate
+  "2d" indistinguishable from an exact one — which is how a four-source
+  histogram produced four sharp spikes that were entirely artifact.
+- `PRECISION_BY_SOURCE` backfills rows exported before the field existed, keyed
+  on the field being **absent** rather than on it being `unknown`. A line that
+  says unknown means it, and export→restore must stay an identity for anything
+  actually written down.
 
 ### Data safety
 

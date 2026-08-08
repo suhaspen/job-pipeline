@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
-from jobpipe.models import Posting
+from jobpipe.models import PRECISION_BY_SOURCE, PostedPrecision, Posting
 
 # Fixed key order. Appending here is safe; reordering rewrites every line.
 #
@@ -32,7 +32,7 @@ FIELDS = [
     "source_id", "first_seen_at", "last_seen_at", "posted_at", "tier", "score",
     "score_rationale", "tier_source", "disqualifiers", "status", "applied_at",
     "company_norm", "title_norm", "recruiter_name", "recruiter_title",
-    "recruiter_linkedin", "draft_note", "link_checked_at",
+    "recruiter_linkedin", "draft_note", "link_checked_at", "posted_precision",
 ]
 
 
@@ -95,6 +95,24 @@ def _row_for_insert(row: dict[str, Any]) -> dict[str, Any]:
     out["disqualifiers"] = json.dumps(row.get("disqualifiers") or [])
     out["link_status"] = row.get("link_status") or "unchecked"
     out["tier_source"] = row.get("tier_source") or "heuristic"
+    # Lines written before this field existed carry no precision at all, and
+    # the export is what every CI run rebuilds from - so the backfill belongs
+    # here rather than in a schema migration, which would run against an empty
+    # table. Precision is a property of the source, so this restates what was
+    # already true rather than guessing.
+    #
+    # Keyed on the field being *absent*, not on it being "unknown". A line that
+    # explicitly says unknown means it, and export -> restore has to stay an
+    # identity for everything that is actually written down - otherwise the
+    # round-trip parity test is asserting something weaker than it looks.
+    if "posted_precision" in row:
+        out["posted_precision"] = row["posted_precision"] or PostedPrecision.UNKNOWN.value
+    elif row.get("posted_at"):
+        out["posted_precision"] = PRECISION_BY_SOURCE.get(
+            row.get("source"), PostedPrecision.UNKNOWN
+        ).value
+    else:
+        out["posted_precision"] = PostedPrecision.UNKNOWN.value
     return out
 
 

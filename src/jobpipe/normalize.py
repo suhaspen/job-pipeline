@@ -689,6 +689,7 @@ def normalize_raw(raw: RawPosting) -> Posting:
         first_seen_at=now,
         last_seen_at=now,
         posted_at=raw.posted_at,
+        posted_precision=raw.posted_precision,
         company_norm=company_norm,
         title_norm=title_norm,
         location_norm=location_norm,

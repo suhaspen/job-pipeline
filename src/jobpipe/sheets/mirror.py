@@ -25,7 +25,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-from jobpipe.models import Posting, Status, utcnow
+from jobpipe.models import Posting, Status, posted_date, utcnow
 from jobpipe.sheets.client import SheetsClient, SheetsError
 
 LIVE = "Live"
@@ -89,6 +89,12 @@ def live_row(posting: Posting) -> list[Any]:
     `posted_date` is an ISO date string written with `USER_ENTERED`, so Sheets
     stores a date value. A rendered age - "2d old" - sorts lexically, which
     puts "10d" above "2d" and makes the column silently lie about recency.
+
+    The day comes from the shared `posted_date`, not from `strftime` on the
+    raw timestamp, so this column and INDEX.md cannot disagree about which day
+    a posting belongs to. They would: a Simplify row is a UTC calendar date
+    that must not be shifted, an ATS row is an instant that belongs in Pacific,
+    and `strftime` gets one of the two wrong whichever zone it picks.
     """
     location = posting.location_norm or ""
     if posting.remote:
@@ -100,7 +106,7 @@ def live_row(posting: Posting) -> list[Any]:
         posting.term.value,
         int(posting.tier),
         escape(location),
-        posting.posted_at.strftime("%Y-%m-%d") if posting.posted_at else "",
+        posted_date(posting).isoformat() if posting.posted_at else "",
         escape(posting.apply_url or ""),
     ]
 

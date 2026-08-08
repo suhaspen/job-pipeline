@@ -17,7 +17,7 @@ import pytest
 
 from jobpipe import export as jsonl_export
 from jobpipe.export import FIELDS
-from jobpipe.models import Posting, Status, Term, Tier
+from jobpipe.models import Posting, PostedPrecision, Status, Term, Tier
 from jobpipe.store import SqliteStore
 
 
@@ -47,6 +47,7 @@ def _fully_populated() -> Posting:
         first_seen_at=now,
         last_seen_at=now + timedelta(hours=1),
         posted_at=now - timedelta(days=2),
+        posted_precision=PostedPrecision.INSTANT,
         tier=Tier.INTERRUPTING,
         score=91,
         score_rationale="target company, new grad",
@@ -145,3 +146,69 @@ class TestRestoreTolerance:
     def test_empty_export_restores_nothing_and_does_not_raise(self, tmp_path):
         with SqliteStore(tmp_path / "d.db") as store:
             assert jsonl_export.restore(store, tmp_path / "nope.jsonl", tmp_path / "no.txt") == 0
+
+
+class TestPrecisionBackfill:
+    """Every line in the committed export predates `posted_precision`, and the
+    export is what every CI run rebuilds from. The backfill has to happen on
+    the way in - a schema migration runs at connect time, against an empty
+    table, before restore has inserted anything."""
+
+    def _legacy_line(self, tmp_path, **overrides):
+        import json
+
+        row = {f: getattr(_fully_populated(), f) for f in FIELDS}
+        row.pop("posted_precision")
+        row["term"] = row["term"].value
+        row["tier"] = int(row["tier"])
+        row["status"] = row["status"].value
+        row["disqualifiers"] = []
+        for key in ("first_seen_at", "last_seen_at", "posted_at", "applied_at",
+                    "link_checked_at"):
+            row[key] = row[key].isoformat() if row[key] else None
+        row.update(overrides)
+        path = tmp_path / "legacy.jsonl"
+        path.write_text(json.dumps(row) + "\n", encoding="utf-8")
+        return path, row["id"]
+
+    @pytest.mark.parametrize("source,expected", [
+        ("ats", PostedPrecision.INSTANT),
+        ("simplify-newgrad", PostedPrecision.DATE),
+        ("speedyapply-swe", PostedPrecision.AGE_DERIVED),
+        ("speedyapply-ai", PostedPrecision.AGE_DERIVED),
+    ])
+    def test_a_legacy_line_is_backfilled_from_its_source(
+        self, tmp_path, source, expected
+    ):
+        path, id_ = self._legacy_line(tmp_path, source=source)
+        with SqliteStore(tmp_path / "d.db") as store:
+            jsonl_export.restore(store, path, tmp_path / "no.txt")
+            assert store.get(id_).posted_precision is expected
+
+    def test_an_unrecognised_source_stays_unknown(self, tmp_path):
+        """Better a row that admits it does not know than one that claims a
+        precision on the strength of a source name nobody has checked."""
+        path, id_ = self._legacy_line(tmp_path, source="something-new")
+        with SqliteStore(tmp_path / "d.db") as store:
+            jsonl_export.restore(store, path, tmp_path / "no.txt")
+            assert store.get(id_).posted_precision is PostedPrecision.UNKNOWN
+
+    def test_no_posted_at_means_no_precision_to_claim(self, tmp_path):
+        path, id_ = self._legacy_line(tmp_path, source="ats", posted_at=None)
+        with SqliteStore(tmp_path / "d.db") as store:
+            jsonl_export.restore(store, path, tmp_path / "no.txt")
+            assert store.get(id_).posted_precision is PostedPrecision.UNKNOWN
+
+    def test_an_explicit_unknown_is_not_overwritten(self, tmp_path):
+        """The backfill keys on the field being absent, not on it being
+        unknown. A line that says unknown means it, and export -> restore has
+        to stay an identity for everything actually written down."""
+        path, id_ = self._legacy_line(tmp_path, source="ats")
+        import json
+
+        row = json.loads(path.read_text())
+        row["posted_precision"] = "unknown"
+        path.write_text(json.dumps(row) + "\n", encoding="utf-8")
+        with SqliteStore(tmp_path / "d.db") as store:
+            jsonl_export.restore(store, path, tmp_path / "no.txt")
+            assert store.get(id_).posted_precision is PostedPrecision.UNKNOWN

@@ -553,3 +553,53 @@ API for personal accounts (`/users/{u}/settings/billing/actions` needs the
 `user` scope and returns usage, not the limit). Confirm it in the billing UI.
 **Raising it above $0 converts the failure mode from "stops" to "charges"**,
 and every budget figure in this repo changes meaning at that moment.
+
+---
+
+## Phase G — posted_at precision
+
+### G1 — Precision is declared per source, not detected per row
+`posted_precision` is `instant` for ATS, `date` for Simplify, `age_derived` for
+speedyapply. The contamination it fixes reached further than the histogram that
+exposed it: `posted_at` was the primary sort key for INDEX.md and the basis of
+the 48-hour section, so an hour and a minute that were never real were deciding
+what the user read first.
+
+**The cost of the per-source call is concrete and worth knowing.** 76% of
+Simplify rows corpus-wide carry a real time of day, and 67 of the 70
+date-precision rows in the current 48-hour section do. Declaring the whole
+source `date` marks all of them approximate. The alternative — inferring
+precision per row from whether the timestamp is exactly midnight UTC — would
+recover those, at the cost of misreading a genuine 00:00:00Z posting as
+date-only. That error is rare and lands in the conservative direction, so the
+per-row rule is arguably better on both axes.
+
+It is not implemented because per-source was the instruction and because a rule
+that reads precision out of the *value* is the kind of thing that quietly stops
+being true when a feed changes format. Revisit with a bias toward doing it: the
+evidence says it would recover most of the marked rows.
+
+### G2 — The date is not `posted_at.date()`
+A DATE row is a UTC calendar date wearing a timestamp. Converting it to Pacific
+moves it to 17:00 the previous day and relabels the posting a day older than the
+source said. An INSTANT row is a real moment and belongs in the reader's zone —
+02:00Z on the 7th went up at 19:00 on the 6th as far as he is concerned.
+
+`models.posted_date` holds both cases, and lives in `models` rather than in a
+rendering module because INDEX.md and the Sheets mirror both sort on it. Two
+answers to "what day is this" is one too many.
+
+### G3 — The 48-hour window compares dates for imprecise rows
+The exact test applied to a DATE row is not merely fuzzy, it is *biased*: the
+row is stored at midnight, so its computed age is always an overestimate, and
+it drops out of the window up to a day early. Always in the direction of hiding
+something fresh, which is the one direction that matters here. INSTANT rows keep
+the exact test; the rest are "today or yesterday" in Pacific, which leaves an
+error of up to a day in *either* direction instead of a full day in the wrong
+one. The section states how many of its rows are approximate.
+
+### G4 — Sorting gained `id` as a final tiebreak
+Date, tier and score leave ties, and without a total order the output depends on
+the order rows come back from the store. That would make INDEX.md flap between
+runs and produce commits with no content change — defeating the
+skip-commit-when-unchanged rule that the whole export format exists to support.

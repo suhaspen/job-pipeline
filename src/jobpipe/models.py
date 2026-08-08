@@ -18,6 +18,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 class Term(str, enum.Enum):
@@ -54,6 +55,73 @@ class Status(str, enum.Enum):
     APPLIED = "applied"
     SKIPPED = "skipped"
     EXPIRED = "expired"
+
+
+class PostedPrecision(str, enum.Enum):
+    """How much of `posted_at` is real.
+
+    Three of the four sources cannot give a publication instant, and treating
+    all of them as if they could produced a histogram with four sharp spikes
+    that looked exactly like a publishing rhythm and were entirely an artifact.
+    The same contamination reaches the INDEX ordering, where sub-day precision
+    silently ranked ATS above speedyapply for reasons that do not exist.
+
+    INSTANT       the source published a real timestamp (ATS `first_published`,
+                  Lever `createdAt`, Ashby `publishedAt`).
+    DATE          a calendar date, stored as midnight UTC. The time of day is
+                  padding, and - importantly - the date is a *UTC* date that
+                  must not be shifted into another zone.
+    AGE_DERIVED   computed from a stated age ("2d") at fetch time. Accurate to
+                  the unit the source used and no further; the sub-unit part is
+                  noise from when we happened to fetch.
+    UNKNOWN       no `posted_at` at all.
+    """
+
+    INSTANT = "instant"
+    DATE = "date"
+    AGE_DERIVED = "age_derived"
+    UNKNOWN = "unknown"
+
+    @property
+    def is_exact(self) -> bool:
+        return self is PostedPrecision.INSTANT
+
+
+# The reader is in Pacific. An ATS req published 2026-08-07T02:00Z went up at
+# 19:00 on the 6th as far as he is concerned, and filing it under the 7th makes
+# every view disagree with his own sense of when things happened.
+LOCAL_TZ = ZoneInfo("America/Los_Angeles")
+
+
+def posted_date(posting: "Posting"):
+    """The calendar day a posting went up, at the best precision available.
+
+    Not `posted_at.date()`. For a DATE-precision row the stored value is
+    midnight UTC standing in for a calendar date, so converting it to Pacific
+    moves it to 17:00 the *previous* day and relabels the posting a day older
+    than the source said. The date is already the answer there; it is read in
+    UTC and left alone. Everything else is a real instant and belongs in the
+    reader's zone.
+
+    Lives here rather than in a rendering module because INDEX.md and the
+    Sheets mirror both sort on it, and two answers to "what day is this" is one
+    too many.
+    """
+    when = posting.posted_at or posting.first_seen_at
+    if posting.posted_precision is PostedPrecision.DATE:
+        return when.date()
+    return when.astimezone(LOCAL_TZ).date()
+
+
+# Precision is a property of the source, not of the row, which is what makes
+# it recoverable for rows exported before the field existed. Sources set it
+# directly; this map only backfills history.
+PRECISION_BY_SOURCE = {
+    "ats": PostedPrecision.INSTANT,
+    "simplify-newgrad": PostedPrecision.DATE,
+    "speedyapply-swe": PostedPrecision.AGE_DERIVED,
+    "speedyapply-ai": PostedPrecision.AGE_DERIVED,
+}
 
 
 class Disqualifier(str, enum.Enum):
@@ -97,6 +165,9 @@ class RawPosting:
     # so text always outranks this.
     term_default: str | None = None
     posted_at: datetime | None = None
+    # Every source must declare this. The default is the honest one: a source
+    # that has not thought about it is not claiming precision it may not have.
+    posted_precision: PostedPrecision = PostedPrecision.UNKNOWN
     remote_hint: bool | None = None
     description: str | None = None
     # Source's own id. Recorded for debugging and never used as a dedupe key on
@@ -127,6 +198,7 @@ class Posting:
     first_seen_at: datetime
     last_seen_at: datetime
     posted_at: datetime | None = None
+    posted_precision: PostedPrecision = PostedPrecision.UNKNOWN
     tier: Tier = Tier.DIGEST
     score: int = 0
     score_rationale: str = ""
@@ -170,6 +242,7 @@ class Posting:
             "first_seen_at": iso(self.first_seen_at),
             "last_seen_at": iso(self.last_seen_at),
             "posted_at": iso(self.posted_at),
+            "posted_precision": self.posted_precision.value,
             "tier": int(self.tier),
             "score": self.score,
             "score_rationale": self.score_rationale,
@@ -209,6 +282,10 @@ class Posting:
             first_seen_at=dt(row["first_seen_at"]),  # type: ignore[arg-type]
             last_seen_at=dt(row["last_seen_at"]),  # type: ignore[arg-type]
             posted_at=dt(row["posted_at"]),
+            posted_precision=PostedPrecision(
+                (row["posted_precision"] if "posted_precision" in row.keys() else None)
+                or "unknown"
+            ),
             tier=Tier(row["tier"]),
             score=row["score"],
             score_rationale=row["score_rationale"] or "",

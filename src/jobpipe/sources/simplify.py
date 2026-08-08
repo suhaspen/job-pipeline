@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from jobpipe.models import RawPosting
+from jobpipe.models import PostedPrecision, RawPosting
 from jobpipe.sources.base import FetchStats, HttpClient, parse_timestamp
 
 LISTINGS_URL = (
@@ -93,6 +93,14 @@ class SimplifySource:
                     # fallback - but a title naming a season still wins.
                     term_default="new-grad",
                     posted_at=parse_timestamp(row.get("date_posted")),
+                    # DATE rather than INSTANT even though ~75% of the feed
+                    # carries a real time of day: the remainder is stamped
+                    # midnight UTC, and nothing distinguishes "posted at
+                    # 00:00:00Z" from "we only knew the date". Declaring the
+                    # weakest case for the whole source over-marks uncertainty,
+                    # which is the safe direction - the alternative silently
+                    # claims precision on a quarter of the rows.
+                    posted_precision=PostedPrecision.DATE,
                     description=None,
                     source_id=str(row.get("id") or "") or None,
                     raw={

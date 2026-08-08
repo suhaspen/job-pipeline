@@ -28,7 +28,7 @@ from typing import Any, Callable
 import requests
 
 from jobpipe.config import ATSCompany
-from jobpipe.models import RawPosting
+from jobpipe.models import PostedPrecision, RawPosting
 from jobpipe.sources.base import FetchStats, HttpClient, parse_timestamp, strip_html
 
 GREENHOUSE_URL = "https://boards-api.greenhouse.io/v1/boards/{token}/jobs?content=true"
@@ -64,6 +64,7 @@ def _greenhouse(row: dict[str, Any], company: ATSCompany, source: str) -> RawPos
         # first_published is when the req went live; updated_at moves on every
         # edit, so it would make an old posting look new.
         posted_at=parse_timestamp(row.get("first_published")),
+        posted_precision=PostedPrecision.INSTANT,
         description=strip_html(row.get("content")),
         source_id=str(row.get("id") or "") or None,
         raw={
@@ -90,6 +91,7 @@ def _lever(row: dict[str, Any], company: ATSCompany, source: str) -> RawPosting 
         apply_url=url,
         location=categories.get("location"),
         posted_at=parse_timestamp(row.get("createdAt")),
+        posted_precision=PostedPrecision.INSTANT,
         description=row.get("descriptionPlain") or strip_html(row.get("description")),
         remote_hint=True if workplace == "remote" else (False if workplace else None),
         source_id=str(row.get("id") or "") or None,
@@ -118,6 +120,7 @@ def _ashby(row: dict[str, Any], company: ATSCompany, source: str) -> RawPosting 
         apply_url=url,
         location=row.get("location"),
         posted_at=parse_timestamp(row.get("publishedAt")),
+        posted_precision=PostedPrecision.INSTANT,
         description=row.get("descriptionPlain") or strip_html(row.get("descriptionHtml")),
         remote_hint=row.get("isRemote"),
         source_id=str(row.get("id") or "") or None,

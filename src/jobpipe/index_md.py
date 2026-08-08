@@ -19,7 +19,9 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 
 from jobpipe.linkcheck import LinkStatus
-from jobpipe.models import Posting, Status, Term, utcnow
+from jobpipe.models import (
+    LOCAL_TZ, Posting, PostedPrecision, Status, Term, posted_date, utcnow,
+)
 from jobpipe.notify.ntfy import posted_age
 
 # Off-cycle co-ops first: they are the scarce, time-critical ones.
@@ -81,16 +83,22 @@ def _escape(text: str) -> str:
 
 
 def sort_key(mode: str):
-    """Ordering within a group. Both keys are total; only the priority differs.
+    """Ordering within a group.
 
-    Score is the tiebreak under `date` rather than the other way round on
-    purpose. Score alone would bury a fresh req behind a fortnight of
-    better-scoring ones, and the whole point of a 30-minute poll is to be there
-    before the fortnight-old req's applicant count is four figures.
+    The date is a *date*, not a timestamp. Sub-day ordering is meaningless for
+    three of the four sources - speedyapply states a whole-day age and we stamp
+    it at fetch time, Simplify is a calendar date padded with midnight - so
+    sorting on the raw instant ranked ATS above speedyapply on the strength of
+    an hour and a minute that were never real. Tier breaks the tie next,
+    because within a day the thing worth reading first is the thing worth
+    applying to first, and score after that.
+
+    Tier is negated: `Tier.INTERRUPTING` is 1 and sorts *first*, while the rest
+    of the key descends.
     """
     if mode == SORT_SCORE:
-        return lambda p: (p.score, p.posted_at or p.first_seen_at)
-    return lambda p: (p.posted_at or p.first_seen_at, p.score)
+        return lambda p: (p.score, posted_date(p), -int(p.tier), p.id)
+    return lambda p: (posted_date(p), -int(p.tier), p.score, p.id)
 
 
 def _posted_date(posting: Posting) -> str:
@@ -102,8 +110,23 @@ def _posted_date(posting: Posting) -> str:
     Sheets mirror encodes by storing a real date value rather than a rendered
     one, for the same reason: a rendered age cannot be ordered or audited.
     """
-    when = posting.posted_at
-    return when.strftime("%Y-%m-%d") if when else "-"
+    if not posting.posted_at:
+        return "-"
+    return posted_date(posting).isoformat()
+
+
+def _age(posting: Posting, now: datetime) -> str:
+    """Age, marked when the underlying timestamp is not exact.
+
+    `~` means the number is as good as the source allows and no better:
+    speedyapply states whole days, Simplify a calendar date. Without the mark
+    an approximate "2d" is indistinguishable from an exact one, which is how a
+    histogram of four sources produced four spikes that were pure artifact.
+    """
+    text = posted_age(posting, now=now)
+    if posting.posted_at and not posting.posted_precision.is_exact:
+        return f"~{text}"
+    return text
 
 
 def _table_head(*, with_term: bool) -> list[str]:
@@ -124,7 +147,7 @@ def _row(posting: Posting, now: datetime, *, with_term: bool = False) -> str:
         _escape(posting.title),
         location,
         _posted_date(posting),
-        posted_age(posting, now=now),
+        _age(posting, now=now),
         str(posting.score),
         link,
         _LINK_BADGE.get(posting.link_status, posting.link_status),
@@ -135,16 +158,31 @@ def _row(posting: Posting, now: datetime, *, with_term: bool = False) -> str:
 
 
 def _is_fresh(posting: Posting, now: datetime) -> bool:
-    """Only a real `posted_at` counts.
+    """Membership of the section at the top, at the row's own precision.
 
-    Falling back to `first_seen_at` would put every backfilled req in the
-    "posted in the last 48 hours" section on the day it was discovered, which
-    is precisely the claim the section exists to make and the one thing it must
-    not get wrong.
+    Only a real `posted_at` counts at all. Falling back to `first_seen_at`
+    would put every backfilled req in here on the day it was discovered, which
+    is precisely the claim the section makes and the one thing it must not get
+    wrong.
+
+    Beyond that the comparison depends on what the timestamp means:
+
+    * INSTANT rows get the real 48-hour test.
+    * Everything else is compared by date, "today or yesterday" in the reader's
+      zone. Applying the exact test to them was a live bug: a Simplify row
+      dated the 7th is stored as 07T00:00Z, so by 09:06Z it computes as 54
+      hours old and drops out - even though the req may have gone up at 23:00
+      on the 7th and be 31 hours old. The exact test does not merely blur those
+      rows, it *systematically* ages them, and always in the direction of
+      hiding something fresh. Comparing dates leaves an error of up to a day in
+      either direction instead of a full day in the wrong one.
     """
     if not posting.posted_at:
         return False
-    return (now - posting.posted_at) <= timedelta(hours=FRESH_HOURS)
+    if posting.posted_precision is PostedPrecision.INSTANT:
+        return (now - posting.posted_at) <= timedelta(hours=FRESH_HOURS)
+    cutoff = now.astimezone(LOCAL_TZ).date() - timedelta(days=FRESH_HOURS // 24 - 1)
+    return posted_date(posting) >= cutoff
 
 
 def render(
@@ -174,7 +212,10 @@ def render(
         lines += [counterpart, ""]
     lines += [
         "`index!` means the link resolves to a careers page rather than the req; "
-        "`dead!` means it does not resolve at all. Both are treated as expiry signals.",
+        "`dead!` means it does not resolve at all. Both are treated as expiry signals. "
+        "A `~` on the age means the source published a whole-day age or a bare "
+        "date, so the number is exact only to the day - sorting is by date for "
+        "that reason, then tier, then score.",
         "",
     ]
 
@@ -209,6 +250,14 @@ def render(
             "Every term, flat. This is the set where being early still counts.",
             "",
         ]
+        approx = sum(1 for p in fresh if not p.posted_precision.is_exact)
+        if approx:
+            lines += [
+                f"_{approx} of these carry a `~` age: the source states a whole "
+                f"day or a date, so membership here is accurate to the day and "
+                f"no further._",
+                "",
+            ]
         lines += _table_head(with_term=True)
         lines += [_row(p, now, with_term=True) for p in fresh]
         lines.append("")
