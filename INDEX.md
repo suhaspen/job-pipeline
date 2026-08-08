@@ -1,12 +1,12 @@
 # Live postings
 
-551 open · newest first, score as the tiebreak · regenerated every run · last updated 2026-08-08 14:39 UTC
+552 open · newest first, score as the tiebreak · regenerated every run · last updated 2026-08-08 18:49 UTC
 
 Ordered by fit instead: [INDEX-by-score.md](INDEX-by-score.md)
 
 `index!` means the link resolves to a careers page rather than the req; `dead!` means it does not resolve at all. Both are treated as expiry signals.
 
-Fall 2026 (co-op): 8, Winter 2027 (co-op): 2, New grad 2027: 248, Summer 2027: 76, Term unknown: 217
+Fall 2026 (co-op): 8, Winter 2027 (co-op): 2, New grad 2027: 249, Summer 2027: 76, Term unknown: 217
 
 ## Posted in the last 48 hours (100)
 
@@ -14,34 +14,35 @@ Every term, flat. This is the set where being early still counts.
 
 | Term | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|---|--:|---|---|
-| New grad 2027 | interface.ai | Software Engineer | sf bay | 2026-08-08 | 13h old | 64 | [apply](https://jobs.ashbyhq.com/interface-ai/abbcf39d-cac3-49ee-9279-82a59821c300/application?embed=true) | ok |
-| New grad 2027 | Montreal Institute for Learning Algorithms | AI Applications Developer Junior - AI Applications Development | montreal | 2026-08-08 | 13h old | 62 | [apply](https://apply.workable.com/mila-2/j/F73F31C5FD/apply) | ok |
-| New grad 2027 | Kanbrick | Forward Deployed Engineer | nashville | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/kanbrick/j/CA9D01A008/apply) | ok |
-| New grad 2027 | Arondite | Deployed Software Engineer New Grad | london | 2026-08-08 | 13h old | 52 | [apply](https://apply.workable.com/arondite/j/5C5C551ADA/apply) | ok |
-| New grad 2027 | Arondite | Software Engineer | london | 2026-08-08 | 13h old | 52 | [apply](https://apply.workable.com/arondite/j/4DB1A60B2B/apply) | ok |
-| New grad 2027 | Homey | Junior Software Engineer - AI-Native | london | 2026-08-08 | 13h old | 62 | [apply](https://apply.workable.com/homey/j/50DF9B3D53/apply) | ok |
-| New grad 2027 | Capula | Quantitative Strategist | london | 2026-08-08 | 13h old | 0 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/9582487D5F/apply) | ok |
-| New grad 2027 | Capula | Technology Graduate Analyst | london | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/88F2A24444/apply) | ok |
-| New grad 2027 | Zaizi | Graduate Machine Learning Engineer - AI | cheltenham uk | 2026-08-08 | 13h old | 62 | [apply](https://apply.workable.com/zaizi/j/5DBB38B542/apply) | ok |
-| New grad 2027 | WallStreetQuants | Quantitative Researcher New Grad | london | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/62537809CA/apply) | ok |
-| New grad 2027 | WallStreetQuants | Quantitative Trader New Grad | chicago | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/615D982644/apply) | ok |
-| New grad 2027 | WallStreetQuants | Quantitative Trader New Grad | nyc | 2026-08-08 | 13h old | 46 | [apply](https://apply.workable.com/wallstreetquants/j/C611D9282B/apply) | ok |
-| New grad 2027 | WallStreetQuants | Quantitative Developer | us in / remote | 2026-08-08 | 13h old | 44 | [apply](https://apply.workable.com/wallstreetquants/j/AA3FB20456/apply) | ok |
-| New grad 2027 | Flexcompute | Software Engineer - Infrastructure | boston | 2026-08-08 | 13h old | 63 | [apply](https://apply.workable.com/flexcompute/j/143ECD1848/apply) | ok |
-| New grad 2027 | Flexcompute | CFD Solver Developer | boston | 2026-08-08 | 13h old | 0 | [apply](https://apply.workable.com/flexcompute/j/EF3D90A736/apply) | ok |
-| New grad 2027 | UBDS Group | Data Engineer | london | 2026-08-08 | 13h old | 50 | [apply](https://apply.workable.com/ubds/j/3E4DD87355/apply) | ok |
-| New grad 2027 | Cortica | Junior AI Data Engineer | san diego | 2026-08-07 | 15h old | 68 | [apply](https://job-boards.greenhouse.io/allcareers/jobs/8692383002) | ok |
-| New grad 2027 | WelbeHealth | AI Engineer 1 | us ca | 2026-08-07 | 16h old | 62 | [apply](https://job-boards.greenhouse.io/welbehealth/jobs/8599687002) | ok |
-| New grad 2027 | DRW | Quantitative Trading Analyst | london | 2026-08-07 | 16h old | 40 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7957241) | ok |
-| New grad 2027 | Trovy | Software Engineer | nyc | 2026-08-07 | 16h old | 58 | [apply](https://jobs.ashbyhq.com/trovy/952381a5-607c-4470-8a97-1c7a8c48c2f0/application?embed=true) | ok |
-| New grad 2027 | ByteDance | Software Development Engineer Graduate - Intent-Based Networking | sf bay | 2026-08-07 | 16h old | 64 | [apply](https://jobs.bytedance.com/en/position/7671145911004842245/detail) | ok |
-| New grad 2027 | Intercontinental Exchange | Engineer 1 | us fl | 2026-08-07 | 16h old | 40 | [apply](https://careers-ice.icims.com/jobs/13435/job?mobile=true&needsRedirect=false) | ok |
-| New grad 2027 | Charles Schwab | Software Development and Engineering Associate - Wealth and Advice Solutions Technology | austin | 2026-08-07 | 16h old | 57 | [apply](https://career-schwab.icims.com/jobs/124804/job?mobile=true&needsRedirect=false) | ok |
-| New grad 2027 | Amazon | Research Scientist - Amazon Music - Disco | seattle | 2026-08-07 | 16h old | 0 | [apply](https://amazon.jobs/en/jobs/10418485/research-scientist-amazon-music-disco) | blocked |
-| New grad 2027 | Belvedere Trading | Quantitative Trader | chicago | 2026-08-07 | 16h old | 40 | [apply](https://jobs.lever.co/belvederetrading/34369a5c-55c0-4e9f-9d2e-4f21b9418bee/apply) | ok |
-| New grad 2027 | Riverside Research | Software Developer - Sensor and Systems | us va | 2026-08-07 | 16h old | 58 | [apply](https://careers-riversideresearch.icims.com/jobs/4331/job?mobile=true&needsRedirect=false) | ok |
-| New grad 2027 | Belvedere Trading | Software Engineer | chicago | 2026-08-07 | 16h old | 52 | [apply](https://jobs.lever.co/belvederetrading/2f6480e5-7bf1-4c41-b3b5-3c7404d95b5f/apply) | ok |
-| New grad 2027 | OptionMetrics | Quantitative Associate - Quantitative Research | nyc | 2026-08-07 | 16h old | 0 | [apply](https://jobs.lever.co/optionmetrics/cd628723-e18f-4f4c-985f-4740d23c22ab/apply) | ok |
+| New grad 2027 | Starbucks | Software Engineer - Software Engineering | nashville | 2026-08-08 | 3h old | 52 | [apply](https://starbucks.eightfold.ai/careers/job/481078166214) | ok |
+| New grad 2027 | interface.ai | Software Engineer | sf bay | 2026-08-08 | 17h old | 64 | [apply](https://jobs.ashbyhq.com/interface-ai/abbcf39d-cac3-49ee-9279-82a59821c300/application?embed=true) | ok |
+| New grad 2027 | Montreal Institute for Learning Algorithms | AI Applications Developer Junior - AI Applications Development | montreal | 2026-08-08 | 17h old | 62 | [apply](https://apply.workable.com/mila-2/j/F73F31C5FD/apply) | ok |
+| New grad 2027 | Kanbrick | Forward Deployed Engineer | nashville | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/kanbrick/j/CA9D01A008/apply) | ok |
+| New grad 2027 | Arondite | Deployed Software Engineer New Grad | london | 2026-08-08 | 17h old | 52 | [apply](https://apply.workable.com/arondite/j/5C5C551ADA/apply) | ok |
+| New grad 2027 | Arondite | Software Engineer | london | 2026-08-08 | 17h old | 52 | [apply](https://apply.workable.com/arondite/j/4DB1A60B2B/apply) | ok |
+| New grad 2027 | Homey | Junior Software Engineer - AI-Native | london | 2026-08-08 | 17h old | 62 | [apply](https://apply.workable.com/homey/j/50DF9B3D53/apply) | ok |
+| New grad 2027 | Capula | Quantitative Strategist | london | 2026-08-08 | 17h old | 0 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/9582487D5F/apply) | ok |
+| New grad 2027 | Capula | Technology Graduate Analyst | london | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/88F2A24444/apply) | ok |
+| New grad 2027 | Zaizi | Graduate Machine Learning Engineer - AI | cheltenham uk | 2026-08-08 | 17h old | 62 | [apply](https://apply.workable.com/zaizi/j/5DBB38B542/apply) | ok |
+| New grad 2027 | WallStreetQuants | Quantitative Researcher New Grad | london | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/62537809CA/apply) | ok |
+| New grad 2027 | WallStreetQuants | Quantitative Trader New Grad | chicago | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/615D982644/apply) | ok |
+| New grad 2027 | WallStreetQuants | Quantitative Trader New Grad | nyc | 2026-08-08 | 17h old | 46 | [apply](https://apply.workable.com/wallstreetquants/j/C611D9282B/apply) | ok |
+| New grad 2027 | WallStreetQuants | Quantitative Developer | us in / remote | 2026-08-08 | 17h old | 44 | [apply](https://apply.workable.com/wallstreetquants/j/AA3FB20456/apply) | ok |
+| New grad 2027 | Flexcompute | Software Engineer - Infrastructure | boston | 2026-08-08 | 17h old | 63 | [apply](https://apply.workable.com/flexcompute/j/143ECD1848/apply) | ok |
+| New grad 2027 | Flexcompute | CFD Solver Developer | boston | 2026-08-08 | 17h old | 0 | [apply](https://apply.workable.com/flexcompute/j/EF3D90A736/apply) | ok |
+| New grad 2027 | UBDS Group | Data Engineer | london | 2026-08-08 | 17h old | 50 | [apply](https://apply.workable.com/ubds/j/3E4DD87355/apply) | ok |
+| New grad 2027 | Cortica | Junior AI Data Engineer | san diego | 2026-08-07 | 20h old | 68 | [apply](https://job-boards.greenhouse.io/allcareers/jobs/8692383002) | ok |
+| New grad 2027 | WelbeHealth | AI Engineer 1 | us ca | 2026-08-07 | 20h old | 62 | [apply](https://job-boards.greenhouse.io/welbehealth/jobs/8599687002) | ok |
+| New grad 2027 | DRW | Quantitative Trading Analyst | london | 2026-08-07 | 20h old | 40 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7957241) | ok |
+| New grad 2027 | Trovy | Software Engineer | nyc | 2026-08-07 | 20h old | 58 | [apply](https://jobs.ashbyhq.com/trovy/952381a5-607c-4470-8a97-1c7a8c48c2f0/application?embed=true) | ok |
+| New grad 2027 | ByteDance | Software Development Engineer Graduate - Intent-Based Networking | sf bay | 2026-08-07 | 20h old | 64 | [apply](https://jobs.bytedance.com/en/position/7671145911004842245/detail) | ok |
+| New grad 2027 | Intercontinental Exchange | Engineer 1 | us fl | 2026-08-07 | 20h old | 40 | [apply](https://careers-ice.icims.com/jobs/13435/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | Charles Schwab | Software Development and Engineering Associate - Wealth and Advice Solutions Technology | austin | 2026-08-07 | 20h old | 57 | [apply](https://career-schwab.icims.com/jobs/124804/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | Amazon | Research Scientist - Amazon Music - Disco | seattle | 2026-08-07 | 20h old | 0 | [apply](https://amazon.jobs/en/jobs/10418485/research-scientist-amazon-music-disco) | blocked |
+| New grad 2027 | Belvedere Trading | Quantitative Trader | chicago | 2026-08-07 | 20h old | 40 | [apply](https://jobs.lever.co/belvederetrading/34369a5c-55c0-4e9f-9d2e-4f21b9418bee/apply) | ok |
+| New grad 2027 | Riverside Research | Software Developer - Sensor and Systems | us va | 2026-08-07 | 20h old | 58 | [apply](https://careers-riversideresearch.icims.com/jobs/4331/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | Belvedere Trading | Software Engineer | chicago | 2026-08-07 | 20h old | 52 | [apply](https://jobs.lever.co/belvederetrading/2f6480e5-7bf1-4c41-b3b5-3c7404d95b5f/apply) | ok |
+| New grad 2027 | OptionMetrics | Quantitative Associate - Quantitative Research | nyc | 2026-08-07 | 20h old | 0 | [apply](https://jobs.lever.co/optionmetrics/cd628723-e18f-4f4c-985f-4740d23c22ab/apply) | ok |
 | Fall 2026 (co-op) | Samsung AI Research Center | 2026 Fall Intern - Digital Health Algorithms | sf bay | 2026-08-07 | 1d old | 60 | [apply](https://job-boards.greenhouse.io/samsungresearchamericainternship/jobs/8678880002) | ok |
 | New grad 2027 | Clera | Founding AI Engineer | sf bay | 2026-08-07 | 1d old | 74 | [apply](https://jobs.ashbyhq.com/clera/cac2629b-73dc-4445-b9c2-6c1f9c938b7f) | ok |
 | Term unknown | Terranova | Software Engineering Intern | sf bay | 2026-08-07 | 1d old | 44 | [apply](https://jobs.ashbyhq.com/terranova/a8e5a8d2-4af3-4736-b66e-e0804447f7a0) | ok |
@@ -113,7 +114,6 @@ Every term, flat. This is the set where being early still counts.
 | New grad 2027 | Applied Intuition | Android Software Engineer - Applications | sf bay | 2026-08-06 | 1d old | 64 | [apply](https://jobs.ashbyhq.com/applied/ffd8635d-43d5-4298-a29c-67eaa45c5a4a) | ok |
 | New grad 2027 | TikTok | Software Engineer Graduate - Global E-commerce-Search - 2027 Start | seattle | 2026-08-06 | 1d old | 62 | [apply](https://lifeattiktok.com/search/7670558992960358661) | ok |
 | New grad 2027 | Roblox | 2027 Software Engineer - Early Career | sf bay | 2026-08-06 | 1d old | 64 | [apply](https://careers.roblox.com/jobs/8072244?gh_jid=8072244) | blocked |
-| Term unknown | Perplexity | Member of Technical Staff (Software Engineer, Backend API) | london | 2026-08-06 | 1d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/9ca67ae3-8507-40b9-9d7f-d81b249c1041) | ok |
 
 ## Fall 2026 (co-op) (8)
 
@@ -132,41 +132,42 @@ Every term, flat. This is the set where being early still counts.
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
-| Robinhood | Market Research Strategy Intern | singapore | 2026-08-04 | 3d old | 44 | [apply](https://boards.greenhouse.io/robinhood/jobs/8103727?t=gh_src=&gh_jid=8103727) | ok |
-| Cohere | Machine Learning Intern/Co-op  (Winter 2027) | canada | 2026-05-13 | 86d old | 78 | [apply](https://jobs.ashbyhq.com/cohere/36d1f52f-8270-4652-adf5-5303a0ff341b) | ok |
+| Robinhood | Market Research Strategy Intern | singapore | 2026-08-04 | 4d old | 44 | [apply](https://boards.greenhouse.io/robinhood/jobs/8103727?t=gh_src=&gh_jid=8103727) | ok |
+| Cohere | Machine Learning Intern/Co-op  (Winter 2027) | canada | 2026-05-13 | 87d old | 78 | [apply](https://jobs.ashbyhq.com/cohere/36d1f52f-8270-4652-adf5-5303a0ff341b) | ok |
 
-## New grad 2027 (248)
+## New grad 2027 (249)
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
-| interface.ai | Software Engineer | sf bay | 2026-08-08 | 13h old | 64 | [apply](https://jobs.ashbyhq.com/interface-ai/abbcf39d-cac3-49ee-9279-82a59821c300/application?embed=true) | ok |
-| Montreal Institute for Learning Algorithms | AI Applications Developer Junior - AI Applications Development | montreal | 2026-08-08 | 13h old | 62 | [apply](https://apply.workable.com/mila-2/j/F73F31C5FD/apply) | ok |
-| Kanbrick | Forward Deployed Engineer | nashville | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/kanbrick/j/CA9D01A008/apply) | ok |
-| Arondite | Deployed Software Engineer New Grad | london | 2026-08-08 | 13h old | 52 | [apply](https://apply.workable.com/arondite/j/5C5C551ADA/apply) | ok |
-| Arondite | Software Engineer | london | 2026-08-08 | 13h old | 52 | [apply](https://apply.workable.com/arondite/j/4DB1A60B2B/apply) | ok |
-| Homey | Junior Software Engineer - AI-Native | london | 2026-08-08 | 13h old | 62 | [apply](https://apply.workable.com/homey/j/50DF9B3D53/apply) | ok |
-| Capula | Quantitative Strategist | london | 2026-08-08 | 13h old | 0 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/9582487D5F/apply) | ok |
-| Capula | Technology Graduate Analyst | london | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/88F2A24444/apply) | ok |
-| Zaizi | Graduate Machine Learning Engineer - AI | cheltenham uk | 2026-08-08 | 13h old | 62 | [apply](https://apply.workable.com/zaizi/j/5DBB38B542/apply) | ok |
-| WallStreetQuants | Quantitative Researcher New Grad | london | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/62537809CA/apply) | ok |
-| WallStreetQuants | Quantitative Trader New Grad | chicago | 2026-08-08 | 13h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/615D982644/apply) | ok |
-| WallStreetQuants | Quantitative Trader New Grad | nyc | 2026-08-08 | 13h old | 46 | [apply](https://apply.workable.com/wallstreetquants/j/C611D9282B/apply) | ok |
-| WallStreetQuants | Quantitative Developer | us in / remote | 2026-08-08 | 13h old | 44 | [apply](https://apply.workable.com/wallstreetquants/j/AA3FB20456/apply) | ok |
-| Flexcompute | Software Engineer - Infrastructure | boston | 2026-08-08 | 13h old | 63 | [apply](https://apply.workable.com/flexcompute/j/143ECD1848/apply) | ok |
-| Flexcompute | CFD Solver Developer | boston | 2026-08-08 | 13h old | 0 | [apply](https://apply.workable.com/flexcompute/j/EF3D90A736/apply) | ok |
-| UBDS Group | Data Engineer | london | 2026-08-08 | 13h old | 50 | [apply](https://apply.workable.com/ubds/j/3E4DD87355/apply) | ok |
-| Cortica | Junior AI Data Engineer | san diego | 2026-08-07 | 15h old | 68 | [apply](https://job-boards.greenhouse.io/allcareers/jobs/8692383002) | ok |
-| WelbeHealth | AI Engineer 1 | us ca | 2026-08-07 | 16h old | 62 | [apply](https://job-boards.greenhouse.io/welbehealth/jobs/8599687002) | ok |
-| DRW | Quantitative Trading Analyst | london | 2026-08-07 | 16h old | 40 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7957241) | ok |
-| Trovy | Software Engineer | nyc | 2026-08-07 | 16h old | 58 | [apply](https://jobs.ashbyhq.com/trovy/952381a5-607c-4470-8a97-1c7a8c48c2f0/application?embed=true) | ok |
-| ByteDance | Software Development Engineer Graduate - Intent-Based Networking | sf bay | 2026-08-07 | 16h old | 64 | [apply](https://jobs.bytedance.com/en/position/7671145911004842245/detail) | ok |
-| Intercontinental Exchange | Engineer 1 | us fl | 2026-08-07 | 16h old | 40 | [apply](https://careers-ice.icims.com/jobs/13435/job?mobile=true&needsRedirect=false) | ok |
-| Charles Schwab | Software Development and Engineering Associate - Wealth and Advice Solutions Technology | austin | 2026-08-07 | 16h old | 57 | [apply](https://career-schwab.icims.com/jobs/124804/job?mobile=true&needsRedirect=false) | ok |
-| Amazon | Research Scientist - Amazon Music - Disco | seattle | 2026-08-07 | 16h old | 0 | [apply](https://amazon.jobs/en/jobs/10418485/research-scientist-amazon-music-disco) | blocked |
-| Belvedere Trading | Quantitative Trader | chicago | 2026-08-07 | 16h old | 40 | [apply](https://jobs.lever.co/belvederetrading/34369a5c-55c0-4e9f-9d2e-4f21b9418bee/apply) | ok |
-| Riverside Research | Software Developer - Sensor and Systems | us va | 2026-08-07 | 16h old | 58 | [apply](https://careers-riversideresearch.icims.com/jobs/4331/job?mobile=true&needsRedirect=false) | ok |
-| Belvedere Trading | Software Engineer | chicago | 2026-08-07 | 16h old | 52 | [apply](https://jobs.lever.co/belvederetrading/2f6480e5-7bf1-4c41-b3b5-3c7404d95b5f/apply) | ok |
-| OptionMetrics | Quantitative Associate - Quantitative Research | nyc | 2026-08-07 | 16h old | 0 | [apply](https://jobs.lever.co/optionmetrics/cd628723-e18f-4f4c-985f-4740d23c22ab/apply) | ok |
+| Starbucks | Software Engineer - Software Engineering | nashville | 2026-08-08 | 3h old | 52 | [apply](https://starbucks.eightfold.ai/careers/job/481078166214) | ok |
+| interface.ai | Software Engineer | sf bay | 2026-08-08 | 17h old | 64 | [apply](https://jobs.ashbyhq.com/interface-ai/abbcf39d-cac3-49ee-9279-82a59821c300/application?embed=true) | ok |
+| Montreal Institute for Learning Algorithms | AI Applications Developer Junior - AI Applications Development | montreal | 2026-08-08 | 17h old | 62 | [apply](https://apply.workable.com/mila-2/j/F73F31C5FD/apply) | ok |
+| Kanbrick | Forward Deployed Engineer | nashville | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/kanbrick/j/CA9D01A008/apply) | ok |
+| Arondite | Deployed Software Engineer New Grad | london | 2026-08-08 | 17h old | 52 | [apply](https://apply.workable.com/arondite/j/5C5C551ADA/apply) | ok |
+| Arondite | Software Engineer | london | 2026-08-08 | 17h old | 52 | [apply](https://apply.workable.com/arondite/j/4DB1A60B2B/apply) | ok |
+| Homey | Junior Software Engineer - AI-Native | london | 2026-08-08 | 17h old | 62 | [apply](https://apply.workable.com/homey/j/50DF9B3D53/apply) | ok |
+| Capula | Quantitative Strategist | london | 2026-08-08 | 17h old | 0 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/9582487D5F/apply) | ok |
+| Capula | Technology Graduate Analyst | london | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/capula-investment-management-ltd/j/88F2A24444/apply) | ok |
+| Zaizi | Graduate Machine Learning Engineer - AI | cheltenham uk | 2026-08-08 | 17h old | 62 | [apply](https://apply.workable.com/zaizi/j/5DBB38B542/apply) | ok |
+| WallStreetQuants | Quantitative Researcher New Grad | london | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/62537809CA/apply) | ok |
+| WallStreetQuants | Quantitative Trader New Grad | chicago | 2026-08-08 | 17h old | 40 | [apply](https://apply.workable.com/wallstreetquants/j/615D982644/apply) | ok |
+| WallStreetQuants | Quantitative Trader New Grad | nyc | 2026-08-08 | 17h old | 46 | [apply](https://apply.workable.com/wallstreetquants/j/C611D9282B/apply) | ok |
+| WallStreetQuants | Quantitative Developer | us in / remote | 2026-08-08 | 17h old | 44 | [apply](https://apply.workable.com/wallstreetquants/j/AA3FB20456/apply) | ok |
+| Flexcompute | Software Engineer - Infrastructure | boston | 2026-08-08 | 17h old | 63 | [apply](https://apply.workable.com/flexcompute/j/143ECD1848/apply) | ok |
+| Flexcompute | CFD Solver Developer | boston | 2026-08-08 | 17h old | 0 | [apply](https://apply.workable.com/flexcompute/j/EF3D90A736/apply) | ok |
+| UBDS Group | Data Engineer | london | 2026-08-08 | 17h old | 50 | [apply](https://apply.workable.com/ubds/j/3E4DD87355/apply) | ok |
+| Cortica | Junior AI Data Engineer | san diego | 2026-08-07 | 20h old | 68 | [apply](https://job-boards.greenhouse.io/allcareers/jobs/8692383002) | ok |
+| WelbeHealth | AI Engineer 1 | us ca | 2026-08-07 | 20h old | 62 | [apply](https://job-boards.greenhouse.io/welbehealth/jobs/8599687002) | ok |
+| DRW | Quantitative Trading Analyst | london | 2026-08-07 | 20h old | 40 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7957241) | ok |
+| Trovy | Software Engineer | nyc | 2026-08-07 | 20h old | 58 | [apply](https://jobs.ashbyhq.com/trovy/952381a5-607c-4470-8a97-1c7a8c48c2f0/application?embed=true) | ok |
+| ByteDance | Software Development Engineer Graduate - Intent-Based Networking | sf bay | 2026-08-07 | 20h old | 64 | [apply](https://jobs.bytedance.com/en/position/7671145911004842245/detail) | ok |
+| Intercontinental Exchange | Engineer 1 | us fl | 2026-08-07 | 20h old | 40 | [apply](https://careers-ice.icims.com/jobs/13435/job?mobile=true&needsRedirect=false) | ok |
+| Charles Schwab | Software Development and Engineering Associate - Wealth and Advice Solutions Technology | austin | 2026-08-07 | 20h old | 57 | [apply](https://career-schwab.icims.com/jobs/124804/job?mobile=true&needsRedirect=false) | ok |
+| Amazon | Research Scientist - Amazon Music - Disco | seattle | 2026-08-07 | 20h old | 0 | [apply](https://amazon.jobs/en/jobs/10418485/research-scientist-amazon-music-disco) | blocked |
+| Belvedere Trading | Quantitative Trader | chicago | 2026-08-07 | 20h old | 40 | [apply](https://jobs.lever.co/belvederetrading/34369a5c-55c0-4e9f-9d2e-4f21b9418bee/apply) | ok |
+| Riverside Research | Software Developer - Sensor and Systems | us va | 2026-08-07 | 20h old | 58 | [apply](https://careers-riversideresearch.icims.com/jobs/4331/job?mobile=true&needsRedirect=false) | ok |
+| Belvedere Trading | Software Engineer | chicago | 2026-08-07 | 20h old | 52 | [apply](https://jobs.lever.co/belvederetrading/2f6480e5-7bf1-4c41-b3b5-3c7404d95b5f/apply) | ok |
+| OptionMetrics | Quantitative Associate - Quantitative Research | nyc | 2026-08-07 | 20h old | 0 | [apply](https://jobs.lever.co/optionmetrics/cd628723-e18f-4f4c-985f-4740d23c22ab/apply) | ok |
 | Clera | Founding AI Engineer | sf bay | 2026-08-07 | 1d old | 74 | [apply](https://jobs.ashbyhq.com/clera/cac2629b-73dc-4445-b9c2-6c1f9c938b7f) | ok |
 | Zoox | Embedded Software Engineer - Body Systems | sf bay | 2026-08-07 | 1d old | 70 | [apply](https://jobs.lever.co/zoox/46c23963-2be1-4037-8f1a-ce87bdccde6d) | ok |
 | SMX | Junior Software Engineer - 5510 | us al | 2026-08-07 | 1d old | 52 | [apply](https://www.smxtech.com/careers/?gh_jid=7832667003) | ok |
@@ -317,8 +318,8 @@ Every term, flat. This is the set where being early still counts.
 | TikTok | Machine Learning MLOps Engineer Graduate - MLOps - 2027 Start | sf bay | 2026-08-01 | 7d old | 70 | [apply](https://lifeattiktok.com/search/7668700671828707589) | ok |
 | TikTok | Site Reliability Engineer Graduate - Global SRE - 2027 Start | sf bay | 2026-08-01 | 7d old | 48 | [apply](https://lifeattiktok.com/search/7668701361741007109) | ok |
 | Ema | AI Resident | sf bay | 2026-08-01 | 7d old | 70 | [apply](https://jobs.ashbyhq.com/ema/0b289403-c2a2-4544-b244-5e9e042af883/application?embed=true) | ok |
-| IMC | Graduate Quantitative Researcher | amsterdam | 2026-07-31 | 7d old | 36 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4939821101) | ok |
-| IMC | Graduate Software Engineer | aarhus central denmark region denmark | 2026-07-31 | 7d old | 48 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4635938101) | - |
+| IMC | Graduate Quantitative Researcher | amsterdam | 2026-07-31 | 8d old | 36 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4939821101) | ok |
+| IMC | Graduate Software Engineer | aarhus central denmark region denmark | 2026-07-31 | 8d old | 48 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4635938101) | - |
 | Duke University | Analytics Engineer | rtp | 2026-07-30 | 8d old | 36 | [apply](https://careers.duke.edu/job/Durham-Analytics-Engineer-NC-27710/1414289400/?ats=successfactors) | ok |
 | TikTok | Research Scientist - Generative AI Graduate - Intelligent Creation - Global Frontier Tech Recruitment Program - 2027 Start - PhD | sf bay | 2026-07-30 | 8d old | 70 | [apply](https://lifeattiktok.com/search/7668206301950642437) | ok |
 | TikTok | World Model Research Scientist - Intelligent Creation - Global Frontier Tech Recruitment Program - 2027 Start - PhD | sf bay | 2026-07-30 | 9d old | 64 | [apply](https://lifeattiktok.com/search/7668207217544677685) | ok |
@@ -348,15 +349,15 @@ Every term, flat. This is the set where being early still counts.
 | Voloridge | Quantitative Research Fellow | us fl | 2026-07-14 | 24d old | 0 | [apply](https://job-boards.greenhouse.io/voloridgeinvestmentmanagement/jobs/4224950009) | ok |
 | Abridge | Software Engineer | sf bay | 2026-07-13 | 25d old | 56 | [apply](https://jobs.ashbyhq.com/abridge/7d6ae2be-cd53-466c-8151-2dae2e87aace/application) | ok |
 | National Fair Housing Alliance | AI Alignment Fellow | dc metro | 2026-07-11 | 28d old | 54 | [apply](http://nationalfairhousingalliance.applytojob.com/apply/xuPlCxjG6O/AI-Alignment-Fellow) | ok |
-| IMC | Graduate Machine Learning Researcher - London | london | 2026-07-06 | 32d old | 0 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4914883101) | ok |
+| IMC | Graduate Machine Learning Researcher - London | london | 2026-07-06 | 33d old | 0 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4914883101) | ok |
 | Sierra Nevada Corporation | Configuration Analyst Fellow | us oh | 2026-07-04 | 35d old | 32 | [apply](https://snc.wd1.myworkdayjobs.com/snc_external_career_site/job/Dayton-OH/Military-Fellowship-Program--Configuration-Analyst_R0029011) | ok |
 | Visa | Software Engineer / Site Reliability Engineer - Linux | basingstoke uk | 2026-07-03 | 36d old | 44 | [apply](https://visa.wd5.myworkdayjobs.com/Visa/job/GB---Basingstoke-United-Kingdom/Software-Engineer_REF076350W) | ok |
 | Moder | Forward Deployed Engineer Fellow | philadelphia | 2026-07-01 | 37d old | 32 | [apply](https://archwellessentials.wd1.myworkdayjobs.com/modercareers/job/Conshohocken-PA/Forward-Deployed-Engineer-Fellowship_JR107103) | ok |
-| IMC | Graduate Quantitative Researcher (PhD) | chicago | 2026-07-01 | 37d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4912325101) | ok |
-| IMC | Graduate Quantitative Researcher (BS/MS) | chicago | 2026-07-01 | 37d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4907368101) | ok |
-| IMC | Graduate Machine Learning Researcher - Chicago | chicago | 2026-07-01 | 37d old | 54 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4907416101) | ok |
-| IMC | Graduate Quantitative Trader | chicago | 2026-07-01 | 37d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4751729101) | ok |
-| IMC | Graduate Hardware Engineer | chicago | 2026-07-01 | 37d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4823805101) | ok |
+| IMC | Graduate Quantitative Researcher (PhD) | chicago | 2026-07-01 | 38d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4912325101) | ok |
+| IMC | Graduate Quantitative Researcher (BS/MS) | chicago | 2026-07-01 | 38d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4907368101) | ok |
+| IMC | Graduate Machine Learning Researcher - Chicago | chicago | 2026-07-01 | 38d old | 54 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4907416101) | ok |
+| IMC | Graduate Quantitative Trader | chicago | 2026-07-01 | 38d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4751729101) | ok |
+| IMC | Graduate Hardware Engineer | chicago | 2026-07-01 | 38d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4823805101) | ok |
 | Susquehanna International Group | Quantitative Researcher - PhD: 2027 | nyc | 2026-06-29 | 39d old | 38 | [apply](https://careers-sig.icims.com/jobs/11017/quantitative-researcher---phd%3a-2027/job) | ok |
 | Susquehanna International Group | Quantitative Systematic Trader - PhD: 2027 | us pa | 2026-06-29 | 39d old | 32 | [apply](https://careers-sig.icims.com/jobs/11019/quantitative-systematic-trader-%e2%80%93-phd%3a-2027/job) | ok |
 | Susquehanna International Group | Quantitative Researcher - Master's: 2027 | nyc | 2026-06-29 | 39d old | 38 | [apply](https://careers-sig.icims.com/jobs/11018/quantitative-researcher-%e2%80%93-master%27s%3a-2027/job) | ok |
@@ -384,9 +385,9 @@ Every term, flat. This is the set where being early still counts.
 | Toyota Research Institute | AI Resident - Learning From Videos - Lfv | sf bay | 2026-03-19 | 142d old | 58 | [apply](https://jobs.lever.co/tri/07910a65-9ab3-4d48-85a8-44cd187afafd/apply) | ok |
 | Schmidt Sciences | AI Institute Fellow in Residence | nyc | 2026-03-10 | 150d old | 0 | [apply](https://jobs.lever.co/schmidt-entities/c42b4c52-d92a-4bd6-bac6-6b2d94159b35/apply) | ok |
 | Chamberlain Group | Software Engineer 1 - AI | us il | 2026-03-09 | 151d old | 46 | [apply](https://chamberlain.wd1.myworkdayjobs.com/Chamberlain_Group/job/Oak-Brook-IL/Software-Engineer-I---AI_JR30291) | ok |
-| Cohere | Research Engineer | toronto / remote | 2026-02-16 | 172d old | 68 | [apply](https://jobs.ashbyhq.com/cohere/1a5925d0-41bd-4549-9b78-f427a2dda922) | ok |
-| Nextdoor | Machine Learning Engineer - New Grad 2026 | dallas | 2025-09-22 | 319d old | 46 | [apply](https://about.nextdoor.com/careers-list/?gh_jid=7264954) | ok |
-| IMC | Graduate Software Engineer (2026) | amsterdam | 2025-08-27 | 345d old | 36 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4667814101) | - |
+| Cohere | Research Engineer | toronto / remote | 2026-02-16 | 173d old | 68 | [apply](https://jobs.ashbyhq.com/cohere/1a5925d0-41bd-4549-9b78-f427a2dda922) | ok |
+| Nextdoor | Machine Learning Engineer - New Grad 2026 | dallas | 2025-09-22 | 320d old | 46 | [apply](https://about.nextdoor.com/careers-list/?gh_jid=7264954) | ok |
+| IMC | Graduate Software Engineer (2026) | amsterdam | 2025-08-27 | 346d old | 36 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4667814101) | - |
 
 ## Summer 2027 (76)
 
@@ -479,7 +480,7 @@ Every term, flat. This is the set where being early still counts.
 | Rho | Quantitative Analyst Intern | nyc | 2026-08-06 | 1d old | 26 | [apply](https://jobs.ashbyhq.com/rho/eb5c9709-ab43-4e9e-9c41-ccb122955fcf) | ok |
 | Canva | PhD Research Scientist Intern | sf bay | 2026-08-06 | 1d old | 52 | [apply](https://jobs.smartrecruiters.com/Canva/6000000001291655-phd-research-scientist-intern?oga=true) | - |
 | Gulf Management | Software Engineer & Business Systems Intern | us la | 2026-08-06 | 1d old | 38 | [apply](http://gulfmanagement.applytojob.com/apply/pnJkrOYga9/Software-Engineer-Business-Systems-Intern) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Backend API) | london | 2026-08-06 | 1d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/9ca67ae3-8507-40b9-9d7f-d81b249c1041) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Backend API) | london | 2026-08-06 | 2d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/9ca67ae3-8507-40b9-9d7f-d81b249c1041) | ok |
 | Leidos | Application Developer Intern | us in | 2026-08-06 | 2d old | 20 | [apply](https://leidos.wd5.myworkdayjobs.com/en-US/external/job/Indianapolis-IN/Application-Developer-Intern_R-00188193-1) | ok |
 | KBR | Software Intern | houston | 2026-08-06 | 2d old | 32 | [apply](https://kbr.wd5.myworkdayjobs.com/en-US/kbr_careers/job/Houston-Texas/Software-Intern_R2127863) | ok |
 | Impact | Associate Software Engineer intern | us ca | 2026-08-06 | 2d old | 32 | [apply](https://job-boards.greenhouse.io/impact/jobs/8645964002) | ok |
@@ -503,7 +504,7 @@ Every term, flat. This is the set where being early still counts.
 | OpenAI | Research Engineer / Research Scientist / AI Systems Engineer, RSI | sf bay / remote | 2026-08-05 | 3d old | 78 | [apply](https://jobs.ashbyhq.com/openai/7243bdb7-7f75-4dff-a10f-18bd7296f632) | ok |
 | Anduril Industries | Resident Supplier Quality Engineer | orange county | 2026-08-05 | 3d old | 32 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5200927007?gh_jid=5200927007) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, GPU Cluster Infrastructure) | sf bay | 2026-08-05 | 3d old | 70 | [apply](https://jobs.ashbyhq.com/perplexity/886f4ab3-e691-45ed-b2db-069edf6f5413) | ok |
-| DoorDash USA | Member of Technical Staff - Applied AI Research | sf bay | 2026-08-04 | 3d old | 54 | [apply](https://job-boards.greenhouse.io/doordashusa/jobs/8105894) | ok |
+| DoorDash USA | Member of Technical Staff - Applied AI Research | sf bay | 2026-08-04 | 4d old | 54 | [apply](https://job-boards.greenhouse.io/doordashusa/jobs/8105894) | ok |
 | Anduril Industries | Research Scientist | us al | 2026-08-04 | 4d old | 40 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5203023007?gh_jid=5203023007) | ok |
 | Waymo | Staff Research Scientist, Foundation Models Recipes | sf bay | 2026-08-03 | 4d old | 68 | [apply](https://careers.withwaymo.com/jobs?gh_jid=8075587) | ok |
 | OpenAI | Research Engineer / Research Scientist - Personal AGI, Personalization | sf bay | 2026-08-03 | 4d old | 68 | [apply](https://jobs.ashbyhq.com/openai/1bf678c5-1058-45ca-b9bd-b0029fccd60e) | ok |
@@ -513,23 +514,23 @@ Every term, flat. This is the set where being early still counts.
 | Anduril Industries | Research Scientist | us co | 2026-07-31 | 7d old | 36 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5201025007?gh_jid=5201025007) | ok |
 | TikTok | Machine Learning Engineer Intern - Data-Global E-Commerce-Search - 2027 Summer | seattle | 2026-07-31 | 7d old | 48 | [apply](https://lifeattiktok.com/search/7668396597746862341) | ok |
 | TikTok | Data Engineering Project Intern - Ads Targeting - 2027 Start | sf bay | 2026-07-31 | 7d old | 38 | [apply](https://lifeattiktok.com/search/7668533140146817333) | ok |
-| Perplexity | Member of Technical Staff (Model Behavior) | sf bay / remote | 2026-07-30 | 8d old | 52 | [apply](https://jobs.ashbyhq.com/perplexity/2c6ae16b-d03e-4e33-9d32-362c5388e956) | ok |
-| Together AI | Research Engineer, Large-Scale Training | sf bay | 2026-07-30 | 8d old | 68 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/5199554007) | ok |
+| Perplexity | Member of Technical Staff (Model Behavior) | sf bay / remote | 2026-07-30 | 9d old | 52 | [apply](https://jobs.ashbyhq.com/perplexity/2c6ae16b-d03e-4e33-9d32-362c5388e956) | ok |
+| Together AI | Research Engineer, Large-Scale Training | sf bay | 2026-07-30 | 9d old | 68 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/5199554007) | ok |
 | Samsara | Data Annotator - Freah Graduate | bangalore | 2026-07-29 | 10d old | 12 | [apply](https://www.samsara.com/company/careers/roles/8076414?gh_jid=8076414) | ok |
 | Anthropic | Research Scientist, Takeoff Intel | sf bay | 2026-07-24 | 14d old | 64 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5370669008) | ok |
 | Perplexity | Member of Technical Staff (AI Software Engineer, Agents) | sf bay | 2026-07-24 | 14d old | 66 | [apply](https://jobs.ashbyhq.com/perplexity/bfb392f2-086e-4187-b69c-2a231b8c3290) | ok |
-| Snowflake | Staff Research Scientist, Exotic AI | seattle / remote | 2026-07-24 | 14d old | 68 | [apply](https://jobs.ashbyhq.com/snowflake/52925922-7cfc-4ee5-bcd2-a52850a7c067) | ok |
-| OpenAI | Research Engineer/Research Scientist- Personal AGI, Model Experience | sf bay | 2026-07-22 | 16d old | 64 | [apply](https://jobs.ashbyhq.com/openai/872ca3d0-c8c0-4585-9a34-7f9ed6b4dbf9) | ok |
+| Snowflake | Staff Research Scientist, Exotic AI | seattle / remote | 2026-07-24 | 15d old | 68 | [apply](https://jobs.ashbyhq.com/snowflake/52925922-7cfc-4ee5-bcd2-a52850a7c067) | ok |
+| OpenAI | Research Engineer/Research Scientist- Personal AGI, Model Experience | sf bay | 2026-07-22 | 17d old | 64 | [apply](https://jobs.ashbyhq.com/openai/872ca3d0-c8c0-4585-9a34-7f9ed6b4dbf9) | ok |
 | Affirm | Software Engineer I, Backend (Collections) | remote / remote | 2026-07-22 | 17d old | 44 | [apply](https://job-boards.greenhouse.io/affirm/jobs/7807506003) | - |
 | IMC | Research Engineer | sydney | 2026-07-22 | 17d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4931815101) | ok |
 | IMC | Research Engineer | hong kong hong kong | 2026-07-22 | 17d old | 32 | [apply](https://job-boards.eu.greenhouse.io/imc/jobs/4930379101) | ok |
 | Perplexity | Member of Technical Staff (Secure Intelligence Institute) | sf bay | 2026-07-21 | 17d old | 44 | [apply](https://jobs.ashbyhq.com/perplexity/32a36cae-ad73-4198-9354-a72b141ff055) | ok |
-| OpenAI | Research Scientist - Multimodal Agent, Consumer Devices | sf bay / remote | 2026-07-21 | 17d old | 68 | [apply](https://jobs.ashbyhq.com/openai/09253a0e-a2b8-49d1-80bb-6955ba3b08a3) | ok |
+| OpenAI | Research Scientist - Multimodal Agent, Consumer Devices | sf bay / remote | 2026-07-21 | 18d old | 68 | [apply](https://jobs.ashbyhq.com/openai/09253a0e-a2b8-49d1-80bb-6955ba3b08a3) | ok |
 | Cohere | Research Scientist, Cohere Labs | london / remote | 2026-07-21 | 18d old | 56 | [apply](https://jobs.ashbyhq.com/cohere/7ec9eaf4-8cfc-4977-9041-86f73e7ab10b) | ok |
 | Anthropic | Research Scientist, Life Sciences (Computational) | sf bay | 2026-07-16 | 22d old | 64 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5357739008) | ok |
 | TikTok | Software Engineer Project Intern - Global E-Commerce Search Infrastructure - 2026 Start | seattle | 2026-07-15 | 24d old | 40 | [apply](https://lifeattiktok.com/search/7662594807715072261) | ok |
 | Twitch | Software Engineer I, Discovery | sf bay | 2026-07-14 | 24d old | 36 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8623578002) | ok |
-| OpenAI | Research Engineer, Privacy | sf bay / remote | 2026-07-14 | 24d old | 68 | [apply](https://jobs.ashbyhq.com/openai/cc434f5b-dc0b-42fd-97ec-e0171545c6e9) | ok |
+| OpenAI | Research Engineer, Privacy | sf bay / remote | 2026-07-14 | 25d old | 68 | [apply](https://jobs.ashbyhq.com/openai/cc434f5b-dc0b-42fd-97ec-e0171545c6e9) | ok |
 | Anthropic | Research Engineer, Chip Design RL (Reinforcement Learning) | sf bay | 2026-07-13 | 25d old | 64 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5231612008) | ok |
 | Anduril Industries | Engineering Technical Fellow, Solid Rocket Motors | orange county | 2026-07-13 | 25d old | 0 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5186018007?gh_jid=5186018007) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Enterprise Adoption) | sf bay | 2026-07-09 | 29d old | 56 | [apply](https://jobs.ashbyhq.com/perplexity/3c16733a-07d1-42d9-ac54-ff9065f702cf) | - |
@@ -538,24 +539,24 @@ Every term, flat. This is the set where being early still counts.
 | Perplexity | Member of Technical Staff (Software Engineer, API Platform) | sf bay | 2026-07-07 | 31d old | 62 | [apply](https://jobs.ashbyhq.com/perplexity/3f800e42-7c48-4f9a-9b12-43ee23e52516) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Acceleration) | sf bay | 2026-07-07 | 31d old | 56 | [apply](https://jobs.ashbyhq.com/perplexity/f45ba174-7e99-4743-9d19-6e4d3e196458) | ok |
 | Perplexity | Member of Technical Staff (AI Software Engineer, Multimodal) | sf bay | 2026-07-07 | 31d old | 66 | [apply](https://jobs.ashbyhq.com/perplexity/6e328b72-9f57-49e0-a1a8-4428abf8ff81) | ok |
-| Together AI | Research Engineer, Post-Training Inference | sf bay | 2026-07-06 | 32d old | 64 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/5179372007) | ok |
+| Together AI | Research Engineer, Post-Training Inference | sf bay | 2026-07-06 | 33d old | 64 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/5179372007) | ok |
 | Modal | Member of Technical Staff - Research, Post-Training | nyc | 2026-07-05 | 33d old | 38 | [apply](https://jobs.ashbyhq.com/modal/7db771eb-e379-47fe-974f-765a8780dc10) | ok |
 | Modal | Member of Technical Staff - Research, Inference | nyc | 2026-07-05 | 33d old | 38 | [apply](https://jobs.ashbyhq.com/modal/73c97bbc-8e27-4c5d-b38b-90b3afdb0d93) | ok |
 | Anthropic | Research Engineer, Life Sciences | sf bay | 2026-07-03 | 36d old | 64 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5265365008) | ok |
 | Anduril Industries | Research Scientist, Battlespace Awareness | denver | 2026-07-01 | 37d old | 32 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5178310007?gh_jid=5178310007) | - |
 | Anduril Industries | Research Scientist, Battlespace Awareness | boston | 2026-07-01 | 37d old | 37 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5178314007?gh_jid=5178314007) | ok |
-| Cloudflare | Systems Engineer - Global Resource Management (Data Residency) | hybrid | 2026-07-01 | 37d old | 50 | [apply](https://boards.greenhouse.io/cloudflare/jobs/8015230?gh_jid=8015230) | ok |
-| Anthropic | Research Engineer, Computer Use | sf bay | 2026-06-30 | 38d old | 64 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5285246008) | ok |
-| Duolingo | Software Engineer I | beijing china | 2026-06-29 | 39d old | 24 | [apply](https://careers.duolingo.com/jobs/8612080002?gh_jid=8612080002) | ok |
+| Cloudflare | Systems Engineer - Global Resource Management (Data Residency) | hybrid | 2026-07-01 | 38d old | 50 | [apply](https://boards.greenhouse.io/cloudflare/jobs/8015230?gh_jid=8015230) | ok |
+| Anthropic | Research Engineer, Computer Use | sf bay | 2026-06-30 | 39d old | 64 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5285246008) | ok |
+| Duolingo | Software Engineer I | beijing china | 2026-06-29 | 40d old | 24 | [apply](https://careers.duolingo.com/jobs/8612080002?gh_jid=8612080002) | ok |
 | Perplexity | Member of Technical Staff (Data Scientist, Evals) | sf bay / remote | 2026-06-29 | 40d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/4615ca06-bea7-47e3-9e57-f5cee52b75e6) | ok |
 | Databricks | Staff Research Engineer, Data Agents | sf bay | 2026-06-26 | 42d old | 64 | [apply](https://databricks.com/company/careers/open-positions/job?gh_jid=8604954002) | ok |
-| Duolingo | Staff AI Research Engineer | nyc | 2026-06-26 | 42d old | 40 | [apply](https://careers.duolingo.com/jobs/8610353002?gh_jid=8610353002) | ok |
-| Duolingo | Staff AI Research Engineer | pittsburgh | 2026-06-26 | 42d old | 34 | [apply](https://careers.duolingo.com/jobs/8610345002?gh_jid=8610345002) | ok |
+| Duolingo | Staff AI Research Engineer | nyc | 2026-06-26 | 43d old | 40 | [apply](https://careers.duolingo.com/jobs/8610353002?gh_jid=8610353002) | ok |
+| Duolingo | Staff AI Research Engineer | pittsburgh | 2026-06-26 | 43d old | 34 | [apply](https://careers.duolingo.com/jobs/8610345002?gh_jid=8610345002) | ok |
 | OpenAI | Research Engineer / Research Scientist -Personal AGI, Proactivity | sf bay / remote | 2026-06-25 | 44d old | 68 | [apply](https://jobs.ashbyhq.com/openai/e57d196b-4fa0-4463-bd33-d8189f0d3541) | ok |
 | OpenAI | Research Engineer/Research Scientist - Personal AGI, North Stars | sf bay / remote | 2026-06-25 | 44d old | 68 | [apply](https://jobs.ashbyhq.com/openai/171ebca6-de53-4d6e-a312-30332f353957) | ok |
 | Confluent | Staff Software Engineer I | remote / remote | 2026-06-23 | 45d old | 58 | [apply](https://jobs.ashbyhq.com/confluent/bef7f6a5-2481-4eb6-a760-86e3746600bb) | ok |
 | Anthropic | Research Engineer, RL Scaling Science | london | 2026-06-22 | 47d old | 52 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5264619008) | ok |
-| Anthropic | Research Engineer, Domain Scaling | sf bay | 2026-06-19 | 49d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5271380008) | ok |
+| Anthropic | Research Engineer, Domain Scaling | sf bay | 2026-06-19 | 50d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5271380008) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Connector Platform) | sf bay / remote | 2026-06-15 | 54d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/daafcaba-cc39-487a-b941-d7a407753788) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Agent Capabilities) | sf bay / remote | 2026-06-13 | 56d old | 52 | [apply](https://jobs.ashbyhq.com/perplexity/7f2b3619-5ffa-467b-be6f-7a6b7d487892) | ok |
 | Campbell Soup | Data Engineer - DA&AI Co-Op | us nj | 2026-06-12 | 56d old | 26 | [apply](https://campbellsoup.wd5.myworkdayjobs.com/en-US/externalcareers_globalsite/job/USA---NJ---Camden/Data-Engineer--DA-AI-Co-Op_Req-65839) | - |
@@ -565,25 +566,25 @@ Every term, flat. This is the set where being early still counts.
 | Perplexity | Member of Technical Staff (ML Engineer, Recommendations & User Modeling) | sf bay | 2026-06-06 | 63d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/affd3040-91e4-4e0c-bd2f-4b022c613f91) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Computer Growth) | sf bay | 2026-06-04 | 64d old | 48 | [apply](https://jobs.ashbyhq.com/perplexity/e7ab0be5-68ba-4a2c-abb1-ee33886d955d) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Cloud Infrastructure) | london | 2026-06-03 | 65d old | 42 | [apply](https://jobs.ashbyhq.com/perplexity/e028e104-e070-4a62-85f2-ebcf982889ea) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Enterprise Experience) | sf bay / remote | 2026-06-03 | 65d old | 52 | [apply](https://jobs.ashbyhq.com/perplexity/33a48d64-ba8c-444f-a41d-9c77c6c00320) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Storage Platform) | sf bay | 2026-06-03 | 65d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/b404e73c-5aff-4151-a1a8-6593fb6ccabf) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Backend Platform) | sf bay | 2026-06-03 | 65d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/7795683f-6c5f-40cd-af2d-51294edddd4b) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Data Platform) | sf bay | 2026-06-03 | 65d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/2e73bc78-684c-47c5-95df-e9973a10e0b6) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Cloud Infrastructure) | sf bay | 2026-06-03 | 65d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/0d722589-0f8c-4500-ae79-d3bba5c8a0ea) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Enterprise Experience) | sf bay / remote | 2026-06-03 | 66d old | 52 | [apply](https://jobs.ashbyhq.com/perplexity/33a48d64-ba8c-444f-a41d-9c77c6c00320) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Storage Platform) | sf bay | 2026-06-03 | 66d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/b404e73c-5aff-4151-a1a8-6593fb6ccabf) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Backend Platform) | sf bay | 2026-06-03 | 66d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/7795683f-6c5f-40cd-af2d-51294edddd4b) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Data Platform) | sf bay | 2026-06-03 | 66d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/2e73bc78-684c-47c5-95df-e9973a10e0b6) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Cloud Infrastructure) | sf bay | 2026-06-03 | 66d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/0d722589-0f8c-4500-ae79-d3bba5c8a0ea) | ok |
 | Anthropic | Research Scientist, Life Sciences | sf bay | 2026-06-02 | 66d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5239733008) | ok |
 | Jump Trading | Research Engineer, Pre-Training | nyc | 2026-06-02 | 66d old | 30 | [apply](https://www.jumptrading.com/hr/job?gh_jid=7977686) | ok |
 | Waymo | Staff Research Scientist, Perception | sf bay | 2026-06-02 | 66d old | 56 | [apply](https://careers.withwaymo.com/jobs?gh_jid=7975025) | ok |
-| Anduril Industries | Research Scientist | denver | 2026-05-29 | 70d old | 24 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5150299007?gh_jid=5150299007) | ok |
-| MongoDB | Staff Research Scientist | sf bay | 2026-05-28 | 71d old | 56 | [apply](https://www.mongodb.com/careers/job/?gh_jid=7956670) | ok |
+| Anduril Industries | Research Scientist | denver | 2026-05-29 | 71d old | 24 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5150299007?gh_jid=5150299007) | ok |
+| MongoDB | Staff Research Scientist | sf bay | 2026-05-28 | 72d old | 56 | [apply](https://www.mongodb.com/careers/job/?gh_jid=7956670) | ok |
 | Modal | Member of Technical Staff - Product (Growth) | nyc | 2026-05-18 | 81d old | 30 | [apply](https://jobs.ashbyhq.com/modal/9fe70d84-1d3a-42ab-87c8-df0266628c16) | ok |
 | Scale AI | Research Scientist, Safety Post Training | sf bay | 2026-05-18 | 81d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4696595005) | ok |
 | Anthropic | Research Engineer, Model Evaluations | remote / remote | 2026-04-28 | 102d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198255008) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Monetization) | sf bay | 2026-04-23 | 106d old | 48 | [apply](https://jobs.ashbyhq.com/perplexity/043d6a58-87a1-4e3c-bf47-4dc351b94cf4) | ok |
-| Anthropic | Research Engineer, Machine Learning (RL Velocity) | london | 2026-04-23 | 106d old | 46 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198074008) | ok |
+| Anthropic | Research Engineer, Machine Learning (RL Velocity) | london | 2026-04-23 | 107d old | 46 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198074008) | ok |
 | Anthropic | Research Engineer, Machine Learning (RL Velocity) | remote / remote | 2026-04-23 | 107d old | 60 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198108008) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Computer) | sf bay | 2026-04-22 | 107d old | 48 | [apply](https://jobs.ashbyhq.com/perplexity/4c0ac8bb-55bf-4fb0-b7d7-36d69f55e6c8) | ok |
 | Modal | Member of Technical Staff - ML Performance | nyc | 2026-04-21 | 109d old | 52 | [apply](https://jobs.ashbyhq.com/modal/af17da5e-23ca-4802-854d-5f0546e1ed32) | ok |
-| Point72 | Fundamental Research Fellow, Canvas | nyc | 2026-04-15 | 114d old | 10 | [apply](https://boards.greenhouse.io/point72/jobs/8492784002?gh_jid=8492784002) | ok |
+| Point72 | Fundamental Research Fellow, Canvas | nyc | 2026-04-15 | 115d old | 10 | [apply](https://boards.greenhouse.io/point72/jobs/8492784002?gh_jid=8492784002) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Data Flywheel) | london / remote | 2026-04-13 | 116d old | 40 | [apply](https://jobs.ashbyhq.com/perplexity/7755eb0a-0f51-4286-b75e-591e44c741bc) | ok |
 | Perplexity | Member of Technical Staff (AI Infrastructure Engineer) | london / remote | 2026-04-13 | 116d old | 50 | [apply](https://jobs.ashbyhq.com/perplexity/60deb376-51b5-46c6-9e17-55377a5ef34e) | ok |
 | Perplexity | Member of Technical Staff (AI Infrastructure Engineer) | sf bay | 2026-04-13 | 116d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/598e1f7d-b802-4de2-99ac-90eb2bc33315) | ok |
@@ -596,14 +597,14 @@ Every term, flat. This is the set where being early still counts.
 | Twitch | Software Engineer I, Commerce Engineering | seattle | 2026-03-25 | 135d old | 26 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8459320002) | ok |
 | Twitch | Software Engineer I, Commerce Engineering | sf bay | 2026-03-25 | 135d old | 28 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8457711002) | ok |
 | Baseten | Post-Training Research Engineer | sf bay / remote | 2026-03-23 | 137d old | 40 | [apply](https://jobs.ashbyhq.com/baseten/68328a94-f785-463b-a3d7-b0dfc11839b5) | ok |
-| Anthropic | Research Engineer, Performance RL (Reinforcement Learning) | sf bay | 2026-03-23 | 137d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5160330008) | ok |
-| Scale AI | Research Scientist, AI Controls and Monitoring | sf bay | 2026-03-20 | 140d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4675694005) | ok |
-| Scale AI | Research Scientist, Agent Robustness | sf bay | 2026-03-20 | 140d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4675684005) | ok |
-| Baseten | Post-Training Research Scientist | sf bay / remote | 2026-03-17 | 143d old | 40 | [apply](https://jobs.ashbyhq.com/baseten/7c9d2bb0-ac03-4a3c-86c3-cf720cd314e8) | ok |
-| Anthropic | Research Engineer / Research Scientist, Pre-training | zurich | 2026-02-27 | 161d old | 0 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5135168008) | ok |
-| Modal | Member of Technical Staff - ML Training Systems | nyc | 2026-02-25 | 163d old | 52 | [apply](https://jobs.ashbyhq.com/modal/89bfd784-071a-4dcc-a5ab-6ba9d5e53dad) | ok |
+| Anthropic | Research Engineer, Performance RL (Reinforcement Learning) | sf bay | 2026-03-23 | 138d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5160330008) | ok |
+| Scale AI | Research Scientist, AI Controls and Monitoring | sf bay | 2026-03-20 | 141d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4675694005) | ok |
+| Scale AI | Research Scientist, Agent Robustness | sf bay | 2026-03-20 | 141d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4675684005) | ok |
+| Baseten | Post-Training Research Scientist | sf bay / remote | 2026-03-17 | 144d old | 40 | [apply](https://jobs.ashbyhq.com/baseten/7c9d2bb0-ac03-4a3c-86c3-cf720cd314e8) | ok |
+| Anthropic | Research Engineer / Research Scientist, Pre-training | zurich | 2026-02-27 | 162d old | 0 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5135168008) | ok |
+| Modal | Member of Technical Staff - ML Training Systems | nyc | 2026-02-25 | 164d old | 52 | [apply](https://jobs.ashbyhq.com/modal/89bfd784-071a-4dcc-a5ab-6ba9d5e53dad) | ok |
 | Nuro | ML Research Scientist, Prediction & Smart Agents | sf bay | 2026-02-19 | 170d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=7439020) | ok |
-| Together AI | Research Engineer, Core ML | sf bay | 2026-02-18 | 170d old | 58 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/4384627007) | ok |
+| Together AI | Research Engineer, Core ML | sf bay | 2026-02-18 | 171d old | 58 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/4384627007) | ok |
 | Anthropic | Research Engineer, Pretraining | london | 2026-02-17 | 172d old | 44 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5119713008) | ok |
 | Confluent | Staff Software Engineer I - SRE | remote / remote | 2026-02-16 | 173d old | 50 | [apply](https://jobs.ashbyhq.com/confluent/0b2a4106-7f01-4205-813d-81e4fa1abdb4) | ok |
 | Reddit | Staff Research Engineer, Post-training & Evaluation | remote / remote | 2026-02-13 | 175d old | 58 | [apply](https://job-boards.greenhouse.io/reddit/jobs/7555007) | ok |
@@ -611,82 +612,82 @@ Every term, flat. This is the set where being early still counts.
 | Scale AI | Machine Learning Fellow - Human Frontier Collective (UK) | uk | 2026-02-12 | 176d old | 46 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4661647005) | ok |
 | Scale AI | Machine Learning Fellow - Human Frontier Collective (US) | us | 2026-02-12 | 176d old | 46 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4660340005) | ok |
 | Anthropic | Research Engineer, Production Model Post-Training | zurich | 2026-02-12 | 177d old | 44 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5112018008) | ok |
-| Anthropic | Research Engineer, Machine Learning (Reinforcement Learning) | london | 2026-02-11 | 177d old | 46 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5115935008) | ok |
+| Anthropic | Research Engineer, Machine Learning (Reinforcement Learning) | london | 2026-02-11 | 178d old | 46 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5115935008) | ok |
 | Cursor | Research Scientist | sf bay | 2026-01-27 | 192d old | 56 | [apply](https://jobs.ashbyhq.com/cursor/cd4bad0a-e2f6-4a8d-9b57-ce1780efedae) | ok |
 | Anthropic | Research Engineer / Scientist, Frontier Red Team (Cyber) | sf bay | 2026-01-23 | 196d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5076477008) | ok |
-| Modal | Member of Technical Staff - Platform Engineering | nyc | 2026-01-19 | 200d old | 48 | [apply](https://jobs.ashbyhq.com/modal/84467a68-6876-4730-9d80-6c6f3d0c2d71) | ok |
+| Modal | Member of Technical Staff - Platform Engineering | nyc | 2026-01-19 | 201d old | 48 | [apply](https://jobs.ashbyhq.com/modal/84467a68-6876-4730-9d80-6c6f3d0c2d71) | ok |
 | Anthropic | Research Engineer, Visual Knowledge Work | nyc | 2026-01-16 | 203d old | 50 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5074217008) | ok |
-| Anthropic | Research Engineer, Economic Research Data Platform | sf bay | 2026-01-16 | 203d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5071132008) | ok |
+| Anthropic | Research Engineer, Economic Research Data Platform | sf bay | 2026-01-16 | 204d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5071132008) | ok |
 | Anthropic | Research Scientist/Engineer, Biological Safety | sf bay | 2026-01-14 | 206d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5066977008) | ok |
-| OpenAI | ML Research Engineer - Hardware Codesign | sf bay | 2026-01-13 | 206d old | 58 | [apply](https://jobs.ashbyhq.com/openai/5931abef-191b-417e-89f1-1d06f00e908c) | ok |
-| Modal | Member of Technical Staff - Systems | stockholm | 2026-01-12 | 207d old | 42 | [apply](https://jobs.ashbyhq.com/modal/3b3c6c42-326e-40c5-b78d-9f556739513b) | ok |
-| Modal | Member of Technical Staff - Product (Backend) | nyc | 2026-01-09 | 210d old | 48 | [apply](https://jobs.ashbyhq.com/modal/a4b8b2b6-5d0c-4ba6-9256-b84be84fb79e) | ok |
-| Anthropic | Research Engineer, Universes | remote / remote | 2026-01-09 | 210d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5061517008) | ok |
+| OpenAI | ML Research Engineer - Hardware Codesign | sf bay | 2026-01-13 | 207d old | 58 | [apply](https://jobs.ashbyhq.com/openai/5931abef-191b-417e-89f1-1d06f00e908c) | ok |
+| Modal | Member of Technical Staff - Systems | stockholm | 2026-01-12 | 208d old | 42 | [apply](https://jobs.ashbyhq.com/modal/3b3c6c42-326e-40c5-b78d-9f556739513b) | ok |
+| Modal | Member of Technical Staff - Product (Backend) | nyc | 2026-01-09 | 211d old | 48 | [apply](https://jobs.ashbyhq.com/modal/a4b8b2b6-5d0c-4ba6-9256-b84be84fb79e) | ok |
+| Anthropic | Research Engineer, Universes | remote / remote | 2026-01-09 | 211d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5061517008) | ok |
 | Cohere | Member of Technical Staff, MLE | sf bay / remote | 2026-01-06 | 214d old | 62 | [apply](https://jobs.ashbyhq.com/cohere/110ba167-4efd-43b7-85d2-3ff719a28b0f) | ok |
 | Waymo | Research Scientist, RL for Autonomous Planning & World Modeling | sf bay | 2025-12-20 | 231d old | 56 | [apply](https://careers.withwaymo.com/jobs?gh_jid=7469425) | ok |
-| Cohere | Member of Technical Staff, Data Analysis and Evaluation | london / remote | 2025-12-15 | 235d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/61703710-4379-42fd-a508-946f2a5fb6bc) | ok |
+| Cohere | Member of Technical Staff, Data Analysis and Evaluation | london / remote | 2025-12-15 | 236d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/61703710-4379-42fd-a508-946f2a5fb6bc) | ok |
 | Anthropic | Research Engineer, Cybersecurity RL (Reinforcement Learning) | sf bay | 2025-12-09 | 241d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5025624008) | ok |
-| Anduril Industries | Machine Learning Research Engineer | orange county | 2025-12-05 | 245d old | 38 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/4998882007?gh_jid=4998882007) | ? |
+| Anduril Industries | Machine Learning Research Engineer | orange county | 2025-12-05 | 246d old | 38 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/4998882007?gh_jid=4998882007) | ? |
 | Perplexity | Member of Technical Staff (Software Engineer, Security) | sf bay | 2025-12-02 | 248d old | 48 | [apply](https://jobs.ashbyhq.com/perplexity/6c9b3c71-85ba-47db-bce5-44fd9fa95d03) | ok |
 | OpenAI | Research Engineer / Research Scientist- Personal AGI (Post Training) | sf bay | 2025-12-01 | 249d old | 56 | [apply](https://jobs.ashbyhq.com/openai/1c516e9f-c97d-4a40-8529-9871dac615a5) | ok |
-| Cohere | Member of Technical Staff - Sovereign AI | canada / remote | 2025-11-12 | 268d old | 50 | [apply](https://jobs.ashbyhq.com/cohere/b9306620-a110-46b5-b4c4-7363e1d03a8d) | ok |
+| Cohere | Member of Technical Staff - Sovereign AI | canada / remote | 2025-11-12 | 269d old | 50 | [apply](https://jobs.ashbyhq.com/cohere/b9306620-a110-46b5-b4c4-7363e1d03a8d) | ok |
 | Cohere | Staff Research Engineer, Model Efficiency | nyc / remote | 2025-11-07 | 273d old | 54 | [apply](https://jobs.ashbyhq.com/cohere/c80f0fe9-3fc4-49fe-9f26-a7115350b1fc) | ok |
 | Cohere | Member of Technical Staff, Model Efficiency | nyc / remote | 2025-11-07 | 273d old | 34 | [apply](https://jobs.ashbyhq.com/cohere/2a989030-6d14-4924-88c1-d878911e26fa) | ok |
 | Anthropic | Research Scientist, Interpretability | sf bay | 2025-11-07 | 273d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4980427008) | ok |
 | Anthropic | Research Engineer, Interpretability | sf bay | 2025-11-07 | 273d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4980430008) | ok |
-| DRW | Research Engineer (FICCO) | chicago | 2025-11-05 | 275d old | 24 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7377915) | ok |
-| DRW | Research Engineer (FICCO) | london | 2025-11-05 | 275d old | 24 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7377981) | ok |
-| Scale AI | Staff Machine Learning Research Engineer, Agent Post-training - Enterprise GenAI | sf bay | 2025-10-31 | 280d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625337005) | ok |
-| Scale AI | Machine Learning Systems Research Engineer, Agent Post-training - Enterprise GenAI | sf bay | 2025-10-31 | 280d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625341005) | ok |
-| Scale AI | Machine Learning Research Engineer, Agents - Enterprise GenAI | sf bay | 2025-10-31 | 280d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625344005) | ok |
-| Scale AI | Machine Learning Research Engineer, Agent Data Foundation - Enterprise GenAI | sf bay | 2025-10-31 | 280d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625345005) | ok |
-| Perplexity | Member of Technical Staff (Rust Engineer, Search) | belgrade | 2025-10-23 | 288d old | 24 | [apply](https://jobs.ashbyhq.com/perplexity/a19f1774-5944-4981-b446-e3e40d0dd281) | ok |
+| DRW | Research Engineer (FICCO) | chicago | 2025-11-05 | 276d old | 24 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7377915) | ok |
+| DRW | Research Engineer (FICCO) | london | 2025-11-05 | 276d old | 24 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7377981) | ok |
+| Scale AI | Staff Machine Learning Research Engineer, Agent Post-training - Enterprise GenAI | sf bay | 2025-10-31 | 281d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625337005) | ok |
+| Scale AI | Machine Learning Systems Research Engineer, Agent Post-training - Enterprise GenAI | sf bay | 2025-10-31 | 281d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625341005) | ok |
+| Scale AI | Machine Learning Research Engineer, Agents - Enterprise GenAI | sf bay | 2025-10-31 | 281d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625344005) | ok |
+| Scale AI | Machine Learning Research Engineer, Agent Data Foundation - Enterprise GenAI | sf bay | 2025-10-31 | 281d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4625345005) | ok |
+| Perplexity | Member of Technical Staff (Rust Engineer, Search) | belgrade | 2025-10-23 | 289d old | 24 | [apply](https://jobs.ashbyhq.com/perplexity/a19f1774-5944-4981-b446-e3e40d0dd281) | ok |
 | Anthropic | Research Engineer, RL Engineering | sf bay | 2025-10-15 | 297d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4952051008) | ok |
-| Anthropic | Research Engineer / Research Scientist, Tokens | nyc | 2025-10-10 | 301d old | 50 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4951814008) | ok |
-| Anthropic | ML/Research Engineer, Safeguards | sf bay | 2025-10-09 | 302d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4949336008) | ok |
+| Anthropic | Research Engineer / Research Scientist, Tokens | nyc | 2025-10-10 | 302d old | 50 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4951814008) | ok |
+| Anthropic | ML/Research Engineer, Safeguards | sf bay | 2025-10-09 | 303d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4949336008) | ok |
 | Anthropic | Research Engineer, Pretraining Scaling - London | london | 2025-09-30 | 311d old | 44 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4938436008) | ok |
 | Anthropic | Research Engineer, Pretraining Scaling | sf bay | 2025-09-30 | 311d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4938432008) | ok |
 | Cohere | Member of Technical Staff, MLE (UK/EU) | london / remote | 2025-09-30 | 312d old | 50 | [apply](https://jobs.ashbyhq.com/cohere/876a2d31-e6c3-497b-9c8e-0b7d111fb4cd) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Applied AI) | sf bay | 2025-09-19 | 322d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/3c656963-876a-458d-bca6-916a42a24c1a) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Applied AI) | sf bay | 2025-09-19 | 323d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/3c656963-876a-458d-bca6-916a42a24c1a) | ok |
 | Cohere | Member of Technical Staff, Agent Code | london / remote | 2025-09-16 | 326d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/70a8dc77-ac84-4790-aff6-13b4dcd4554a) | ok |
 | Datadog | AI Research Engineer - Datadog AI Research (DAIR) | paris | 2025-08-27 | 346d old | 46 | [apply](https://careers.datadoghq.com/detail/7194969/?gh_jid=7194969) | ok |
-| Modal | Member of Technical Staff - Python SDK | nyc | 2025-08-22 | 350d old | 30 | [apply](https://jobs.ashbyhq.com/modal/265d6127-dd34-433b-819a-1f935572c7d8) | ok |
+| Modal | Member of Technical Staff - Python SDK | nyc | 2025-08-22 | 351d old | 30 | [apply](https://jobs.ashbyhq.com/modal/265d6127-dd34-433b-819a-1f935572c7d8) | ok |
 | Cohere | Member of Technical Staff, Integration/RL Team (Research Engineer) | paris / remote | 2025-08-19 | 354d old | 48 | [apply](https://jobs.ashbyhq.com/cohere/e9ef9420-88e5-403b-82e8-1c36fa010d4d) | ok |
-| Perplexity | Member of Technical Staff (Forward Deployed Engineer, Applied AI) | nyc / remote | 2025-08-15 | 357d old | 56 | [apply](https://jobs.ashbyhq.com/perplexity/aa511ea8-96e3-42ba-b28f-5e222170bcee) | ok |
+| Perplexity | Member of Technical Staff (Forward Deployed Engineer, Applied AI) | nyc / remote | 2025-08-15 | 358d old | 56 | [apply](https://jobs.ashbyhq.com/perplexity/aa511ea8-96e3-42ba-b28f-5e222170bcee) | ok |
 | OpenAI | Research Engineer, Codex | sf bay | 2025-08-05 | 367d old | 56 | [apply](https://jobs.ashbyhq.com/openai/793964ae-d40b-45e3-9798-84f4b6da48c5) | ok |
 | Perplexity | Member of Technical Staff (Backend Software Engineer, Search Crawler) | belgrade | 2025-07-28 | 376d old | 42 | [apply](https://jobs.ashbyhq.com/perplexity/94ccf41e-d3e1-41aa-9569-c3bcbffc4184) | ok |
-| DRW | Research Engineer (FICCO) | greenwich | 2025-07-23 | 380d old | 24 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7097016) | ok |
+| DRW | Research Engineer (FICCO) | greenwich | 2025-07-23 | 381d old | 24 | [apply](https://job-boards.greenhouse.io/drweng/jobs/7097016) | ok |
 | Anthropic | Research Engineer/Research Scientist, Pre-training | remote / remote | 2025-07-18 | 385d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4616971008) | ok |
 | Cohere | Member of Technical Staff, Pre-Training Data | toronto / remote | 2025-06-25 | 409d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/859e2e47-02fb-4afe-bb8a-e83bf4d8c265) | ok |
 | DRW | Research Engineer | nyc | 2025-06-16 | 418d old | 30 | [apply](https://job-boards.greenhouse.io/drweng/jobs/6973885) | ok |
-| Cohere | Member of Technical Staff, Post-Training | london / remote | 2025-06-13 | 420d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/554a9380-ab50-4338-88a9-c6b8ab19d92e) | ok |
+| Cohere | Member of Technical Staff, Post-Training | london / remote | 2025-06-13 | 421d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/554a9380-ab50-4338-88a9-c6b8ab19d92e) | ok |
 | Cohere | Member of Technical Staff, Search | us / remote | 2025-05-23 | 441d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/d5cc437c-2397-4c1a-9d12-3a2bf64d98ea) | ok |
 | OpenAI | Research Engineer/Research Scientist, RL/Reasoning | sf bay | 2025-05-14 | 450d old | 56 | [apply](https://jobs.ashbyhq.com/openai/7e198d81-34e0-48b6-b64e-a501a75f9d53) | ok |
-| Anthropic | Research Engineer, Discovery | sf bay | 2025-05-14 | 450d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4669581008) | ok |
+| Anthropic | Research Engineer, Discovery | sf bay | 2025-05-14 | 451d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4669581008) | ok |
 | Anthropic | Staff Research Engineer, Discovery Team | sf bay | 2025-04-23 | 472d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4593216008) | ok |
 | Datadog | AI Research Scientist - Datadog AI Research (DAIR) | paris | 2025-04-18 | 477d old | 46 | [apply](https://careers.datadoghq.com/detail/6652564/?gh_jid=6652564) | ok |
 | Anthropic | Research Engineer / Scientist, Alignment | sf bay | 2025-04-14 | 480d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4631822008) | ok |
-| OpenAI | Research Engineer, Frontier Evals & Environments | sf bay | 2025-04-13 | 481d old | 56 | [apply](https://jobs.ashbyhq.com/openai/bba18df5-f30f-4d2c-909c-30e651f95579) | ok |
+| OpenAI | Research Engineer, Frontier Evals & Environments | sf bay | 2025-04-13 | 482d old | 56 | [apply](https://jobs.ashbyhq.com/openai/bba18df5-f30f-4d2c-909c-30e651f95579) | ok |
 | OpenAI | Research Engineer | sf bay | 2025-04-05 | 490d old | 56 | [apply](https://jobs.ashbyhq.com/openai/240d459b-696d-43eb-8497-fab3e56ecd9b) | ok |
 | OpenAI | Research Scientist | sf bay | 2025-04-05 | 490d old | 56 | [apply](https://jobs.ashbyhq.com/openai/5f0c6579-0bfb-4a06-8a43-1dd371499e10) | ok |
 | Anthropic | Research Engineer, Production Model Post-Training | sf bay | 2025-04-01 | 493d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4613592008) | ok |
 | Anthropic | Research Engineer, Machine Learning (Reinforcement Learning) | sf bay | 2025-04-01 | 493d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4613568008) | ok |
-| Anthropic | (Expression of Interest) Research Engineer / Scientist, Alignment - London | london | 2025-03-31 | 494d old | 44 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4610158008) | ok |
+| Anthropic | (Expression of Interest) Research Engineer / Scientist, Alignment - London | london | 2025-03-31 | 495d old | 44 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4610158008) | ok |
 | Perplexity | Member of Technical Staff (Search Engine Developer, Search Core) | belgrade | 2025-03-31 | 495d old | 24 | [apply](https://jobs.ashbyhq.com/perplexity/27aa1a14-bc59-4613-a65a-38598695076f) | ok |
 | Perplexity | Member of Technical Staff (Machine Learning Engineer, Search) | remote / remote | 2025-03-25 | 500d old | 60 | [apply](https://jobs.ashbyhq.com/perplexity/0190699f-010b-44f2-8399-278899fef018) | ok |
-| Scale AI | ML Research Engineer, ML Systems | sf bay | 2025-03-10 | 515d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4534631005) | ok |
-| Perplexity | Member of Technical Staff (Backend/Infrastructure Engineer, Search) | belgrade | 2025-03-07 | 518d old | 42 | [apply](https://jobs.ashbyhq.com/perplexity/dd80ab52-34bd-42af-aa5e-6283b7e6c194) | ok |
-| Cohere | Member of Technical Staff, Training Infra Engineer | paris / remote | 2025-02-20 | 533d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/a13207e7-dc82-473f-8ca4-e832452fe8c3) | ok |
+| Scale AI | ML Research Engineer, ML Systems | sf bay | 2025-03-10 | 516d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4534631005) | ok |
+| Perplexity | Member of Technical Staff (Backend/Infrastructure Engineer, Search) | belgrade | 2025-03-07 | 519d old | 42 | [apply](https://jobs.ashbyhq.com/perplexity/dd80ab52-34bd-42af-aa5e-6283b7e6c194) | ok |
+| Cohere | Member of Technical Staff, Training Infra Engineer | paris / remote | 2025-02-20 | 534d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/a13207e7-dc82-473f-8ca4-e832452fe8c3) | ok |
 | Cohere | Member of Technical Staff, Training Performance Engineer | london / remote | 2025-02-20 | 534d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/d42f5fd4-1ffc-45b9-957c-f09862db6af6) | ok |
-| Datadog | AI Research Scientist - Datadog AI Research (DAIR) | nyc | 2025-01-24 | 560d old | 52 | [apply](https://careers.datadoghq.com/detail/6572669/?gh_jid=6572669) | ok |
-| Cohere | Member of Technical Staff, Modeling | london / remote | 2024-11-01 | 644d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/3136a5a5-06fd-4c82-8b72-a43467e6b128) | ok |
+| Datadog | AI Research Scientist - Datadog AI Research (DAIR) | nyc | 2025-01-24 | 561d old | 52 | [apply](https://careers.datadoghq.com/detail/6572669/?gh_jid=6572669) | ok |
+| Cohere | Member of Technical Staff, Modeling | london / remote | 2024-11-01 | 645d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/3136a5a5-06fd-4c82-8b72-a43467e6b128) | ok |
 | Cohere | Member of Technical Staff, MLE (Korea) | remote / remote | 2024-10-31 | 646d old | 60 | [apply](https://jobs.ashbyhq.com/cohere/31c47498-0ccf-4d23-a418-0d2c616ba909) | ok |
 | Modal | Member of Technical Staff - Systems | nyc | 2024-10-23 | 653d old | 48 | [apply](https://jobs.ashbyhq.com/modal/9b33ebe7-e829-4f03-97ba-5c94dbd7daf6) | ok |
-| Chroma | Member of Technical Staff | sf bay | 2024-09-09 | 697d old | 16 | [apply](https://jobs.ashbyhq.com/trychroma/9ed3aee8-07dd-44e3-9ca1-dd1a3020fb6f) | ok |
-| Jump Trading | Research Scientist/Research Engineer \| Deep Learning | nyc | 2024-07-23 | 745d old | 32 | [apply](https://www.jumptrading.com/hr/job?gh_jid=6032511) | ok |
+| Chroma | Member of Technical Staff | sf bay | 2024-09-09 | 698d old | 16 | [apply](https://jobs.ashbyhq.com/trychroma/9ed3aee8-07dd-44e3-9ca1-dd1a3020fb6f) | ok |
+| Jump Trading | Research Scientist/Research Engineer \| Deep Learning | nyc | 2024-07-23 | 746d old | 32 | [apply](https://www.jumptrading.com/hr/job?gh_jid=6032511) | ok |
 | Anthropic | Research Engineer, Knowledge Team | remote / remote | 2024-04-23 | 836d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4017331008) | ok |
 | OpenAI | Research Engineer, Retrieval & Search, Applied Engineering | sf bay | 2024-03-20 | 870d old | 56 | [apply](https://jobs.ashbyhq.com/openai/7322d344-9325-4a92-8445-0a2c4e9272f8) | ok |
 | Jump Trading | AI Research Scientist \| Research & Development | singapore | 2024-03-04 | 886d old | 26 | [apply](https://www.jumptrading.com/hr/job?gh_jid=4982814) | ok |
-| Together AI | Systems Research Engineer, GPU Programming | sf bay | 2024-01-16 | 934d old | 56 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/4188119007) | ok |
+| Together AI | Systems Research Engineer, GPU Programming | sf bay | 2024-01-16 | 935d old | 56 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/4188119007) | ok |
 | Nuro | Machine Learning Research Scientist, Behavior Planning and Prediction | sf bay | 2023-11-03 | 1008d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=5434059) | ok |
 | Nuro | Machine Learning Research Scientist: Generative Modeling for Planning | sf bay | 2023-10-17 | 1025d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=5416913) | ok |
