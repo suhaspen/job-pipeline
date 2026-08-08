@@ -23,13 +23,15 @@ shape everything above:
 
 - The 15-minute peak band exists to *receive* the 30-minute cadence this system
   was designed around. Asking for 30 gets you 60.
-- The budget below is comfortable **because** delivery is poor. If GitHub ever
-  became punctual, the same schedule costs ~2,365 min/month and goes over.
+- The budget below is comfortable **because** delivery is poor. At full
+  delivery the same schedule costs ~1,825–2,170 min/month, which is at or over
+  the 2,000 allowance depending on how many runs hit 3 billed minutes.
   `make eval` warns above 1,200 projected, just above the expected figure, so
   it trips when delivery improves rather than after the bill.
 
-`*/15` across the whole 06:00–19:00 window was the alternative and was rejected:
-~3,340 min/month at full delivery.
+`*/15` across the whole 06:00–19:00 window was the alternative and was
+rejected: ~2,700 min/month at full delivery, clear of the allowance with no
+ambiguity.
 
 Two rules the schedule has to keep, both asserted in `tests/test_workflows.py`:
 
@@ -103,10 +105,10 @@ startedAt,updatedAt,conclusion`), with per-job round-up:
 | | |
 |---|--:|
 | Typical run | 68–123s → **2 billed min** |
-| Observed rate, previous schedule | 43 billed min / 29.4 h |
-| Projected, previous schedule | ~1,070 min/month |
-| Projected, this schedule at 48% delivery | **~1,170 min/month** |
-| Projected, this schedule at 100% delivery | ~2,365 min/month — **over** |
+| Mean, steady state | 2.13 billed min (32 min / 15 runs) |
+| Mean, including two one-off outliers | 2.53 billed min (43 min / 17 runs) |
+| This schedule at 48% delivery | **~880–1,040 min/month** |
+| This schedule at 100% delivery | ~1,825–2,170 min/month — **at the line** |
 
 GitHub's own `actions/workflows/{id}/timing` endpoint returns 0 for this repo,
 so these are computed from run durations rather than read from GitHub.

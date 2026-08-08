@@ -494,12 +494,13 @@ Two things follow, and they pull in opposite directions:
   designed rate. So 08:00–12:00 PT — the hours that produce most US postings —
   now asks for every 15 minutes, because 15 asked for is ~30 received.
 - The budget looks comfortable *because* delivery is poor. Measured cost is
-  ~1,170 billed min/month; the same schedule at full delivery is ~2,365 and
-  goes over the 2,000 allowance. `make eval` warns above 1,200 projected, set
+  ~880–1,040 billed min/month (857 scheduled runs, 48% delivered, 2.13–2.53
+  billed minutes each); the same schedule at full delivery is ~1,825–2,170,
+  at or over the 2,000 allowance. `make eval` warns above 1,200 projected, set
   deliberately just above the expected figure so it trips when delivery
   improves rather than after the bill.
 
-`*/15` across the whole 06:00–19:00 window was rejected at ~3,340 min/month at
+`*/15` across the whole 06:00–19:00 window was rejected at ~2,700 min/month at
 full delivery. An external cron driving `workflow_dispatch` would be more
 punctual than any of these and was rejected on different grounds: it needs a
 PAT with `workflow` scope held by a third party, which is the published-

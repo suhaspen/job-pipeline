@@ -16,10 +16,11 @@ on:
     # for, not what arrives, and the two differ by about half.
     #
     # That is also why the budget looks comfortable. At the delivery rate we
-    # actually see this is ~1,170 billed minutes a month; if GitHub ever became
-    # punctual the same schedule would cost ~2,365 and blow the 2,000
-    # allowance. `make eval` warns above 1,200 projected, which is deliberately
-    # just above the expected figure - it trips when delivery improves.
+    # actually see this is ~880-1,040 billed minutes a month; if GitHub ever
+    # became punctual the same schedule would cost ~1,825-2,170, at or over the
+    # 2,000 allowance. `make eval` warns above 1,200 projected, which is
+    # deliberately just above the expected figure - it trips when delivery
+    # improves rather than after the bill.
     #
     # `timezone` is a real field as of March 2026. Before that these had to be
     # hand-offset from UTC, which drifted an hour twice a year. Spring-forward
@@ -35,7 +36,7 @@ on:
     # 30-minute effective cadence in the hours that produce most of the US
     # postings, where a delivery rate of one in two hurts most. Deliberately
     # not applied to the whole window: `*/15` across 06:00-19:00 would cost
-    # ~3,340 billed minutes a month if GitHub ever delivered all of it.
+    # ~2,700 billed minutes a month if GitHub ever delivered all of it.
     # :05 and :35 still line up with Simplify; :20 and :50 sample the others.
     - cron: "5,20,35,50 8-11 * * 1-5"
       timezone: America/Los_Angeles

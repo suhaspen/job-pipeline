@@ -65,12 +65,12 @@ Summary of what changed and why:
 
 **GitHub delivers about half of what is scheduled** — measured at 13.9 runs/day
 against 29, median gap 59 minutes against a nominal 30. That is why the peak
-band asks for 15 minutes: it is what receives 30. Measured cost is **~1,170
+band asks for 15 minutes: it is what receives 30. Measured cost is **~880–1,040
 billed min/month** against the 2,000 allowance, and the headroom exists only
-because delivery is poor — at full delivery this schedule costs ~2,365 and goes
-over. `make eval` warns above 1,200 projected, which is deliberately just above
-the expected figure so it trips when delivery improves rather than after the
-bill arrives.
+because delivery is poor — at full delivery this schedule costs ~1,825–2,170,
+which is at or over the line. `make eval` warns above 1,200 projected, which is
+deliberately just above the expected figure so it trips when delivery improves
+rather than after the bill arrives.
 
 ## Then, in order
 
