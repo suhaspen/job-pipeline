@@ -509,3 +509,47 @@ credential shape the security invariants exclude.
 **Do not widen the 15-minute band without redoing this arithmetic.** The
 weekly run count is asserted in `tests/test_workflows.py` precisely so that
 widening it fails a test rather than a bill.
+
+### F8 — The 15-minute band is measured from ATS timestamps alone
+The first version of this band was 08:00-12:00 PT, chosen from "when US
+postings go up", which was an assumption wearing the clothes of a rationale.
+Measured, the answer is different in both directions.
+
+Charting `posted_at` across all sources produces four sharp spikes — 07:00,
+12:00, 15:00, 18:00 PT — that look exactly like a publishing rhythm. They are
+an artifact. speedyapply publishes an **age** ("2d") rather than a timestamp,
+so `posted_at` is stamped relative to fetch time: 47 of its rows share a single
+minute:second, 38 share another. Simplify is partly date-only (34 rows at
+exactly midnight UTC). Only the ATS boards report a real publication instant,
+via Greenhouse/Lever/Ashby `first_published`, and there the timestamps are
+spread with at most 2 rows sharing any minute:second.
+
+On 201 weekday ATS postings the best contiguous four hours is **09:00-13:00 PT
+(36.8%)**, against 33.8% for the 08:00-12:00 originally shipped and **14.4%**
+for the 06:00-09:00 that a "09:00 Eastern" assumption suggests. The peak is
+*later* than the Eastern-hours intuition, not earlier.
+
+Two caveats that matter more than the three-point gain:
+
+- The curve is a **broad plateau** from 09:00 to 16:00, not a peak. The top
+  four windows are within noise of each other at this sample size.
+- 201 postings over ~2 days is thin. `jobpipe posting-hours` re-derives the
+  whole thing; move the band only when the ordering is stable across weeks.
+
+The run count is unchanged, so this costs nothing either way.
+
+### F9 — Going over budget stops the pipeline rather than billing
+A personal account with no payment method carries a $0 Actions spending limit,
+so exhausting the 2,000 free minutes suspends scheduled runs until the next
+cycle. "Over budget" is therefore an availability failure, which is why the
+schedule can sit close to the line at full delivery without that being reckless.
+
+It is also silent — no error, no email, the workflow simply stops firing, which
+is the same shape as the 60-day auto-disable. The dead-man's switch is what
+catches all three.
+
+Not assertable in a test: the spending limit is not exposed through the REST
+API for personal accounts (`/users/{u}/settings/billing/actions` needs the
+`user` scope and returns usage, not the limit). Confirm it in the billing UI.
+**Raising it above $0 converts the failure mode from "stops" to "charges"**,
+and every budget figure in this repo changes meaning at that moment.

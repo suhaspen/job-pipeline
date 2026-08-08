@@ -60,8 +60,22 @@ Summary of what changed and why:
 - Shallow checkout, pip cache keyed on `pyproject.toml`, artifacts on failure
   only, all actions on their Node 24 majors.
 - Cron is time-windowed with the `timezone:` field, and banded: every 15
-  minutes 08:00-12:00 PT, every 30 minutes across the rest of 06:00-19:00,
-  every 4 hours otherwise. **~857 poll runs/month scheduled.**
+  minutes 09:00-13:00 PT, every 30 minutes across the rest of 06:00-19:00,
+  every 4 hours otherwise. **~857 poll runs/month scheduled.** The band's hours
+  are measured, not assumed — `jobpipe posting-hours` re-derives them.
+
+**Going over budget stops the pipeline; it does not produce a bill.** A
+personal account with no payment method has a $0 Actions spending limit, so
+exhausting the 2,000 free minutes suspends scheduled runs until the next
+billing cycle rather than charging for the overage. That makes "over budget" an
+availability failure, not a financial one — which is the right way round, but it
+also means the failure mode is the pipeline going quiet without an error. The
+dead-man's switch is what catches it: a missed healthcheck ping fires whether
+the cause is a broken run, a disabled workflow or an exhausted allowance.
+**Confirm the limit at github.com/settings/billing → Spending limits before
+relying on this**; it is not readable through the REST API for personal
+accounts, and raising it silently converts the failure mode from "stops" to
+"charges".
 
 **GitHub delivers about half of what is scheduled** — measured at 13.9 runs/day
 against 29, median gap 59 minutes against a nominal 30. That is why the peak

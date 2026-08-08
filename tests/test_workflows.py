@@ -103,14 +103,14 @@ class TestPollSchedule:
         assert len(fire_times(poll_crons)) == (16 + 18 + 1 + 2) * 5 + 6 * 2
 
     def test_the_peak_band_polls_every_15_minutes(self, poll_crons):
-        """08:00-12:00 local, where most US reqs go up.
+        """09:00-13:00 local - measured, not assumed.
 
         GitHub delivers about half of what is scheduled, so 15 minutes asked
         for is ~30 minutes received - which is the cadence this system was
         designed around in the first place.
         """
         monday = [w for w, _ in fire_times(poll_crons, days=1)]
-        peak = [w for w in monday if 8 <= w.hour < 12]
+        peak = [w for w in monday if 9 <= w.hour < 13]
         assert len(peak) == 16
         assert {w.minute for w in peak} == {5, 20, 35, 50}
 
@@ -118,7 +118,7 @@ class TestPollSchedule:
         monday = [w for w, _ in fire_times(poll_crons, days=1)]
         shoulder = [
             w for w in monday
-            if 6 <= w.hour < 8 or 12 <= w.hour < 19 or (w.hour == 19 and w.minute == 5)
+            if 6 <= w.hour < 9 or 13 <= w.hour < 19 or (w.hour == 19 and w.minute == 5)
         ]
         assert len(shoulder) == 19
         assert shoulder[0].hour == 6 and shoulder[0].minute == 5

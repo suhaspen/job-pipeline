@@ -10,7 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import timedelta
+from datetime import timedelta, timezone
 from pathlib import Path
 
 from jobpipe.config import DEFAULT_COMPANIES, REPO_ROOT, load_config
@@ -463,6 +463,69 @@ def _cmd_sheets_import_backlog(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_posting_hours(args: argparse.Namespace) -> int:
+    """When postings actually go up, in local time. Decides the poll band.
+
+    ATS only by default, and that restriction is the whole point. speedyapply
+    publishes an age ("2d") rather than a timestamp, so its `posted_at` is
+    derived from fetch time - 47 of its rows share a single minute:second.
+    Including it produces four sharp spikes that are purely that artifact and
+    look exactly like a real publishing rhythm. Greenhouse/Lever/Ashby report
+    `first_published`, which is the real instant.
+    """
+    from collections import Counter
+    from zoneinfo import ZoneInfo
+
+    tz = ZoneInfo(args.tz)
+    cfg = load_config()
+    with SqliteStore(cfg.db_path) as store:
+        rows = store.recent(limit=10**6)
+
+    times = []
+    dropped_undated = dropped_date_only = 0
+    for p in rows:
+        if p.source not in (args.source or ["ats"]):
+            continue
+        if not p.posted_at:
+            dropped_undated += 1
+            continue
+        utc = p.posted_at.astimezone(timezone.utc)
+        # Midnight UTC to the second is a date the source stamped, not a time.
+        if (utc.hour, utc.minute, utc.second) == (0, 0, 0):
+            dropped_date_only += 1
+            continue
+        local = utc.astimezone(tz)
+        if args.weekdays_only and local.weekday() >= 5:
+            continue
+        times.append(local)
+
+    if not times:
+        print("no postings with a usable posted_at", file=sys.stderr)
+        return 1
+
+    hours = Counter(t.hour for t in times)
+    total = len(times)
+    peak = max(hours.values())
+    print(f"{total} postings · {args.tz} · sources {args.source or ['ats']}"
+          f" · dropped {dropped_date_only} date-only, {dropped_undated} undated\n")
+    for h in range(24):
+        n = hours[h]
+        print(f"{h:02d}:00 {n:>4} {n / total:>6.1%} " + "#" * round(n / peak * 44))
+
+    width = args.window
+    ranked = sorted(
+        ((sum(hours[(s + i) % 24] for i in range(width)), s) for s in range(24)),
+        reverse=True,
+    )
+    print(f"\nbest contiguous {width}-hour windows:")
+    for n, start in ranked[:5]:
+        print(f"  {start:02d}:00-{(start + width) % 24:02d}:00  {n:>4}  {n / total:>6.1%}")
+    print("\nThe curve is usually a broad plateau rather than a peak, and the top")
+    print("few windows sit within noise of each other. Move the band in poll.yml")
+    print("only when the ordering is stable across a few weeks.")
+    return 0
+
+
 def _cmd_applied(args: argparse.Namespace) -> int:
     cfg = load_config()
     with SqliteStore(cfg.db_path) as store:
@@ -811,6 +874,19 @@ def build_parser() -> argparse.ArgumentParser:
     lst.add_argument("--urls", action="store_true", help="print apply URLs")
     lst.add_argument("--all", action="store_true", help="include expired and skipped")
     lst.set_defaults(func=_cmd_list)
+
+    ph = sub.add_parser(
+        "posting-hours",
+        help="hourly distribution of posted_at, to choose the poll band",
+    )
+    ph.add_argument(
+        "--source", action="append",
+        help="repeatable; defaults to ats, the only source with real timestamps",
+    )
+    ph.add_argument("--tz", default="America/Los_Angeles")
+    ph.add_argument("--window", type=int, default=4, help="band width in hours")
+    ph.add_argument("--all-days", dest="weekdays_only", action="store_false")
+    ph.set_defaults(func=_cmd_posting_hours, source=None, weekdays_only=True)
 
     applied = sub.add_parser("applied", help="mark a posting as applied")
     applied.add_argument("posting_id")

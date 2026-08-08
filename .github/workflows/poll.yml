@@ -32,18 +32,33 @@ on:
     # the largest feed here. Polling on the hour meant arriving a minute before
     # the new data every time, so anything it published waited a full cycle.
     #
-    # 08:00-12:00 America/Los_Angeles, every 15 minutes. Buying back the
-    # 30-minute effective cadence in the hours that produce most of the US
-    # postings, where a delivery rate of one in two hurts most. Deliberately
-    # not applied to the whole window: `*/15` across 06:00-19:00 would cost
-    # ~2,700 billed minutes a month if GitHub ever delivered all of it.
-    # :05 and :35 still line up with Simplify; :20 and :50 sample the others.
-    - cron: "5,20,35,50 8-11 * * 1-5"
+    # 09:00-13:00 America/Los_Angeles, every 15 minutes. Buying back the
+    # 30-minute effective cadence in the hours that actually produce postings,
+    # where a delivery rate of one in two hurts most.
+    #
+    # The window is measured, not assumed - `jobpipe posting-hours` re-derives
+    # it. It is computed from the ATS boards alone, because they are the only
+    # source whose `posted_at` is a real publication instant: speedyapply
+    # publishes an age rather than a timestamp, so its `posted_at` is stamped
+    # relative to fetch time and 47 of its rows share one minute:second. Using
+    # all sources produces four sharp spikes that are purely that artifact.
+    #
+    # On weekday ATS postings, 09:00-13:00 is the best contiguous four hours at
+    # 36.8%, against 33.8% for 08:00-12:00 and 14.4% for the 06:00-09:00 that a
+    # 09:00-Eastern assumption would suggest. The curve is a broad plateau from
+    # 09:00 to 16:00 rather than a peak, and the top few windows are within
+    # noise of each other on 201 postings - so this is worth re-deriving once
+    # there are a few weeks of data, but it is not worth agonising over.
+    #
+    # Deliberately not applied to the whole window: `*/15` across 06:00-19:00
+    # would cost ~2,700 billed minutes a month if GitHub ever delivered all of
+    # it. :05 and :35 still line up with Simplify; :20 and :50 sample the rest.
+    - cron: "5,20,35,50 9-12 * * 1-5"
       timezone: America/Los_Angeles
 
     # The rest of the working day, every 30 minutes. Hours are disjoint from
     # the band above, which is what keeps two entries off the same minute.
-    - cron: "5,35 6-7,12-18 * * 1-5"
+    - cron: "5,35 6-8,13-18 * * 1-5"
       timezone: America/Los_Angeles
     - cron: "5 19 * * 1-5"
       timezone: America/Los_Angeles
