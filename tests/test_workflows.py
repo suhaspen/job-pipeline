@@ -96,20 +96,44 @@ class TestPollSchedule:
         )
 
     def test_weekly_run_count_is_what_the_budget_assumes(self, poll_crons):
-        # 27 in-window + 2 off-window on each of 5 weekdays, 6 on each weekend
-        # day. Change this number and change the projection in HANDOFF.md.
-        assert len(fire_times(poll_crons)) == 27 * 5 + 2 * 5 + 6 * 2
+        # Per weekday: 16 at */15 across 08:00-11:59, 18 at */30 across
+        # 06:00-07:59 and 12:00-18:59, 1 at 19:05, 2 off-window. Plus 6 on each
+        # weekend day. Change this number and change the projection in
+        # HANDOFF.md and docs/operations.md - it is what bounds the budget.
+        assert len(fire_times(poll_crons)) == (16 + 18 + 1 + 2) * 5 + 6 * 2
 
-    def test_the_working_window_polls_every_30_minutes(self, poll_crons):
+    def test_the_peak_band_polls_every_15_minutes(self, poll_crons):
+        """08:00-12:00 local, where most US reqs go up.
+
+        GitHub delivers about half of what is scheduled, so 15 minutes asked
+        for is ~30 minutes received - which is the cadence this system was
+        designed around in the first place.
+        """
         monday = [w for w, _ in fire_times(poll_crons, days=1)]
-        in_window = [w for w in monday if 6 <= w.hour < 19 or (w.hour == 19 and w.minute == 5)]
-        assert len(in_window) == 27
-        assert in_window[0].hour == 6 and in_window[0].minute == 5
-        assert in_window[-1].hour == 19 and in_window[-1].minute == 5
+        peak = [w for w in monday if 8 <= w.hour < 12]
+        assert len(peak) == 16
+        assert {w.minute for w in peak} == {5, 20, 35, 50}
+
+    def test_the_rest_of_the_working_day_polls_every_30_minutes(self, poll_crons):
+        monday = [w for w, _ in fire_times(poll_crons, days=1)]
+        shoulder = [
+            w for w in monday
+            if 6 <= w.hour < 8 or 12 <= w.hour < 19 or (w.hour == 19 and w.minute == 5)
+        ]
+        assert len(shoulder) == 19
+        assert shoulder[0].hour == 6 and shoulder[0].minute == 5
+        assert shoulder[-1].hour == 19 and shoulder[-1].minute == 5
         # :05 and :35, offset from Simplify's :01/:31 publish cadence. Moving
         # these back to the hour re-introduces a full cycle of latency on the
         # largest feed whenever GitHub happens to be punctual.
-        assert {w.minute for w in in_window} == {5, 35}
+        assert {w.minute for w in shoulder} == {5, 35}
+
+    def test_the_peak_band_never_overlaps_the_shoulder_band(self, poll_crons):
+        """Both bands use :05 and :35, so they are kept apart by hour alone.
+        An overlapping hour would put two entries on the same minute and bill
+        a duplicate run - the failure this whole file exists to catch."""
+        monday = [w for w, _ in fire_times(poll_crons, days=1)]
+        assert len(monday) == len({(w.hour, w.minute) for w in monday})
 
     def test_no_gap_longer_than_four_hours(self, poll_crons):
         times = [w for w, _ in fire_times(poll_crons)]

@@ -6,15 +6,30 @@ Time-windowed, on the default branch, all entries in `America/Los_Angeles`:
 
 | When | Cadence | Runs |
 |---|---|---|
-| Weekdays 06:00–19:00 | every 30 min | 27/day |
+| Weekdays 08:00–12:00 | every 15 min | 16/day |
+| Weekdays 06:00–08:00, 12:00–19:00 | every 30 min | 19/day |
 | Weekdays, the rest (23:00, 03:00) | every 4 h | 2/day |
 | Weekends (03:00 → 23:00) | every 4 h | 6/day |
 
-**157 runs/week, ~683/month.** Uniform `*/30` was 48/day; the overnight and
-weekend slots were buying nothing, because US reqs do not go up at 03:00 on a
-Sunday. **Do not go below 30 minutes in the window.** GitHub enforces a
-5-minute floor, recommends no more often than 15 minutes on the free tier, and
-the GitHub-sourced feeds only update daily — polling faster buys nothing.
+**197 runs/week scheduled, ~857/month.** Everything is offset to **:05**, not
+:00 — see the Simplify note below.
+
+### GitHub delivers about half of it
+
+Measured over 29 hours: **13.9 runs a day against 29 scheduled — 48%**, with a
+median gap of **59 minutes** against a nominal 30. Nothing is broken; the
+scheduler drops fires under load and there is no SLA. Two consequences that
+shape everything above:
+
+- The 15-minute peak band exists to *receive* the 30-minute cadence this system
+  was designed around. Asking for 30 gets you 60.
+- The budget below is comfortable **because** delivery is poor. If GitHub ever
+  became punctual, the same schedule costs ~2,365 min/month and goes over.
+  `make eval` warns above 1,200 projected, just above the expected figure, so
+  it trips when delivery improves rather than after the bill.
+
+`*/15` across the whole 06:00–19:00 window was the alternative and was rejected:
+~3,340 min/month at full delivery.
 
 Two rules the schedule has to keep, both asserted in `tests/test_workflows.py`:
 
@@ -82,16 +97,24 @@ Private repos get **2,000 free Linux minutes/month**.
 Billing rounds **each job** up to the nearest minute, so the run count matters
 more than the seconds.
 
-| | poll | digest | keepalive | total |
-|---|--:|--:|--:|--:|
-| Runs/month | 683 | 30 | 4 | 717 |
-| At 1 billed min | 683 | 30 | 4 | **717** |
-| At 2 billed min | 1,366 | 30 | 4 | **1,400** |
+Measured from 17 real runs (`gh run list --workflow=poll.yml --json
+startedAt,updatedAt,conclusion`), with per-job round-up:
 
-Both fit 2,000. For comparison, the uniform `*/30` schedule was ~1,461 poll
-runs/month, which at the 6 billed minutes the first live run actually cost is
-~8,766 — four times the allowance. `make eval` warns above a projected 1,200
-min/month.
+| | |
+|---|--:|
+| Typical run | 68–123s → **2 billed min** |
+| Observed rate, previous schedule | 43 billed min / 29.4 h |
+| Projected, previous schedule | ~1,070 min/month |
+| Projected, this schedule at 48% delivery | **~1,170 min/month** |
+| Projected, this schedule at 100% delivery | ~2,365 min/month — **over** |
+
+GitHub's own `actions/workflows/{id}/timing` endpoint returns 0 for this repo,
+so these are computed from run durations rather than read from GitHub.
+
+Outliers worth recognising rather than chasing: the first live run cost 6
+billed minutes (cold start, 300 link checks) and the run after the four-hour
+outage cost 5 (it absorbed 14 hours of backlog in one pass). Both are the
+system working.
 
 ### Where the time goes
 
@@ -109,8 +132,8 @@ Setup was never the problem. Two changes followed:
 
 - **Link validation fans out 8 wide, 3 per registrable domain, on a 5s
   timeout.** That run was a cold start — 308 new postings, so 300 links.
-  Steady state is one or two per run at ~70 new postings/day over 157
-  runs/week, so this is insurance against backfills and cold containers rather
+  Steady state is one or two per run at ~70 new postings/day over ~197
+  runs/week scheduled, so this is insurance against backfills and cold containers rather
   than the common case. The per-domain cap is not tuning: `blocked` is not an
   expiry signal, so a throttled runner IP degrades silently and nothing
   downstream can detect it.
@@ -137,7 +160,8 @@ Set these in **Settings → Secrets and variables → Actions**:
 | Secret | Required | Notes |
 |---|---|---|
 | `NTFY_TOPIC` | yes | Treat as a password — ntfy topics are world-readable |
-| `HEALTHCHECK_URL` | recommended | Dead-man's switch; a *missed* ping is the alarm |
+| `HEALTHCHECK_URL` | recommended | Dead-man's switch; a *missed* ping is the alarm, and a red workflow now pings `/fail` explicitly |
+| `DIGEST_HEALTHCHECK_URL` | recommended | Separate check, **daily period**. The digest commits nothing, so without this a digest that never fires looks like one with nothing to say |
 | `ANTHROPIC_API_KEY` | no | Absent by design. Scoring runs heuristic-only; add it to enable the LLM path |
 | `GOOGLE_SHEET_ID` | no | Sheets mirror. Both this and the key, or neither |
 | `GOOGLE_SA_KEY` | no | Service-account JSON, base64. See below |

@@ -482,3 +482,29 @@ one posting visible on the day.
 A test asserts the *premise* as well as the behaviour: if term or discipline
 weights ever change so a new grad role can clear 75 unaided, the dedicated path
 is redundant and the test says so.
+
+### F7 — The schedule is banded because GitHub delivers about half of it
+Measured across 17 real runs with `gh`: **13.9 runs a day against 29
+scheduled — 48%**, median gap **59 minutes** against a nominal 30. The
+scheduler drops fires under load; there is no SLA and nothing is broken.
+
+Two things follow, and they pull in opposite directions:
+
+- Latency, which is the entire premise of this system, was running at half the
+  designed rate. So 08:00–12:00 PT — the hours that produce most US postings —
+  now asks for every 15 minutes, because 15 asked for is ~30 received.
+- The budget looks comfortable *because* delivery is poor. Measured cost is
+  ~1,170 billed min/month; the same schedule at full delivery is ~2,365 and
+  goes over the 2,000 allowance. `make eval` warns above 1,200 projected, set
+  deliberately just above the expected figure so it trips when delivery
+  improves rather than after the bill.
+
+`*/15` across the whole 06:00–19:00 window was rejected at ~3,340 min/month at
+full delivery. An external cron driving `workflow_dispatch` would be more
+punctual than any of these and was rejected on different grounds: it needs a
+PAT with `workflow` scope held by a third party, which is the published-
+credential shape the security invariants exclude.
+
+**Do not widen the 15-minute band without redoing this arithmetic.** The
+weekly run count is asserted in `tests/test_workflows.py` precisely so that
+widening it fails a test rather than a bill.

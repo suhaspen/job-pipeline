@@ -19,9 +19,9 @@ of applicants within 48 hours.
 
 - Deployed. Private repo `suhaspen/job-pipeline`. Runs on GitHub Actions.
   Secrets `NTFY_TOPIC` and `HEALTHCHECK_URL` are set.
-- 506 tests passing, no network in tests.
-- Baseline: **2,540 ids**. Export: **424 rows — 422 live** (3 tier 1, 135 tier
-  2, 284 tier 3) **and 2 expired**.
+- 635 tests passing, no network in tests.
+- Baseline: **2,527 ids**. Export: **560 rows — 549 live** (3 tier 1, 183 tier
+  2, 363 tier 3) **and 11 expired**.
 - Measured inflow: ~70 new eligible postings/day, range 42–140.
 - Four sources: Greenhouse/Lever/Ashby ATS boards (71 verified tokens),
   SimplifyJobs/New-Grad-Positions, speedyapply/2027-SWE-College-Jobs,
@@ -30,14 +30,13 @@ of applicants within 48 hours.
   exists and activates if a key is ever added. Do not add the key to workflow
   secrets.
 
-> The earlier handoff quoted 2,543 baseline and 114 live. Those were the
-> numbers before the first scheduled CI run, which added 308 postings and
-> promoted 3 reposts out of baseline. The figures above are post-run and
-> reconcile against both the export and the database.
+> These move every run. Re-read them from `data/postings.jsonl` rather than
+> trusting the number here; the point of writing them down is to notice when
+> they move in a way that does not make sense.
 
 Read `FEEDBACK.md` for build history, `ASSUMPTIONS.md` for judgment calls
-A1–A12, B1–B10 and C1–C6, `docs/sources.md` for every endpoint and schema,
-`docs/operations.md` for the runbook.
+A1–A12, B1–B10, C1–C9, D1–D5, E1–E9 and F1–F7, `docs/sources.md` for every
+endpoint and schema, `docs/operations.md` for the runbook.
 
 ## Immediate task — done
 
@@ -60,20 +59,28 @@ Summary of what changed and why:
   `actions/cache`. Before this, no CI run ever sent a conditional request.
 - Shallow checkout, pip cache keyed on `pyproject.toml`, artifacts on failure
   only, all actions on their Node 24 majors.
-- Cron is time-windowed with the `timezone:` field. **~683 poll runs/month.**
-  At 1 billed minute each that is 717 min/month all-in; at 2 it is 1,400.
-  Either fits the 2,000 free allowance. The previous uniform `*/30` was ~1,461
-  runs and ~8,766 billed minutes.
+- Cron is time-windowed with the `timezone:` field, and banded: every 15
+  minutes 08:00-12:00 PT, every 30 minutes across the rest of 06:00-19:00,
+  every 4 hours otherwise. **~857 poll runs/month scheduled.**
+
+**GitHub delivers about half of what is scheduled** — measured at 13.9 runs/day
+against 29, median gap 59 minutes against a nominal 30. That is why the peak
+band asks for 15 minutes: it is what receives 30. Measured cost is **~1,170
+billed min/month** against the 2,000 allowance, and the headroom exists only
+because delivery is poor — at full delivery this schedule costs ~2,365 and goes
+over. `make eval` warns above 1,200 projected, which is deliberately just above
+the expected figure so it trips when delivery improves rather than after the
+bill arrives.
 
 ## Then, in order
 
-**Tier 1 new grad gap.** Tier 1 currently resolves to "off-cycle co-op at a
-target company" — `term:winter-2027` is +40, `target-company` +20, threshold
-75. A new grad role at a non-target company can't reach tier 1, so the user's
-primary category never interrupts; it waits for the 07:00 digest, up to 24
-hours late. Of the 135 live tier 2 postings, 43 are `new-grad` — report how
-many of those are at target companies. If under ~8/day, add a tier 1 path for
-them.
+**Tier 1 new grad gap — done.** It was not a volume problem. The general rule
+needs score >= 75 *and* a target company, and a new grad role tops out at
+32 (term) + 22 (best discipline) + 20 (target) = **74** — arithmetically
+excluded, not narrowly missed. There is now a second path: new grad + target
+company + no disqualifiers + score >= 60, admitting ~1/day. See `ASSUMPTIONS.md`
+F6, and note the test that asserts the *premise* so the path can be retired if
+the weights ever change.
 
 **`jobpipe serve` — deferred to the backlog, not cancelled.** The Sheets mirror
 covers it: sorting, filtering, mobile and the user's own notes columns, for

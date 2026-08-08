@@ -8,28 +8,41 @@ on:
     # why the off-hours grid below skips 09/13/17 on weekdays instead of using
     # a plain `0 */4`.
     #
-    # GitHub does not fire cron punctually: 5-30 minutes late is routine and
-    # there is no SLA. Treat 30-60 as the realistic p50 inside the window.
-    # The platform floor is 5 minutes; do not go below 30 here - the
-    # GitHub-sourced feeds only update daily.
+    # GitHub does not fire cron punctually, and more importantly it does not
+    # fire every entry at all. Measured over 29 hours on the previous
+    # schedule: 13.9 runs a day delivered against 29 scheduled - 48%, with a
+    # median gap of 59 minutes against a nominal 30. Nothing is wrong; the
+    # scheduler drops fires under load. So the cadence below is what is asked
+    # for, not what arrives, and the two differ by about half.
+    #
+    # That is also why the budget looks comfortable. At the delivery rate we
+    # actually see this is ~1,170 billed minutes a month; if GitHub ever became
+    # punctual the same schedule would cost ~2,365 and blow the 2,000
+    # allowance. `make eval` warns above 1,200 projected, which is deliberately
+    # just above the expected figure - it trips when delivery improves.
     #
     # `timezone` is a real field as of March 2026. Before that these had to be
     # hand-offset from UTC, which drifted an hour twice a year. Spring-forward
     # skips 02:00-03:00 local and GitHub advances a skipped slot to the next
     # valid time; nothing here is scheduled in that hour.
 
-    # Weekdays 06:00-19:00 America/Los_Angeles, every 30 minutes. This is when
-    # US postings actually go up, and being early is the entire point.
-    # `5,35 6-18` stops at 18:35, so 19:05 is a separate entry rather than
-    # `6-19`, which would also fire at 19:35.
+    # Everything below is offset to :05 rather than :00. Simplify's bot commits
+    # listings.json at :01 and :31 past the hour, every 30 minutes, and it is
+    # the largest feed here. Polling on the hour meant arriving a minute before
+    # the new data every time, so anything it published waited a full cycle.
     #
-    # :05 and :35, not :00 and :30. Simplify's bot commits listings.json at
-    # :01 and :31 past the hour, every 30 minutes, and it is the largest feed
-    # here. Polling on the hour meant arriving a minute before the new data
-    # every time, so anything it published waited a full cycle. GitHub's
-    # scheduler lag usually covers that by accident; this makes the punctual
-    # case - the one where latency is best and matters most - correct too.
-    - cron: "5,35 6-18 * * 1-5"
+    # 08:00-12:00 America/Los_Angeles, every 15 minutes. Buying back the
+    # 30-minute effective cadence in the hours that produce most of the US
+    # postings, where a delivery rate of one in two hurts most. Deliberately
+    # not applied to the whole window: `*/15` across 06:00-19:00 would cost
+    # ~3,340 billed minutes a month if GitHub ever delivered all of it.
+    # :05 and :35 still line up with Simplify; :20 and :50 sample the others.
+    - cron: "5,20,35,50 8-11 * * 1-5"
+      timezone: America/Los_Angeles
+
+    # The rest of the working day, every 30 minutes. Hours are disjoint from
+    # the band above, which is what keeps two entries off the same minute.
+    - cron: "5,35 6-7,12-18 * * 1-5"
       timezone: America/Los_Angeles
     - cron: "5 19 * * 1-5"
       timezone: America/Los_Angeles
