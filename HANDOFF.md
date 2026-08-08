@@ -171,10 +171,23 @@ it.
   good as the source allows and no better. Removing it makes an approximate
   "2d" indistinguishable from an exact one — which is how a four-source
   histogram produced four sharp spikes that were entirely artifact.
-- `PRECISION_BY_SOURCE` backfills rows exported before the field existed, keyed
-  on the field being **absent** rather than on it being `unknown`. A line that
-  says unknown means it, and export→restore must stay an identity for anything
-  actually written down.
+- **Simplify's precision is read per row**, from whether the timestamp is
+  exactly midnight UTC. Declaring the whole source `date` was the safe reading
+  and cost too much to keep: it marked 64 of the 66 rows in the 48-hour section
+  approximate, and a warning that is always on is one nobody reads — the same
+  failure the suspect-link annotation had before it stopped firing on known
+  bot-blocked domains. Per row it is 12 of 78.
+- **For a per-row source, precision is derived, not stored.** `restore()`
+  recomputes it rather than trusting the export, which is why the rule could
+  change without a migration — and why a feed that changes format reclassifies
+  itself on the next restore. For every other source the stored value wins when
+  present, keyed on the field being **absent** rather than on it being
+  `unknown`: a line that says unknown means it.
+- **The drift alarm is what makes reading precision out of a value safe.**
+  `SourceReport.midnight`/`dated` track the share of midnight-stamped rows per
+  source per run, and `health` alarms on an absolute move of 25 points against
+  the trailing median. Same shape as `responding`: when a check stops being
+  true, find the signal that stays true rather than dropping the check.
 
 ### Data safety
 

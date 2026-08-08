@@ -173,7 +173,6 @@ class TestPrecisionBackfill:
 
     @pytest.mark.parametrize("source,expected", [
         ("ats", PostedPrecision.INSTANT),
-        ("simplify-newgrad", PostedPrecision.DATE),
         ("speedyapply-swe", PostedPrecision.AGE_DERIVED),
         ("speedyapply-ai", PostedPrecision.AGE_DERIVED),
     ])
@@ -181,6 +180,23 @@ class TestPrecisionBackfill:
         self, tmp_path, source, expected
     ):
         path, id_ = self._legacy_line(tmp_path, source=source)
+        with SqliteStore(tmp_path / "d.db") as store:
+            jsonl_export.restore(store, path, tmp_path / "no.txt")
+            assert store.get(id_).posted_precision is expected
+
+    @pytest.mark.parametrize("stamp,expected", [
+        ("2026-08-04T00:00:00+00:00", PostedPrecision.DATE),
+        ("2026-08-04T13:47:11+00:00", PostedPrecision.INSTANT),
+    ])
+    def test_a_legacy_simplify_line_is_backfilled_from_its_own_timestamp(
+        self, tmp_path, stamp, expected
+    ):
+        """Simplify mixes, so the backfill has to read the row rather than the
+        source name - otherwise every historical row is marked approximate and
+        the mark stops meaning anything."""
+        path, id_ = self._legacy_line(
+            tmp_path, source="simplify-newgrad", posted_at=stamp
+        )
         with SqliteStore(tmp_path / "d.db") as store:
             jsonl_export.restore(store, path, tmp_path / "no.txt")
             assert store.get(id_).posted_precision is expected

@@ -36,7 +36,9 @@ from jobpipe import export as jsonl_export
 from jobpipe import index_md
 from jobpipe.linkcheck import LinkResult, LinkStatus, check as check_link
 from jobpipe.logging_ import RunLogger
-from jobpipe.models import Posting, RawPosting, Status, Tier, utcnow
+from jobpipe.models import (
+    Posting, RawPosting, Status, Tier, is_midnight_utc, utcnow,
+)
 from jobpipe.notify import NotifyContext, NtfyClient, gate, ping_healthcheck, redact
 from jobpipe.sources import HttpClient, build_sources
 from jobpipe.store import SqliteStore
@@ -90,6 +92,12 @@ class SourceReport:
     # None where row volume is still the health signal.
     responding: int | None = None
     units: int | None = None
+    # Timestamp shape, for the drift alarm. `dated` counts postings with a
+    # posted_at at all; `midnight` counts those stamped exactly 00:00:00Z.
+    # Their ratio is what per-row precision detection reads, so a feed that
+    # changes format shows up here before it shows up as mislabelled rows.
+    dated: int = 0
+    midnight: int = 0
     baselined: int = 0
     term_unknown_rate: float = 0.0
     warnings: list[str] = field(default_factory=list)
@@ -109,6 +117,11 @@ class SourceReport:
             "term_unknown_rate": round(self.term_unknown_rate, 3),
             "responding": self.responding,
             "units": self.units,
+            "dated": self.dated,
+            "midnight": self.midnight,
+            "midnight_share": (
+                round(self.midnight / self.dated, 3) if self.dated else None
+            ),
             "warnings": self.warnings,
         }
 
@@ -279,6 +292,8 @@ def run(
                 log.info("source.prefilter", source=source.name, **reasons)
 
             postings = _normalize(kept, log, source.name, raw_by_id)
+            sr.dated = sum(1 for p in postings if p.posted_at)
+            sr.midnight = sum(1 for p in postings if is_midnight_utc(p.posted_at))
             if postings:
                 unknown = sum(1 for p in postings if p.term.value == "unknown")
                 sr.term_unknown_rate = unknown / len(postings)
@@ -798,7 +813,14 @@ def _source_health_check(
     """
     history = store.runs(since=clock - timedelta(days=STALE_304_DAYS + 1))
     current = [
-        (s.name, s.raw_fetched, s.not_modified, s.responding)
+        {
+            "name": s.name,
+            "raw_fetched": s.raw_fetched,
+            "not_modified": s.not_modified,
+            "responding": s.responding,
+            "dated": s.dated,
+            "midnight": s.midnight,
+        }
         for s in report.sources if s.ok
     ]
     for health in evaluate_all(current, history, now=clock):

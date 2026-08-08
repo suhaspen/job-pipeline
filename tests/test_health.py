@@ -178,3 +178,68 @@ class TestAggregateSources:
         )
         assert health.volume_drop
         assert "raw postings" in health.message()
+
+
+class TestPrecisionDrift:
+    """Per-row precision detection reads the *shape* of a timestamp, so a feed
+    that changes format reclassifies itself with nothing else going wrong.
+    That is the one objection to reading precision out of the value, and this
+    is the answer: monitor the share rather than drop the check."""
+
+    def _runs(self, shares, dated=200):
+        return [
+            {"started_at": "2026-08-07T12:00:00+00:00",
+             "sources": [{"name": "simplify-newgrad", "raw_fetched": 1900,
+                          "not_modified": False,
+                          "dated": dated, "midnight": int(dated * sh)}]}
+            for sh in shares
+        ]
+
+    def _health(self, runs, dated, midnight):
+        from jobpipe.health import evaluate_source
+        from jobpipe.models import utcnow
+
+        return evaluate_source(
+            "simplify-newgrad", raw_fetched=1900, not_modified=False,
+            runs=runs, now=utcnow(), dated=dated, midnight=midnight,
+        )
+
+    def test_a_steady_mix_does_not_alarm(self):
+        """Simplify has always been ~24% midnight-stamped. That is normal."""
+        health = self._health(self._runs([0.24, 0.23, 0.26, 0.25]), 200, 48)
+        assert health.ok, health.message()
+
+    def test_a_feed_switching_to_all_dates_alarms(self):
+        health = self._health(self._runs([0.24, 0.23, 0.26, 0.25]), 200, 200)
+        assert health.precision_drift
+        assert "timestamp format may have changed" in health.message()
+
+    def test_a_feed_switching_to_all_instants_alarms(self):
+        """Drift in either direction is a format change. Losing the midnight
+        rows entirely is just as much a signal as gaining them."""
+        health = self._health(self._runs([0.5, 0.48, 0.52, 0.5]), 200, 0)
+        assert health.precision_drift
+
+    def test_a_small_sample_never_alarms(self):
+        """A handful of dated rows swings wildly on its own."""
+        health = self._health(self._runs([0.24, 0.23, 0.26]), 5, 5)
+        assert health.ok
+        assert health.midnight_share is None
+
+    def test_history_from_before_the_fields_existed_is_not_zero(self):
+        """Older run reports carry neither `dated` nor `midnight`. Reading a
+        missing key as zero would make the first run after the upgrade look
+        like a jump from 0% to 24%."""
+        runs = [
+            {"started_at": "2026-08-07T12:00:00+00:00",
+             "sources": [{"name": "simplify-newgrad", "raw_fetched": 1900,
+                          "not_modified": False}]}
+            for _ in range(5)
+        ]
+        health = self._health(runs, 200, 48)
+        assert health.ok
+        assert health.midnight_median is None
+
+    def test_drift_makes_the_source_not_ok(self):
+        health = self._health(self._runs([0.24, 0.23, 0.26, 0.25]), 200, 200)
+        assert health.ok is False

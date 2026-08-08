@@ -113,15 +113,52 @@ def posted_date(posting: "Posting"):
     return when.astimezone(LOCAL_TZ).date()
 
 
-# Precision is a property of the source, not of the row, which is what makes
-# it recoverable for rows exported before the field existed. Sources set it
-# directly; this map only backfills history.
+# For most sources precision is a property of the source: Greenhouse, Lever and
+# Ashby always publish a real instant, speedyapply always publishes a whole-day
+# age. Simplify is the exception - it mixes, and roughly three rows in four
+# carry a real time of day.
 PRECISION_BY_SOURCE = {
     "ats": PostedPrecision.INSTANT,
-    "simplify-newgrad": PostedPrecision.DATE,
     "speedyapply-swe": PostedPrecision.AGE_DERIVED,
     "speedyapply-ai": PostedPrecision.AGE_DERIVED,
 }
+
+# Sources that mix, where precision has to be read off each row.
+PER_ROW_PRECISION_SOURCES = {"simplify-newgrad"}
+
+
+def is_midnight_utc(when: datetime | None) -> bool:
+    """Exactly 00:00:00.000000 UTC - a date wearing a timestamp.
+
+    A genuine posting at that instant is possible and would be misread as
+    date-only. It is also rare, and the misreading is the conservative
+    direction: it marks an exact row approximate rather than the reverse.
+    """
+    if when is None:
+        return False
+    utc = when.astimezone(timezone.utc)
+    return (utc.hour, utc.minute, utc.second, utc.microsecond) == (0, 0, 0, 0)
+
+
+def precision_for(source: str | None, posted_at: datetime | None) -> PostedPrecision:
+    """What `posted_at` means, given where it came from.
+
+    Per-row for the sources that mix. Declaring all of Simplify `date` was the
+    safe reading and cost too much to keep: it marked 64 of the 66 rows in the
+    48-hour section approximate, and a warning that is always on is a warning
+    nobody reads - the same failure the suspect-link annotation had before it
+    stopped firing on known bot-blocked domains.
+
+    The risk this takes on is format drift: a feed that switches to emitting
+    midnight for everything would silently reclassify itself. That is monitored
+    rather than avoided - `SourceReport.midnight_share` tracks it per run and
+    `health` alarms on a sharp move.
+    """
+    if posted_at is None:
+        return PostedPrecision.UNKNOWN
+    if source in PER_ROW_PRECISION_SOURCES:
+        return PostedPrecision.DATE if is_midnight_utc(posted_at) else PostedPrecision.INSTANT
+    return PRECISION_BY_SOURCE.get(source, PostedPrecision.UNKNOWN)
 
 
 class Disqualifier(str, enum.Enum):

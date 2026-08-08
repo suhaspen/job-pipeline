@@ -201,6 +201,58 @@ next real measurement is one click rather than another profiling session.
 If it gets tight: split the ATS source into a fast tier (targets, every run)
 and a slow tier (the rest, hourly). The ~70 boards are ~22s of a cold run.
 
+## Changing the export format
+
+Adding a field to `FIELDS`, or changing what one means, rewrites all ~560 lines
+of `data/postings.jsonl`. The poll rewrites the same file every run, so a format
+change races it: land the change and the next poll either conflicts with you or
+commits the old format back over the top. This has already happened once, and
+the resolution — take the bot's newer data, regenerate from it, re-verify — is
+more error-prone than just stopping the poll for five minutes.
+
+```bash
+gh workflow disable poll.yml
+```
+
+Then land the change, rebuild from the committed export, and check the diff is
+only what you intended:
+
+```bash
+rm -f data/postings.db && jobpipe run --dry-run
+```
+
+The check that matters is row-by-row, not `git diff --stat`. Every previous
+format change has been provably additive, and proving it takes one script:
+
+```bash
+python -c "
+import json, subprocess
+new=[json.loads(l) for l in open('data/postings.jsonl') if l.strip()]
+old=[json.loads(l) for l in subprocess.run(['git','show','origin/main:data/postings.jsonl'],capture_output=True,text=True).stdout.splitlines() if l.strip()]
+assert len(new)==len(old), (len(new), len(old))
+for a,b in zip(new,old): a.pop('YOUR_NEW_FIELD', None); b.pop('YOUR_NEW_FIELD', None)
+print('rows differing beyond the new field:', sum(1 for a,b in zip(new,old) if a!=b))
+"
+```
+
+Commit, push, and **re-enable**:
+
+```bash
+gh workflow enable poll.yml
+```
+
+**Re-enabling is not optional and nothing will remind you.** A disabled workflow
+produces no error, no failed run and no email — it is the same silent shape as
+the 60-day auto-disable and an exhausted minute allowance. The only thing that
+notices is the dead-man's switch, and only after its grace period. If you are
+interrupted between disable and enable, the pipeline is simply off.
+
+```bash
+gh workflow list
+```
+
+`disabled_manually` in that output is the state to look for.
+
 ## Secrets
 
 Set these in **Settings → Secrets and variables → Actions**:

@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from jobpipe.models import PostedPrecision, RawPosting
+from jobpipe.models import RawPosting, precision_for
 from jobpipe.sources.base import FetchStats, HttpClient, parse_timestamp
 
 LISTINGS_URL = (
@@ -39,8 +39,11 @@ RELEVANT_CATEGORIES = {
 }
 
 
+SOURCE_NAME = "simplify-newgrad"
+
+
 class SimplifySource:
-    name = "simplify-newgrad"
+    name = SOURCE_NAME
 
     def __init__(self, http: HttpClient, *, categories: set[str] | None = None):
         self.http = http
@@ -81,6 +84,7 @@ class SimplifySource:
 
             locations = row.get("locations") or []
             location = locations[0] if locations else None
+            posted = parse_timestamp(row.get("date_posted"))
 
             out.append(
                 RawPosting(
@@ -92,15 +96,13 @@ class SimplifySource:
                     # The repo only carries new-grad reqs, so that is the
                     # fallback - but a title naming a season still wins.
                     term_default="new-grad",
-                    posted_at=parse_timestamp(row.get("date_posted")),
-                    # DATE rather than INSTANT even though ~75% of the feed
-                    # carries a real time of day: the remainder is stamped
-                    # midnight UTC, and nothing distinguishes "posted at
-                    # 00:00:00Z" from "we only knew the date". Declaring the
-                    # weakest case for the whole source over-marks uncertainty,
-                    # which is the safe direction - the alternative silently
-                    # claims precision on a quarter of the rows.
-                    posted_precision=PostedPrecision.DATE,
+                    posted_at=posted,
+                    # Per row: this feed mixes. Roughly three rows in four
+                    # carry a real time of day and the rest are stamped
+                    # midnight UTC, so declaring the whole source `date` marked
+                    # almost everything in the 48-hour section approximate -
+                    # a warning that is always on is one nobody reads.
+                    posted_precision=precision_for(SOURCE_NAME, posted),
                     description=None,
                     source_id=str(row.get("id") or "") or None,
                     raw={

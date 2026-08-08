@@ -13,10 +13,13 @@ byte-identical file so the workflow can skip the commit entirely.
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
-from jobpipe.models import PRECISION_BY_SOURCE, PostedPrecision, Posting
+from jobpipe.models import (
+    PER_ROW_PRECISION_SOURCES, PostedPrecision, Posting, precision_for,
+)
 
 # Fixed key order. Appending here is safe; reordering rewrites every line.
 #
@@ -105,14 +108,29 @@ def _row_for_insert(row: dict[str, Any]) -> dict[str, Any]:
     # explicitly says unknown means it, and export -> restore has to stay an
     # identity for everything that is actually written down - otherwise the
     # round-trip parity test is asserting something weaker than it looks.
-    if "posted_precision" in row:
-        out["posted_precision"] = row["posted_precision"] or PostedPrecision.UNKNOWN.value
-    elif row.get("posted_at"):
-        out["posted_precision"] = PRECISION_BY_SOURCE.get(
-            row.get("source"), PostedPrecision.UNKNOWN
-        ).value
-    else:
+    # For a source that mixes, precision is not independent data - it is a
+    # pure function of the timestamp, so it is recomputed rather than trusted.
+    # That is what let the rule change from per-source to per-row without a
+    # migration step, and it is what makes a future format change reclassify
+    # itself on the next restore. The drift alarm in `health` is the thing that
+    # notices when it does; see ASSUMPTIONS G5.
+    #
+    # For every other source the stored value wins when present, keyed on the
+    # field being there rather than on its content: a line that says `unknown`
+    # means it, and export -> restore stays an identity for what is written
+    # down. Lines predating the field get it derived.
+    source = row.get("source")
+    stored = row.get("posted_precision")
+    if stored and source not in PER_ROW_PRECISION_SOURCES:
+        out["posted_precision"] = stored
+    elif "posted_precision" in row and source not in PER_ROW_PRECISION_SOURCES:
         out["posted_precision"] = PostedPrecision.UNKNOWN.value
+    else:
+        raw = row.get("posted_at")
+        when = datetime.fromisoformat(raw) if raw else None
+        if when is not None and when.tzinfo is None:
+            when = when.replace(tzinfo=timezone.utc)
+        out["posted_precision"] = precision_for(source, when).value
     return out
 
 

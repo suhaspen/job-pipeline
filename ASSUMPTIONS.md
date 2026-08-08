@@ -603,3 +603,45 @@ Date, tier and score leave ties, and without a total order the output depends on
 the order rows come back from the store. That would make INDEX.md flap between
 runs and produce commits with no content change — defeating the
 skip-commit-when-unchanged rule that the whole export format exists to support.
+
+### G5 — Precision is read per row for Simplify, and the risk is monitored
+G1 chose per-source and flagged the cost; the cost was worse than the estimate.
+Declaring the whole feed `date` marked **64 of the 66** rows in the 48-hour
+section approximate. A warning that is always on is a warning nobody reads —
+the same failure the suspect-link annotation had before it stopped firing on
+known bot-blocked domains. Per row it is **12 of 78**, and the mark means
+something again.
+
+The rule: exactly `00:00:00.000000` UTC is a date, anything else is an instant.
+A genuine posting at that instant is misread, which is rare and errs
+conservative — an exact row marked approximate rather than the reverse.
+
+**The objection to reading precision out of a value stands, so it is monitored
+rather than avoided.** A feed that switched to emitting midnight for everything
+would reclassify itself silently. `SourceReport` now carries `dated` and
+`midnight` per run, and `health` alarms when the share moves 25 points against
+its trailing median in either direction — losing the midnight rows is as much a
+format change as gaining them. Below 30 dated rows it never fires, and history
+predating the fields is skipped rather than read as zero, so the first run after
+this lands does not look like a jump from 0%.
+
+This is the same move as `responding` for `ats`: when a check stops being true,
+find the signal that stays true rather than dropping the check.
+
+For a per-row source the stored precision is *derived*, so `restore()`
+recomputes it instead of trusting the export. That is what let this change land
+without a migration — the 109 Simplify rows reclassified themselves on the next
+restore — and it is what makes a future format change self-correcting. The
+alarm is the thing that tells you it happened.
+
+### G6 — Export format changes stop the poll first
+Landing a format change races the poll, which rewrites the same file every run.
+It has already produced one mid-rebase conflict on generated files. The runbook
+now carries the procedure: `gh workflow disable poll.yml`, land and regenerate,
+verify row-by-row that the diff is confined to the new field, push, then
+`gh workflow enable poll.yml`.
+
+Re-enabling is the step that needs the warning. A disabled workflow produces no
+error, no failed run and no email — the same silent shape as the 60-day
+auto-disable and an exhausted minute allowance — and only the dead-man's switch
+notices, after its grace period.

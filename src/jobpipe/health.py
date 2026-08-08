@@ -27,6 +27,13 @@ from datetime import datetime, timedelta
 from typing import Any
 
 VOLUME_DROP_RATIO = 0.5
+# Precision drift. Per-row precision detection reads the shape of a timestamp,
+# so a feed that changes format reclassifies itself silently - which is the one
+# objection to reading precision out of the value. This is the answer to it: an
+# absolute move of this much in the midnight-stamped share, against the
+# trailing median, is a format change rather than a quiet week.
+MIDNIGHT_SHARE_DRIFT = 0.25
+MIN_DATED_FOR_DRIFT = 30
 MIN_RUNS_FOR_MEDIAN = 3
 STALE_304_DAYS = 7
 TRAILING_WINDOW = 20
@@ -46,10 +53,13 @@ class SourceHealth:
     volume_drop: bool = False
     stale_304: bool = False
     days_since_data: float | None = None
+    midnight_share: float | None = None
+    midnight_median: float | None = None
+    precision_drift: bool = False
 
     @property
     def ok(self) -> bool:
-        return not (self.volume_drop or self.stale_304)
+        return not (self.volume_drop or self.stale_304 or self.precision_drift)
 
     def message(self) -> str | None:
         if self.volume_drop:
@@ -66,6 +76,13 @@ class SourceHealth:
             return (
                 f"{self.name}: only 304s for {self.days_since_data:.0f} days - "
                 f"upstream frozen or an ETag is pinned"
+            )
+        if self.precision_drift:
+            return (
+                f"{self.name}: {self.midnight_share:.0%} of timestamps are midnight "
+                f"UTC, against a trailing median of {self.midnight_median:.0%} - "
+                f"the feed's timestamp format may have changed, which would "
+                f"silently reclassify posted_at precision"
             )
         return None
 
@@ -87,6 +104,8 @@ def evaluate_source(
     *,
     now: datetime,
     responding: int | None = None,
+    dated: int = 0,
+    midnight: int = 0,
 ) -> SourceHealth:
     """Assess one source against its own trailing history.
 
@@ -102,6 +121,7 @@ def evaluate_source(
         name=name, raw_fetched=raw_fetched, unit=unit, measured=measured
     )
     history = _history(runs, name)
+    _precision_drift(health, history, dated, midnight)
 
     # --- stale 304s -------------------------------------------------------
     last_with_data: datetime | None = None
@@ -142,20 +162,51 @@ def evaluate_source(
     return health
 
 
+def _precision_drift(
+    health: SourceHealth, history: list[dict[str, Any]], dated: int, midnight: int
+) -> None:
+    """Alarm when a feed's timestamp shape moves, not when it is merely mixed.
+
+    Simplify has always mixed - roughly a quarter of its rows are stamped
+    midnight UTC and the rest carry a real time - and per-row precision
+    detection reads exactly that distinction. A feed that switched to emitting
+    midnight for everything would reclassify itself as date-only with nothing
+    else going wrong, so the share is the signal that stays true where the
+    per-row rule alone would not.
+    """
+    if dated < MIN_DATED_FOR_DRIFT:
+        return
+    health.midnight_share = midnight / dated
+    prior = [
+        entry["midnight"] / entry["dated"]
+        for entry in history[-TRAILING_WINDOW:]
+        # Runs predating these fields carry neither; a missing key is not zero.
+        if entry.get("dated") and entry.get("midnight") is not None
+    ]
+    if len(prior) < MIN_RUNS_FOR_MEDIAN:
+        return
+    health.midnight_median = statistics.median(prior)
+    if abs(health.midnight_share - health.midnight_median) >= MIDNIGHT_SHARE_DRIFT:
+        health.precision_drift = True
+
+
 def evaluate_all(
-    current: list[tuple],
+    current: list[dict[str, Any]],
     runs: list[dict[str, Any]],
     *,
     now: datetime,
 ) -> list[SourceHealth]:
-    """`current` entries are (name, raw_fetched, not_modified[, responding])."""
-    out = []
-    for entry in current:
-        name, raw_fetched, not_modified = entry[:3]
-        responding = entry[3] if len(entry) > 3 else None
-        out.append(
-            evaluate_source(
-                name, raw_fetched, not_modified, runs, now=now, responding=responding
-            )
+    """`current` entries mirror the shape of a run report's source entries."""
+    return [
+        evaluate_source(
+            entry["name"],
+            entry.get("raw_fetched") or 0,
+            bool(entry.get("not_modified")),
+            runs,
+            now=now,
+            responding=entry.get("responding"),
+            dated=entry.get("dated") or 0,
+            midnight=entry.get("midnight") or 0,
         )
-    return out
+        for entry in current
+    ]

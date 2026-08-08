@@ -406,3 +406,58 @@ class TestATS:
         assert "boards-api.greenhouse.io" in ats.board_url(_company("greenhouse"))
         assert "api.lever.co" in ats.board_url(_company("lever"))
         assert "api.ashbyhq.com" in ats.board_url(_company("ashby"))
+
+
+class TestSimplifyPrecisionPerRow:
+    """Simplify mixes: roughly three rows in four carry a real time of day.
+    Declaring the whole source date-only marked 64 of the 66 rows in the
+    48-hour section approximate, and a warning that is always on is one nobody
+    reads - the same failure the suspect-link annotation had before it stopped
+    firing on known bot-blocked domains."""
+
+    def _row(self, epoch):
+        return {
+            "active": True, "is_visible": True, "category": "Software",
+            "company_name": "Acme", "title": "Software Engineer",
+            "url": "https://example.test/1", "locations": ["San Francisco, CA"],
+            "date_posted": epoch, "id": "1",
+        }
+
+    def _fetch(self, epoch):
+        from jobpipe.sources.simplify import SimplifySource
+
+        class FakeHttp:
+            def get_json(self, url, conditional=False):
+                return [self._row(epoch)] if False else None
+        source = SimplifySource.__new__(SimplifySource)
+        source.name = "simplify-newgrad"
+        source.categories = {"Software"}
+        from jobpipe.sources.base import FetchStats
+        source.stats = FetchStats()
+        source.raw_payload = []
+
+        class Http:
+            def get_json(_self, url, conditional=False):
+                return [self._row(epoch)]
+        http = Http()
+        http._row = self._row
+        source.http = http
+        return source.fetch()
+
+    def test_midnight_utc_is_read_as_a_date(self):
+        from jobpipe.models import PostedPrecision
+        # 2026-08-04T00:00:00Z
+        (posting,) = self._fetch(1785801600)
+        assert posting.posted_precision is PostedPrecision.DATE
+
+    def test_a_real_time_of_day_is_read_as_an_instant(self):
+        from jobpipe.models import PostedPrecision
+        # 2026-08-04T13:47:11Z
+        (posting,) = self._fetch(1785851231)
+        assert posting.posted_precision is PostedPrecision.INSTANT
+
+    def test_no_timestamp_is_unknown(self):
+        from jobpipe.models import PostedPrecision
+        (posting,) = self._fetch(None)
+        assert posting.posted_at is None
+        assert posting.posted_precision is PostedPrecision.UNKNOWN
