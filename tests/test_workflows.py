@@ -8,6 +8,7 @@ YAML and invisible in a green run, which is exactly the kind that needs a test.
 
 from __future__ import annotations
 
+import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -213,3 +214,89 @@ class TestSheetsSecrets:
         for name in ("poll.yml", "digest.yml", "keepalive.yml"):
             body = (WORKFLOWS / name).read_text()
             assert "GOOGLE_SA_KEY" not in body or ">" not in body.split("GOOGLE_SA_KEY")[1][:80]
+
+
+class TestStagingIsTolerantOfAbsentOutputs:
+    """`git add` aborts the whole step on a pathspec that matches nothing.
+
+    It does not skip the missing path and carry on. Listing
+    `data/sheet-status.json` unconditionally - a file that only exists once the
+    Sheets mirror is configured - failed every run for four hours while the
+    pipeline itself was completing fine and the healthcheck stayed green.
+
+    This runs the real staging script against a repo where the optional
+    outputs are missing, because reading it was not enough to catch it.
+    """
+
+    def _staging_script(self) -> str:
+        wf = load("poll.yml")
+        step = [
+            s for s in wf["jobs"]["poll"]["steps"]
+            if "git add" in (s.get("run") or "")
+        ][0]["run"]
+        # Everything up to the change check; the commit and push need a remote.
+        return step.split("# An all-304")[0]
+
+    def _repo(self, tmp_path, present: list[str]):
+        import subprocess
+
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+        for rel in present:
+            target = tmp_path / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("x\n")
+        return tmp_path
+
+    def _run(self, cwd) -> subprocess.CompletedProcess:
+        import subprocess
+
+        return subprocess.run(
+            ["bash", "-e", "-c", self._staging_script()],
+            cwd=cwd, capture_output=True, text=True,
+        )
+
+    def test_succeeds_when_the_optional_outputs_are_absent(self, tmp_path):
+        """The exact shape of the outage: no sheet-status.json, no audit dir."""
+        repo = self._repo(tmp_path, [
+            "data/postings.jsonl", "data/baseline.txt", "data/run-report.json",
+            "INDEX.md", "INDEX-by-score.md",
+        ])
+        result = self._run(repo)
+        assert result.returncode == 0, result.stderr
+
+    def test_stages_everything_that_is_present(self, tmp_path):
+        import subprocess
+
+        files = [
+            "data/postings.jsonl", "data/baseline.txt", "data/run-report.json",
+            "data/sheet-status.json", "data/audit/2026-08-07.jsonl",
+            "INDEX.md", "INDEX-by-score.md",
+        ]
+        repo = self._repo(tmp_path, files)
+        assert self._run(repo).returncode == 0
+        staged = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"],
+            cwd=repo, capture_output=True, text=True,
+        ).stdout.split()
+        assert sorted(staged) == sorted(files)
+
+    def test_succeeds_when_nothing_at_all_was_produced(self, tmp_path):
+        assert self._run(self._repo(tmp_path, [])).returncode == 0
+
+
+class TestFailureAlarm:
+    def test_a_red_workflow_pings_the_healthcheck(self):
+        """The ping inside `jobpipe run` answers "did the pipeline run", not
+        "did the workflow succeed" - so a failing commit step left
+        healthchecks.io green for four hours."""
+        wf = load("poll.yml")
+        step = [s for s in wf["jobs"]["poll"]["steps"] if s.get("name") == "Alarm on failure"][0]
+        assert step["if"] == "failure()"
+        assert "/fail" in step["run"]
+
+    def test_the_secret_goes_through_env_not_the_condition(self):
+        """The `secrets` context is not dependable in a step-level `if:`."""
+        wf = load("poll.yml")
+        step = [s for s in wf["jobs"]["poll"]["steps"] if s.get("name") == "Alarm on failure"][0]
+        assert "secrets" not in step["if"]
+        assert "HEALTHCHECK_URL" in step["env"]

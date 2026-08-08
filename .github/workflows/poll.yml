@@ -142,8 +142,16 @@ jobs:
         run: |
           git config user.name  "jobpipe[bot]"
           git config user.email "jobpipe@users.noreply.github.com"
-          git add data/postings.jsonl data/baseline.txt data/run-report.json \
-                  data/sheet-status.json data/audit INDEX.md INDEX-by-score.md
+          # One path at a time, guarded. `git add` aborts the entire step on a
+          # pathspec that matches nothing - it does not skip it and carry on -
+          # and some of these are produced conditionally: sheet-status.json
+          # only exists once the Sheets mirror is configured. Listing it
+          # unconditionally took the workflow down for four hours.
+          for path in data/postings.jsonl data/baseline.txt data/run-report.json \
+                      data/sheet-status.json data/audit \
+                      INDEX.md INDEX-by-score.md; do
+            if [ -e "$path" ]; then git add "$path"; fi
+          done
           # An all-304 run produces a byte-identical export. No diff, no commit -
           # which is what keeps the history readable.
           if git diff --cached --quiet; then
@@ -152,3 +160,22 @@ jobs:
           fi
           git commit -m "poll: $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
+
+      # The dead-man's switch is pinged inside `jobpipe run`, which answers
+      # "did the pipeline run" - not "did the workflow succeed". So when the
+      # commit step failed on every run for four hours, healthchecks.io stayed
+      # green throughout and the only signal was GitHub's failure email. An
+      # explicit /fail turns a red workflow into the same alarm as a missed
+      # ping, immediately rather than after the grace period.
+      #
+      # The secret goes through `env` rather than into the `if:`. The `secrets`
+      # context is not dependable in a step-level condition, and this file has
+      # already shipped one untested workflow change today.
+      - name: Alarm on failure
+        if: failure()
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+        run: |
+          if [ -n "$HEALTHCHECK_URL" ]; then
+            curl -fsS -m 10 --retry 3 "$HEALTHCHECK_URL/fail" || true
+          fi
