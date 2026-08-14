@@ -1,14 +1,14 @@
 # Live postings
 
-1178 open · newest first, score as the tiebreak · regenerated every run · last updated 2026-08-14 19:49 UTC
+1179 open · newest first, score as the tiebreak · regenerated every run · last updated 2026-08-14 20:16 UTC
 
 Ordered by fit instead: [INDEX-by-score.md](INDEX-by-score.md)
 
 `index!` means the link resolves to a careers page rather than the req; `dead!` means it does not resolve at all. Both are treated as expiry signals. A `~` on the age means the source published a whole-day age or a bare date, so the number is exact only to the day - sorting is by date for that reason, then tier, then score.
 
-Fall 2026 (co-op): 11, Winter 2027 (co-op): 5, Spring 2027 (co-op): 5, New grad 2027: 778, Summer 2027: 97, Term unknown: 282
+Fall 2026 (co-op): 11, Winter 2027 (co-op): 5, Spring 2027 (co-op): 5, New grad 2027: 778, Summer 2027: 97, Term unknown: 283
 
-## Posted in the last 48 hours (190)
+## Posted in the last 48 hours (188)
 
 Every term, flat. This is the set where being early still counts.
 
@@ -16,84 +16,85 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 
 | Term | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|---|--:|---|---|
-| Winter 2027 (co-op) | Notion | Software Engineer Intern (Winter 2027) | sf bay / remote | 2026-08-14 | just posted | 96 | [apply](https://jobs.ashbyhq.com/notion/e66c6658-9e65-4c58-8db2-844628b6e8f8) | ok |
-| New grad 2027 | Notion | Software Engineer, New Grad (Dec 2026) | sf bay / remote | 2026-08-14 | just posted | 88 | [apply](https://jobs.ashbyhq.com/notion/e32799d2-8ef8-4803-8189-c72514afa816) | ok |
-| New grad 2027 | NVIDIA | Software Engineer New Grad - Deep Learning Libraries | sf bay | 2026-08-14 | ~19h old | 74 | [apply](https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Software-Engineer--Deep-Learning-Libraries---New-College-Graduate-2026_JR2023252) | ok |
-| New grad 2027 | Clera | Software Engineer - AI & Data Systems | sf bay | 2026-08-14 | ~5h old | 74 | [apply](https://jobs.ashbyhq.com/clera/d1a632c6-648f-4457-bdff-8dd188e292ab) | ok |
-| Fall 2026 (co-op) | Composio | Fullstack and Product Engineering Internship - Fall 2026 & Winter 2027 | sf bay | 2026-08-14 | ~5h old | 74 | [apply](https://jobs.ashbyhq.com/composio/eea3c0be-8589-4e3d-a684-de29a9eada0d) | ok |
+| Winter 2027 (co-op) | Notion | Software Engineer Intern (Winter 2027) | sf bay / remote | 2026-08-14 | 1h old | 96 | [apply](https://jobs.ashbyhq.com/notion/e66c6658-9e65-4c58-8db2-844628b6e8f8) | ok |
+| New grad 2027 | Notion | Software Engineer, New Grad (Dec 2026) | sf bay / remote | 2026-08-14 | 1h old | 88 | [apply](https://jobs.ashbyhq.com/notion/e32799d2-8ef8-4803-8189-c72514afa816) | ok |
+| New grad 2027 | NVIDIA | Software Engineer New Grad - Deep Learning Libraries | sf bay | 2026-08-14 | ~20h old | 74 | [apply](https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Software-Engineer--Deep-Learning-Libraries---New-College-Graduate-2026_JR2023252) | ok |
+| New grad 2027 | Clera | Software Engineer - AI & Data Systems | sf bay | 2026-08-14 | ~6h old | 74 | [apply](https://jobs.ashbyhq.com/clera/d1a632c6-648f-4457-bdff-8dd188e292ab) | ok |
+| Fall 2026 (co-op) | Composio | Fullstack and Product Engineering Internship - Fall 2026 & Winter 2027 | sf bay | 2026-08-14 | ~6h old | 74 | [apply](https://jobs.ashbyhq.com/composio/eea3c0be-8589-4e3d-a684-de29a9eada0d) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Software Security - '26/'27 (Starlink) | sf bay | 2026-08-14 | 3h old | 64 | [apply](https://boards.greenhouse.io/spacex/jobs/8696158002?gh_jid=8696158002) | ok |
-| New grad 2027 | Applied Intuition | Software Engineer | sf bay | 2026-08-14 | ~5h old | 64 | [apply](https://jobs.ashbyhq.com/applied/43286c63-937d-4384-a5ff-12cb31baa225) | ok |
+| New grad 2027 | Applied Intuition | Software Engineer | sf bay | 2026-08-14 | ~6h old | 64 | [apply](https://jobs.ashbyhq.com/applied/43286c63-937d-4384-a5ff-12cb31baa225) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Software - '26/'27 (Starlink) | sf bay | 2026-08-14 | 3h old | 64 | [apply](https://boards.greenhouse.io/spacex/jobs/8696080002?gh_jid=8696080002) | ok |
-| New grad 2027 | Fastly | Software Development Engineer | sf bay | 2026-08-14 | ~5h old | 64 | [apply](https://www.fastly.com/about/jobs/apply?gh_jid=8128535) | ok |
+| New grad 2027 | Fastly | Software Development Engineer | sf bay | 2026-08-14 | ~6h old | 64 | [apply](https://www.fastly.com/about/jobs/apply?gh_jid=8128535) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Software - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 62 | [apply](https://boards.greenhouse.io/spacex/jobs/8696058002?gh_jid=8696058002) | ok |
-| New grad 2027 | Clera | Founding Engineer - Full Stack | la | 2026-08-14 | ~5h old | 62 | [apply](https://jobs.ashbyhq.com/clera/e1ce387a-1f00-4b55-b2b6-0c0143d8028e) | ok |
+| New grad 2027 | Clera | Founding Engineer - Full Stack | la | 2026-08-14 | ~6h old | 62 | [apply](https://jobs.ashbyhq.com/clera/e1ce387a-1f00-4b55-b2b6-0c0143d8028e) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Software Security - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 62 | [apply](https://boards.greenhouse.io/spacex/jobs/8696143002?gh_jid=8696143002) | ok |
-| Summer 2027 | Notion | Software Engineer Intern (Summer 2027) | sf bay / remote | 2026-08-14 | just posted | 60 | [apply](https://jobs.ashbyhq.com/notion/3fba1c39-c5cb-47d7-9ad2-1cec4d7e9d0c) | ok |
-| New grad 2027 | Andrew Morgan Consulting | OneStream Developer | remote / remote | 2026-08-14 | ~5h old | 54 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
+| Summer 2027 | Notion | Software Engineer Intern (Summer 2027) | sf bay / remote | 2026-08-14 | 1h old | 60 | [apply](https://jobs.ashbyhq.com/notion/3fba1c39-c5cb-47d7-9ad2-1cec4d7e9d0c) | ok |
+| New grad 2027 | Andrew Morgan Consulting | OneStream Developer | remote / remote | 2026-08-14 | ~6h old | 54 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
 | New grad 2027 | SpaceX | New Graduate Engineer, Software Security - '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8696156002?gh_jid=8696156002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Silicon Engineering | orange county | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8706884002?gh_jid=8706884002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Software  - '26/'27  (Starlink) | us tx | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8696097002?gh_jid=8696097002) | ok |
-| New grad 2027 | CVS Health | Associate Software Engineer | us tx | 2026-08-14 | ~19h old | 52 | [apply](https://cvshealth.wd1.myworkdayjobs.com/CVS_Health_Careers/job/TX---Farmers-Branch/Associate-Software-Development-Engineer_R1006749) | ok |
-| New grad 2027 | Esri | Software Development Engineer I | denver | 2026-08-14 | ~5h old | 52 | [apply](https://www.esri.com/careers/5209800007?gh_jid=5209800007) | ok |
-| New grad 2027 | SpaceX | Software Engineer - Starlink | us tx | 2026-08-14 | ~5h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8706510002?gh_jid=8706510002) | ok |
-| New grad 2027 | Esri | Software Development Engineer | us ca | 2026-08-14 | ~5h old | 52 | [apply](https://www.esri.com/careers/5210782007?gh_jid=5210782007) | ok |
+| New grad 2027 | CVS Health | Associate Software Engineer | us tx | 2026-08-14 | ~20h old | 52 | [apply](https://cvshealth.wd1.myworkdayjobs.com/CVS_Health_Careers/job/TX---Farmers-Branch/Associate-Software-Development-Engineer_R1006749) | ok |
+| New grad 2027 | Esri | Software Development Engineer I | denver | 2026-08-14 | ~6h old | 52 | [apply](https://www.esri.com/careers/5209800007?gh_jid=5209800007) | ok |
+| New grad 2027 | SpaceX | Software Engineer - Starlink | us tx | 2026-08-14 | ~6h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8706510002?gh_jid=8706510002) | ok |
+| New grad 2027 | Esri | Software Development Engineer | us ca | 2026-08-14 | ~6h old | 52 | [apply](https://www.esri.com/careers/5210782007?gh_jid=5210782007) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Silicon Engineering | sf bay | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8703552002?gh_jid=8703552002) | ok |
-| New grad 2027 | Esri | Software Development Engineer I - Applied Research & Prototyping | us ca | 2026-08-14 | ~5h old | 52 | [apply](https://www.esri.com/careers/5209466007?gh_jid=5209466007) | ok |
+| New grad 2027 | Esri | Software Development Engineer I - Applied Research & Prototyping | us ca | 2026-08-14 | ~6h old | 52 | [apply](https://www.esri.com/careers/5209466007?gh_jid=5209466007) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Silicon Engineering | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8706885002?gh_jid=8706885002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Electrical - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8696490002?gh_jid=8696490002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Mechanical - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8696986002?gh_jid=8696986002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, GNC- '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8696105002?gh_jid=8696105002) | ok |
-| New grad 2027 | Squarepoint Capital | Quantitative Researcher - Volatility - II | nyc | 2026-08-14 | ~5h old | 46 | [apply](https://www.squarepoint-capital.com/open-opportunities?id=8122132&gh_jid=8122132) | ok |
+| New grad 2027 | Squarepoint Capital | Quantitative Researcher - Volatility - II | nyc | 2026-08-14 | ~6h old | 46 | [apply](https://www.squarepoint-capital.com/open-opportunities?id=8122132&gh_jid=8122132) | ok |
 | Term unknown | LangChain | Research Engineer, LangSmith Engine | nyc | 2026-08-14 | 2h old | 46 | [apply](https://jobs.ashbyhq.com/langchain/bdc96ffd-2a95-4d63-bf8f-193574961e00) | ok |
+| Term unknown | Twitch | Software Engineer I, Payments | sf bay | 2026-08-14 | just posted | 44 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8700578002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Mechanical - '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 40 | [apply](https://boards.greenhouse.io/spacex/jobs/8696952002?gh_jid=8696952002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, GNC- '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 40 | [apply](https://boards.greenhouse.io/spacex/jobs/8696124002?gh_jid=8696124002) | ok |
 | New grad 2027 | SpaceX | New Graduate Engineer, Electrical - '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 40 | [apply](https://boards.greenhouse.io/spacex/jobs/8696469002?gh_jid=8696469002) | ok |
-| New grad 2027 | Micron Technology | AI Innovation Research Engineer New Grad | sf bay | 2026-08-14 | ~19h old | 0 | [apply](https://micron.wd1.myworkdayjobs.com/External/job/San-Jose-CA/New-College-Grad---AI-Innovation-Research-Engineer_JR108594) | ok |
+| New grad 2027 | Micron Technology | AI Innovation Research Engineer New Grad | sf bay | 2026-08-14 | ~20h old | 0 | [apply](https://micron.wd1.myworkdayjobs.com/External/job/San-Jose-CA/New-College-Grad---AI-Innovation-Research-Engineer_JR108594) | ok |
 | New grad 2027 | TikTok | Software Engineer Graduate - Recommendation Infrastructure | sf bay | 2026-08-13 | 1d old | 70 | [apply](https://lifeattiktok.com/search/7673284715407886597) | ok |
-| New grad 2027 | CTG | AI Vibe Coding Engineer | us in / remote | 2026-08-13 | 15h old | 66 | [apply](https://careers.ctg.com/jobs/17347?icims=1) | ok |
-| New grad 2027 | Composio | Fullstack Engineer New Grad - Product Team | sf bay | 2026-08-13 | 13h old | 66 | [apply](https://jobs.ashbyhq.com/composio/01e0e7ad-44a2-44e8-9340-64ca70eff491/application?embed=true) | ok |
+| New grad 2027 | CTG | AI Vibe Coding Engineer | us in / remote | 2026-08-13 | 16h old | 66 | [apply](https://careers.ctg.com/jobs/17347?icims=1) | ok |
+| New grad 2027 | Composio | Fullstack Engineer New Grad - Product Team | sf bay | 2026-08-13 | 14h old | 66 | [apply](https://jobs.ashbyhq.com/composio/01e0e7ad-44a2-44e8-9340-64ca70eff491/application?embed=true) | ok |
 | New grad 2027 | Roblox | Software Engineer - Account Authentication | sf bay | 2026-08-13 | ~1d old | 64 | [apply](https://careers.roblox.com/jobs/8097701?gh_jid=8097701) | blocked |
 | New grad 2027 | TikTok | Data Scientist Graduate - Multimedia | sf bay | 2026-08-13 | 1d old | 62 | [apply](https://lifeattiktok.com/search/7670288355678177589) | ok |
 | New grad 2027 | Kyndryl | Associate AI Engineer | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://kyndryl.wd5.myworkdayjobs.com/en-US/KyndrylProfessionalCareers/job/USDALFRI---Dallas-Frisco-AI-HUB-FRI/Early-Career-Consult-Program---Associate-AI-Engineer_R-66739-2) | ok |
 | New grad 2027 | Kyndryl | Associate AI Engineer - Early Career Consult Program | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://kyndryl.wd5.myworkdayjobs.com/KyndrylEarlyCareers/job/USDALFRI---Dallas-Frisco-AI-HUB-FRI/Early-Career-Consult-Program---Associate-AI-Engineer_R-66739) | ok |
 | New grad 2027 | Renesas Electronics | AI Compiler Engineer | dallas | 2026-08-13 | 1d old | 62 | [apply](https://jobs.smartrecruiters.com/RenesasElectronics/744000143317369) | blocked |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Synthetic Aperture Radar Machine Learning Engineer - Imaging Systems | us md | 2026-08-13 | 15h old | 62 | [apply](https://careers.jhuapl.edu/jobs/58971?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Synthetic Aperture Radar Machine Learning Engineer - Imaging Systems | us md | 2026-08-13 | 16h old | 62 | [apply](https://careers.jhuapl.edu/jobs/58971?icims=1) | ok |
 | New grad 2027 | Kyndryl | Early Career Consult Program - Associate AI Engineer | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://kyndryl.wd5.myworkdayjobs.com/en-US/kyndrylprofessionalcareers/job/USDALFRI---Dallas-Frisco-AI-HUB-FRI/Early-Career-Consult-Program---Associate-AI-Engineer_R-66739-2) | ok |
 | New grad 2027 | Microsoft | Software Engineer | seattle | 2026-08-13 | 21h old | 62 | [apply](https://apply.careers.microsoft.com/careers/job/1970393556960468) | blocked |
 | New grad 2027 | Bank of America | Software Engineer II - AI/ML | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://ghr.wd1.myworkdayjobs.com/en-US/lateral-us/job/Plano/Software-Engineer-II--AI-ML-_26026987) | ok |
-| New grad 2027 | AppLovin | Data Scientist - Analytics | sf bay | 2026-08-13 | 15h old | 62 | [apply](https://boards.greenhouse.io/applovin/jobs/4705263006) | ok |
-| New grad 2027 | ITA International | Junior Power Platform Developer | us in / remote | 2026-08-13 | 15h old | 62 | [apply](https://careers-ita-intl.icims.com/jobs/4470/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | AppLovin | Data Scientist - Analytics | sf bay | 2026-08-13 | 16h old | 62 | [apply](https://boards.greenhouse.io/applovin/jobs/4705263006) | ok |
+| New grad 2027 | ITA International | Junior Power Platform Developer | us in / remote | 2026-08-13 | 16h old | 62 | [apply](https://careers-ita-intl.icims.com/jobs/4470/job?mobile=true&needsRedirect=false) | ok |
 | New grad 2027 | Jobgether | Junior Software & Systems Specialist - AI & Automation | us | 2026-08-13 | ~1d old | 62 | [apply](https://jobs.lever.co/jobgether/9deafdc3-55f7-4699-a420-b473364fde47) | ok |
 | New grad 2027 | General Matter | Software Engineer - New Grad | la | 2026-08-13 | ~1d old | 60 | [apply](https://job-boards.greenhouse.io/generalmatter/jobs/5375987008) | ok |
 | New grad 2027 | BlackRock | Associate Database Platform Developer | us de | 2026-08-13 | ~1d old | 58 | [apply](https://blackrock.wd1.myworkdayjobs.com/en-US/blackrock_professional/job/Wilmington-DE/Associate-Database-Platform-Developer_R266105) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Systems Engineer Graduate - Systems Engineer - Analyst | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59497?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Systems Engineer Graduate - Systems Engineer - Analyst | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59497?icims=1) | ok |
 | New grad 2027 | Uniswap Labs | Software Engineer - Early Career | nyc | 2026-08-13 | ~1d old | 58 | [apply](https://jobs.ashbyhq.com/uniswap/fb4d4137-f003-4669-beb7-2a5caca88012) | ok |
 | New grad 2027 | ASM | Systems Engineer I - Software - Robotics & Semiconductor Automation | phoenix | 2026-08-13 | ~1d old | 58 | [apply](https://www.asm.com/open-vacancies/?gh_jid=4948195101) | ok |
 | New grad 2027 | Book of the Month | Associate Software Engineer - Frontend | nyc | 2026-08-13 | ~1d old | 58 | [apply](http://bookofthemonth.applytojob.com/apply/ByZkWONsJH/Associate-Software-Engineer-Frontend) | ok |
-| New grad 2027 | M.C. Dean | Systems Specialist - Associate | atlanta | 2026-08-13 | 13h old | 58 | [apply](https://careers.mcdean.com/jobs/31987?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Navigation Systems Analyst/Engineer | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59337?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Intelligent Systems Development Engineer - Intelligent Combat Platforms Group | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/58080?icims=1) | ok |
-| New grad 2027 | M.C. Dean | Systems Specialist - Associate | us va | 2026-08-13 | 13h old | 58 | [apply](https://careers.mcdean.com/jobs/31986?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Computer Engineer New Grad - Shipboard Systems Team | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59098?icims=1) | ok |
-| New grad 2027 | Shearers Foods | EDI Business Systems Analyst | us oh | 2026-08-13 | 15h old | 58 | [apply](https://careers.shearers.com/jobs/1996?icims=1) | ok |
+| New grad 2027 | M.C. Dean | Systems Specialist - Associate | atlanta | 2026-08-13 | 14h old | 58 | [apply](https://careers.mcdean.com/jobs/31987?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Navigation Systems Analyst/Engineer | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59337?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Intelligent Systems Development Engineer - Intelligent Combat Platforms Group | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/58080?icims=1) | ok |
+| New grad 2027 | M.C. Dean | Systems Specialist - Associate | us va | 2026-08-13 | 14h old | 58 | [apply](https://careers.mcdean.com/jobs/31986?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Computer Engineer New Grad - Shipboard Systems Team | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59098?icims=1) | ok |
+| New grad 2027 | Shearers Foods | EDI Business Systems Analyst | us oh | 2026-08-13 | 16h old | 58 | [apply](https://careers.shearers.com/jobs/1996?icims=1) | ok |
 | New grad 2027 | Dexcom | Software Development Engineer 1 | us in / remote | 2026-08-13 | ~1d old | 56 | [apply](https://dexcom.wd1.myworkdayjobs.com/Dexcom/job/Remote---United-States/Software-Development-Engineer-1_JR120540) | ok |
-| New grad 2027 | DecisionPoint Corporation | Entry-level Software Developer | us in / remote | 2026-08-13 | 15h old | 56 | [apply](https://careers-decisionpointcorp.icims.com/jobs/3685/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | DecisionPoint Corporation | Entry-level Software Developer | us in / remote | 2026-08-13 | 16h old | 56 | [apply](https://careers-decisionpointcorp.icims.com/jobs/3685/job?mobile=true&needsRedirect=false) | ok |
 | Term unknown | Cohere | Member of Technical Staff, Agentic Environments | remote / remote | 2026-08-13 | 1d old | 54 | [apply](https://jobs.ashbyhq.com/cohere/8878b0d0-7d88-4ee9-bc17-b0dd237e39a0) | ok |
 | New grad 2027 | Berkshire Hathaway GUARD Insurance Companies | Full Stack Developer | atlanta | 2026-08-13 | 13h old | 54 | [apply](https://careers-guard.icims.com/jobs/5913/job?mobile=true&needsRedirect=false) | ok |
 | New grad 2027 | Associated Bank | Full-Stack Developer Associate | us mn | 2026-08-13 | ~1d old | 54 | [apply](https://associatedbank.wd1.myworkdayjobs.com/en-US/external_careers/job/US-WI-Remote/Full-Stack-Developer-Associate_JR106237) | ok |
 | New grad 2027 | Jobgether | Software Support Specialist | us | 2026-08-13 | ~1d old | 52 | [apply](https://jobs.lever.co/jobgether/4820d02b-4e3a-4a47-b007-a0f4359b4cd2) | ok |
 | New grad 2027 | New Relic | Software Engineer - Query Language | portland | 2026-08-13 | ~1d old | 52 | [apply](https://job-boards.greenhouse.io/newrelic/jobs/5387144008) | ok |
-| New grad 2027 | Composio | Forward Deployed Engineer New Grad | sf bay | 2026-08-13 | 13h old | 52 | [apply](https://jobs.ashbyhq.com/composio/f83a19a0-8188-4100-9dd5-b259efb342e6/application?embed=true) | ok |
-| New grad 2027 | VTG | Associate Software Engineer | us va | 2026-08-13 | 15h old | 52 | [apply](https://careers.vtgdefense.com/jobs/9425?icims=1) | - |
+| New grad 2027 | Composio | Forward Deployed Engineer New Grad | sf bay | 2026-08-13 | 14h old | 52 | [apply](https://jobs.ashbyhq.com/composio/f83a19a0-8188-4100-9dd5-b259efb342e6/application?embed=true) | ok |
+| New grad 2027 | VTG | Associate Software Engineer | us va | 2026-08-13 | 16h old | 52 | [apply](https://careers.vtgdefense.com/jobs/9425?icims=1) | - |
 | New grad 2027 | RTX | Software Engineer 1 | dc metro | 2026-08-13 | ~1d old | 52 | [apply](https://globalhr.wd5.myworkdayjobs.com/fr-CA/Private_Posting_No_TMP/job/US-MD-ANNAPOLIS-JUNCTION-339--306-Sentinel-Dr--339-BLDG/Software-Engineer-I--Onsite-_01866357) | ok |
 | New grad 2027 | Microsoft | Software Development Engineer - Azure PostgreSQL | us | 2026-08-13 | 15h old | 52 | [apply](https://apply.careers.microsoft.com/careers/job/1970393556959253) | blocked |
 | New grad 2027 | Honeywell | Software Engineer 1 | us va | 2026-08-13 | 16h old | 52 | [apply](https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/job/155664) | - |
-| New grad 2027 | Arcfield | Software Engineer / Electrical Engineer | us pa | 2026-08-13 | 15h old | 52 | [apply](https://careers.arcfield.com/jobs/8467?icims=1) | ok |
+| New grad 2027 | Arcfield | Software Engineer / Electrical Engineer | us pa | 2026-08-13 | 16h old | 52 | [apply](https://careers.arcfield.com/jobs/8467?icims=1) | ok |
 | New grad 2027 | Sonalysts | Junior Software Engineer | us ri | 2026-08-13 | ~1d old | 52 | [apply](https://careers-sonalysts.icims.com/jobs/2463/junior-software-engineer/job) | ok |
 | New grad 2027 | TikTok | Data Science Graduate - Advertisement Team - 2027 Start - PhD | sf bay | 2026-08-13 | ~1d old | 52 | [apply](https://lifeattiktok.com/search/7673232905797880069) | ok |
 | New grad 2027 | Pennsylvania State University | Software Research and Development Engineer - Applied Research Laboratory | us pa | 2026-08-13 | ~1d old | 52 | [apply](https://psu.wd1.myworkdayjobs.com/PSU_Staff/job/Penn-State-University-Park/Software-Research-and-Development-Engineer_REQ_0000080402-2) | ok |
 | New grad 2027 | Northrop Grumman | Associate Software Engineer/Software Engineer | us ca | 2026-08-13 | ~1d old | 52 | [apply](https://ngc.wd1.myworkdayjobs.com/Northrop_Grumman_External_Site/job/United-States-California-San-Diego/XMLNAME-2027-Associate-Software-Engineer-Software-Engineer_R10245648) | ok |
-| New grad 2027 | Urban Science | Associate Software Engineer - Serviceview | detroit | 2026-08-13 | 13h old | 52 | [apply](https://careers-urbanscience.icims.com/jobs/5181/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | Urban Science | Associate Software Engineer - Serviceview | detroit | 2026-08-13 | 14h old | 52 | [apply](https://careers-urbanscience.icims.com/jobs/5181/job?mobile=true&needsRedirect=false) | ok |
 | New grad 2027 | i3 Corps | COMPASS Associate Software Developer | us al | 2026-08-13 | ~1d old | 52 | [apply](https://careers-i3-corps.icims.com/jobs/5211/compass-associate-software-developer/job) | ok |
 | New grad 2027 | Autodesk | Software Developer | toronto | 2026-08-13 | ~1d old | 52 | [apply](https://autodesk.wd1.myworkdayjobs.com/Ext/job/Toronto-ON-CAN/Software-Developer_26WD100537) | - |
 | New grad 2027 | Leidos | Junior CEMA Software Engineer | us ok | 2026-08-13 | ~1d old | 52 | [apply](https://leidos.wd5.myworkdayjobs.com/en-US/external/job/Lawton-OK/Junior-CEMA-Software-Engineer_R-00189354) | ok |
@@ -104,15 +105,15 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | New grad 2027 | Applied Materials | Software Engineer New Grad - DevOps | us ma | 2026-08-13 | ~1d old | 52 | [apply](https://amat.wd1.myworkdayjobs.com/External/job/GloucesterMA/XMLNAME-2027-Software-Engineer--DevOps---New-College-Grad---Bachelor-s--Gloucester--MA-_R2625762) | ok |
 | New grad 2027 | KBR | Junior Software Engineer | us co | 2026-08-13 | ~1d old | 52 | [apply](https://kbr.wd5.myworkdayjobs.com/en-US/kbr_careers/job/Colorado-Springs-Colorado/Junior-Software-Engineer_R2126608) | ok |
 | New grad 2027 | Leidos | Software Engineer | us md | 2026-08-13 | ~1d old | 52 | [apply](https://leidos.wd5.myworkdayjobs.com/External/job/Bowie-MD/Software-Engineer_R-00189564) | ok |
-| New grad 2027 | CPI Card Group | Software Developer 1 | norwich uk | 2026-08-13 | 15h old | 52 | [apply](https://careersuk-cpicardgroup.icims.com/jobs/11208/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | CPI Card Group | Software Developer 1 | norwich uk | 2026-08-13 | 16h old | 52 | [apply](https://careersuk-cpicardgroup.icims.com/jobs/11208/job?mobile=true&needsRedirect=false) | ok |
 | New grad 2027 | Quantum | Graduate Data Engineer | london | 2026-08-13 | 21h old | 50 | [apply](https://jobs.ashbyhq.com/quantum/4e81ce91-ecf2-4be2-8aba-bf3e80d1f8b6/application?embed=true) | ok |
-| New grad 2027 | International Motors, LLC | Supply Chain Analytics Data Scientist | us il | 2026-08-13 | 15h old | 50 | [apply](https://careers.navistar.com/jobs/59467?icims=1) | ok |
+| New grad 2027 | International Motors, LLC | Supply Chain Analytics Data Scientist | us il | 2026-08-13 | 16h old | 50 | [apply](https://careers.navistar.com/jobs/59467?icims=1) | ok |
 | New grad 2027 | Gartner | Associate Data Scientist | us ct | 2026-08-13 | ~1d old | 50 | [apply](https://gartner.wd5.myworkdayjobs.com/EXT/job/Irving-TX/Associate-Data-Scientist---Spring-2027-Master-s-level-graduates_113311) | ok |
 | New grad 2027 | Moffitt Cancer Center | Data Engineer 1 | us fl | 2026-08-13 | ~1d old | 50 | [apply](https://moffitt.wd108.myworkdayjobs.com/Moffitt/job/Moffitt-Business-Center/DATA-ENGINEER-I_R-2977) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Data Scientist New Grad - Data Science - System Performance Evaluation | us md | 2026-08-13 | 15h old | 50 | [apply](https://careers.jhuapl.edu/jobs/57653?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Data Scientist New Grad - Data Science - System Performance Evaluation | us md | 2026-08-13 | 16h old | 50 | [apply](https://careers.jhuapl.edu/jobs/57653?icims=1) | ok |
 | New grad 2027 | Loblaw Companies | Front-End Developer | toronto | 2026-08-13 | ~1d old | 46 | [apply](https://myview.wd3.myworkdayjobs.com/paradox_careers/job/500-Lake-Shore-Blvd-W-Toronto-ON/Front-End-Developer--DX-Studio---18-Month-Contract_R2000692440) | ok |
 | Term unknown | Metaphor | Software Engineer - Intern | sf bay | 2026-08-13 | ~1d old | 44 | [apply](https://jobs.ashbyhq.com/exa/a9e01521-66f1-481b-89da-ec01d4620f16) | ok |
-| New grad 2027 | Andrew Morgan | OneStream Developer | us in / remote | 2026-08-13 | 20h old | 44 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
+| New grad 2027 | Andrew Morgan | OneStream Developer | us in / remote | 2026-08-13 | 21h old | 44 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
 | Term unknown | Crowe | AI Engineering Intern | chicago | 2026-08-13 | ~1d old | 42 | [apply](https://crowe.wd12.myworkdayjobs.com/en-US/external_careers/job/Chicago-IL-USA/AI-Engineering-Intern_R-51782) | ok |
 | Term unknown | Crowe | AI Functional Intern | chicago | 2026-08-13 | ~1d old | 42 | [apply](https://crowe.wd12.myworkdayjobs.com/en-US/external_careers/job/Chicago-IL-USA/AI-Functional-Intern_R-71008) | ok |
 | New grad 2027 | Intropic | Quantitative Analyst - Client Solutions | london | 2026-08-13 | 21h old | 40 | [apply](https://jobs.lever.co/intropic/41cb2a0a-4c31-4fa8-a042-720adba0e03b/apply) | ok |
@@ -120,22 +121,22 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | New grad 2027 | ManTech | Associate BI Analytics Engineer | dc metro | 2026-08-13 | 21h old | 40 | [apply](https://mantech.avature.net/en_US/careers/JobDetail/64747) | ok |
 | New grad 2027 | Bristol Myers Squibb | Veeva CRM Admin/Developer - Field Enablement | us | 2026-08-13 | ~1d old | 40 | [apply](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/bms/job/Princeton---NJ---US/Veeva-CRM-Admin-Developer---Field-Enablement_R1605331) | ok |
 | New grad 2027 | AIR Control Concepts | Application Engineer | us md | 2026-08-13 | 21h old | 40 | [apply](https://aircontrolconcepts.applytojob.com/apply/0mgWNmp2sM/Application-Engineer) | ok |
-| New grad 2027 | WorldQuant | Quantitative Developer - Portfolio Management Solutions | us ct | 2026-08-13 | 21h old | 40 | [apply](https://job-boards.greenhouse.io/worldquant/jobs/4700347006) | ok |
+| New grad 2027 | WorldQuant | Quantitative Developer - Portfolio Management Solutions | us ct | 2026-08-13 | 22h old | 40 | [apply](https://job-boards.greenhouse.io/worldquant/jobs/4700347006) | ok |
 | New grad 2027 | Wells Fargo | 2027 Quantitative Analytics Program Capital Markets - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 40 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program-Capital-Markets--Masters----Early-Careers_R-568263) | ok |
 | New grad 2027 | Wells Fargo | 2027 Quantitative Analytics Program - Risk Analytics and Decision Science - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 40 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program---Risk-Analytics-and-Decision-Science--Masters----Early-Careers_R-568204) | ok |
-| New grad 2027 | Trace Systems | Database Administrator 1 | us sc | 2026-08-13 | 15h old | 40 | [apply](https://careers.tracesystems.com/jobs/6269?icims=1) | ok |
-| New grad 2027 | M.C. Dean | Engineer 1 New Grad - Cis | us va | 2026-08-13 | 13h old | 40 | [apply](https://careers.mcdean.com/jobs/32119?icims=1) | ok |
+| New grad 2027 | Trace Systems | Database Administrator 1 | us sc | 2026-08-13 | 16h old | 40 | [apply](https://careers.tracesystems.com/jobs/6269?icims=1) | ok |
+| New grad 2027 | M.C. Dean | Engineer 1 New Grad - Cis | us va | 2026-08-13 | 14h old | 40 | [apply](https://careers.mcdean.com/jobs/32119?icims=1) | ok |
 | New grad 2027 | BlackRock | Application Engineer - Service Management Operations Group | us de | 2026-08-13 | ~1d old | 40 | [apply](https://blackrock.wd1.myworkdayjobs.com/en-US/BlackRock_Professional/job/Wilmington-DE/Analyst--Application-Engineer_R266106) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Engineer Graduate - Multi-Mission Planning Development | us md | 2026-08-13 | 15h old | 40 | [apply](https://careers.jhuapl.edu/jobs/58163?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Engineer Graduate - Multi-Mission Planning Development | us md | 2026-08-13 | 16h old | 40 | [apply](https://careers.jhuapl.edu/jobs/58163?icims=1) | ok |
 | New grad 2027 | Latham & Watkins | Conflicts Database Administrator | london | 2026-08-13 | 15h old | 40 | [apply](https://ukcareers-lw.icims.com/jobs/5152/job?mobile=true&needsRedirect=false) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Cyber Engineer - Capabilities Development | us md | 2026-08-13 | 15h old | 40 | [apply](https://careers.jhuapl.edu/jobs/57600?icims=1) | ok |
-| New grad 2027 | Dawn Meats | Graduate Business Intelligence Developer | waterford ireland | 2026-08-13 | 15h old | 40 | [apply](https://graduate-roi-dawnmeats.icims.com/jobs/5282/job?mobile=true&needsRedirect=false) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Cyber Engineer - Capabilities Development | us md | 2026-08-13 | 16h old | 40 | [apply](https://careers.jhuapl.edu/jobs/57600?icims=1) | ok |
+| New grad 2027 | Dawn Meats | Graduate Business Intelligence Developer | waterford ireland | 2026-08-13 | 16h old | 40 | [apply](https://graduate-roi-dawnmeats.icims.com/jobs/5282/job?mobile=true&needsRedirect=false) | ok |
 | New grad 2027 | Cigna Group | Technology Development Program New Grad - Data & Analytics Engineering Track | us nj | 2026-08-13 | ~1d old | 40 | [apply](https://cigna.wd5.myworkdayjobs.com/cignacareers/job/Bloomfield-CT/Technology-Development-Program--TECDP----Data---Analytics-Engineering-Track_26009518-1) | ok |
 | New grad 2027 | Cenovus Energy | Geologist-in-Training New Grad | calgary ab canada | 2026-08-13 | ~1d old | 40 | [apply](https://cenovus.wd3.myworkdayjobs.com/careers/job/CA-AB-Calgary/New-Grad--Geologist-in-Training--June-2027--Calgary-_R-410988) | ok |
 | New grad 2027 | Cenovus Energy | Geophysicist-in-Training New Grad | calgary ab canada | 2026-08-13 | ~1d old | 40 | [apply](https://cenovus.wd3.myworkdayjobs.com/careers/job/CA-AB-Calgary/New-Grad--Geophysicist-in-Training--June-2027--Calgary-_R-410991) | ok |
 | New grad 2027 | Jobgether | Research Associate Quantitative Analysis | us | 2026-08-13 | ~1d old | 40 | [apply](https://jobs.lever.co/jobgether/37485f0b-dc22-4490-bc4e-8654d0d0d633) | ok |
 | New grad 2027 | State of Nebraska | IT Applications Developer - Public Health | us ne | 2026-08-13 | ~1d old | 40 | [apply](https://son.wd108.myworkdayjobs.com/NebraskaStateCareers/job/Lincoln-NE/IT-Applications-Developer---Public-Health_JR2026-00028657) | ok |
-| New grad 2027 | M.C. Dean | Engineer 1 - New College Graduate | dc metro | 2026-08-13 | 13h old | 40 | [apply](https://careers.mcdean.com/jobs/32350?icims=1) | ok |
+| New grad 2027 | M.C. Dean | Engineer 1 - New College Graduate | dc metro | 2026-08-13 | 14h old | 40 | [apply](https://careers.mcdean.com/jobs/32350?icims=1) | ok |
 | Term unknown | TikTok | Data Science Intern - Advertisement Team - 2027 Start - PhD | sf bay | 2026-08-13 | ~1d old | 32 | [apply](https://lifeattiktok.com/search/7673226686054107445) | ? |
 | Summer 2027 | Teledyne | NHRC Software Engineering Internship - Summer 2027 | us al | 2026-08-13 | ~1d old | 24 | [apply](https://flir.wd1.myworkdayjobs.com/en-US/flircareers/job/US---Huntsville-AL/NHRC-Software-Engineering-Internship--Summer-2027-_REQ36193) | ok |
 | Term unknown | ConnectPrep | Data Analyst Internship | dc metro | 2026-08-13 | ~1d old | 20 | [apply](https://apply.workable.com/connectprep/j/D1C67258C0/) | ok |
@@ -143,23 +144,23 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Summer 2027 | Wells Fargo | 2027 Quantitative Analytics Summer Internship Capital Markets - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 12 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Summer-Internship-Capital-Markets--Masters----Early-Careers_R-568270) | ok |
 | Summer 2027 | Wells Fargo | 2027 Quantitative Analytics Summer Internship Capital Markets - PhD - Early Careers | us nc | 2026-08-13 | ~1d old | 12 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Summer-Internship-Capital-Markets--PhD----Early-Careers_R-568279) | ok |
 | Summer 2027 | Wells Fargo | 2027 Quantitative Analytics Summer Internship Risk Analytics and Decision Sciences - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 12 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Summer-Internship-Risk-Analytics-and-Decision-Sciences--Masters----Early-Careers_R-568259) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Algorithm Researcher - Multiple Teams | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57698?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Computer Scientist New Grad - Tactical System Prototyping and Deployment | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59416?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Modeler and Data Analyst - PhD Graduate | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58102?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Applied Algorithms Engineer New Grad | us al | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59108?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Algorithm Researcher - Multiple Teams | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57698?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Computer Scientist New Grad - Tactical System Prototyping and Deployment | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59416?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Modeler and Data Analyst - PhD Graduate | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58102?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Applied Algorithms Engineer New Grad | us al | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59108?icims=1) | ok |
 | New grad 2027 | Wells Fargo | Quantitative Analytics Program - Multiple Teams | us nc | 2026-08-13 | ~1d old | 0 | [apply](https://wd1.myworkdaysite.com/recruiting/wf/WellsFargoJobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program---Risk-Analytics-and-Decision-Science--Masters----Early-Careers_R-568204) | - |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Statistician New Grad - Statistics and Data Science | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59011?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Statistician New Grad - Statistics and Data Science | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59011?icims=1) | ok |
 | New grad 2027 | TikTok | Data Science Graduate - Advertisement Team | sf bay | 2026-08-13 | 1d old | 0 | [apply](https://lifeattiktok.com/search/7673232905797880069) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Engineer - Intelligent Autonomous Systems | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57438?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Systems Engineer/Analyst New Grad - Multi-Mission Planning Development | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58164?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Data Scientist / Computer Scientist PhD Graduate - Decision Systems | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57706?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Research Scientist - Artificial Intelligence and Machine Learning | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57812?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Machine Learning PhD New Grad - Artificial Intelligence | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59010?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Engineer - Intelligent Autonomous Systems | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57438?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Systems Engineer/Analyst New Grad - Multi-Mission Planning Development | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58164?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Data Scientist / Computer Scientist PhD Graduate - Decision Systems | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57706?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Research Scientist - Artificial Intelligence and Machine Learning | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57812?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Machine Learning PhD New Grad - Artificial Intelligence | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59010?icims=1) | ok |
 | New grad 2027 | Wells Fargo | Quantitative Analytics Program - Risk Analytics and Decision Science | us nc | 2026-08-13 | ~1d old | 0 | [apply](https://wd1.myworkdaysite.com/recruiting/wf/WellsFargoJobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program---Risk-Analytics-and-Decision-Science--PhD----Early-Careers_R-568247) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | PhD Graduate - Distributed Tactical Awareness | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59533?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Artificial Intelligence and Complex Systems Postdoc Researcher | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58855?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Software Engineering/ML/Data Scientist Graduate - Intelligence Systems | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57747?icims=1) | ok |
-| New grad 2027 | Johns Hopkins Applied Physics Laboratory | AI/ML Data Scientist/Engineer New Grad - Analytic Capabilities | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57801?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | PhD Graduate - Distributed Tactical Awareness | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59533?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Artificial Intelligence and Complex Systems Postdoc Researcher | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58855?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | Software Engineering/ML/Data Scientist Graduate - Intelligence Systems | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57747?icims=1) | ok |
+| New grad 2027 | Johns Hopkins Applied Physics Laboratory | AI/ML Data Scientist/Engineer New Grad - Analytic Capabilities | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57801?icims=1) | ok |
 | New grad 2027 | ByteDance | Research Scientist Graduate - Seed AI Foundation Model Infrastructure | sf bay | 2026-08-12 | 1d old | 74 | [apply](https://jobs.bytedance.com/en/position/7673268418623293749/detail) | ok |
 | New grad 2027 | TikTok | Software Engineer Graduate - Foundation Platform | sf bay | 2026-08-12 | 1d old | 70 | [apply](https://lifeattiktok.com/search/7670276769459456309) | ok |
 | New grad 2027 | TikTok | Backend Software Engineer New Grad - Creator Strategy | sf bay | 2026-08-12 | 1d old | 70 | [apply](https://lifeattiktok.com/search/7672976491146004741) | ? |
@@ -171,7 +172,6 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | New grad 2027 | TikTok | Graduate Software Engineer - Media Engine | sf bay | 2026-08-12 | 1d old | 64 | [apply](https://lifeattiktok.com/search/7673667938889009461) | - |
 | New grad 2027 | United Smart Tech | AI Engineer - Agents & Experimentation | us tx | 2026-08-12 | 1d old | 62 | [apply](https://unitedsmarttech.bamboohr.com/careers/185/) | ok |
 | New grad 2027 | Citizens Financial Group | AI Software Engineer 1 | us | 2026-08-12 | 1d old | 62 | [apply](https://hcgn.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/48633) | ok |
-| New grad 2027 | Hawk-Eye Innovations | Football Tracking Systems Operator - Remote Operations Centre | basingstoke uk | 2026-08-12 | 1d old | 58 | [apply](https://jobs.ashbyhq.com/hawkeyeinnovations/8dda0b7b-5e67-450b-b281-76aa9949f460/application?embed=true) | ok |
 | New grad 2027 | Uniswap | Software Engineer - Early Career | nyc | 2026-08-12 | 1d old | 58 | [apply](https://jobs.ashbyhq.com/uniswap/fb4d4137-f003-4669-beb7-2a5caca88012/application?embed=true) | ok |
 | New grad 2027 | T2 Systems | Full Stack Developer | us in | 2026-08-12 | 1d old | 54 | [apply](https://www.t2systems.com/jobs?gh_jid=4675527006) | ok |
 | New grad 2027 | Epos Now Group | Software Engineer 3 | norwich uk | 2026-08-12 | 1d old | 52 | [apply](https://eposnowgroup.bamboohr.com/careers/567/) | ok |
@@ -181,7 +181,6 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | New grad 2027 | Apollo Mission Critical Engineering | Software Engineering Associate - Software Development Associate | atlanta | 2026-08-12 | 1d old | 52 | [apply](https://apollomce.bamboohr.com/careers/96/) | ok |
 | New grad 2027 | Accenture | Software Engineering Associate | dc metro | 2026-08-12 | 1d old | 52 | [apply](https://jobs.smartrecruiters.com/AccentureFederalServices/78253961) | blocked |
 | New grad 2027 | Consumer Direct Care Network | Software Engineer 1 | us mt | 2026-08-12 | 1d old | 52 | [apply](https://cdcn.avature.net/careers/JobDetail/8611) | ok |
-| New grad 2027 | Integration Innovation (i3) | Associate Software Developer - COMPASS | us al | 2026-08-12 | 1d old | 52 | [apply](https://careers-i3-corps.icims.com/jobs/5211/job?mobile=true&needsRedirect=false) | ok |
 | New grad 2027 | ConeTec Group | Field Engineer/Field Geologist | seattle | 2026-08-12 | 1d old | 50 | [apply](https://conetec.bamboohr.com/careers/599/) | ok |
 | New grad 2027 | RRS Group | Associate Data Scientist New Grad | london | 2026-08-12 | 1d old | 50 | [apply](https://jobs.smartrecruiters.com/RRSGroup/744000134688049) | blocked |
 | New grad 2027 | Options Technology | PHP/SQL Web Developer - Options Market Data Team | london | 2026-08-12 | 1d old | 46 | [apply](https://optionsit.bamboohr.com/careers/121/) | ok |
@@ -189,7 +188,6 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | New grad 2027 | Rivian | Field Service Technician - Night Shift - Mobile | us fl | 2026-08-12 | 1d old | 46 | [apply](https://careers.rivian.com/jobs/32888?icims=1) | ok |
 | New grad 2027 | Adidev Technologies Inc | Mobile Developer - iOS/Android | atlanta | 2026-08-12 | 1d old | 46 | [apply](https://adidev.bamboohr.com/careers/44/) | ok |
 | New grad 2027 | Adidev Technologies Inc | Android Developer | dallas | 2026-08-12 | 1d old | 46 | [apply](https://adidev.bamboohr.com/careers/27/) | ok |
-| New grad 2027 | Blue Cross Blue Shield of Michigan | Analyst Trainee - Analyst Development Program | detroit | 2026-08-12 | 1d old | 40 | [apply](https://ejko.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3/job/14581) | ok |
 | New grad 2027 | ConeTec Group | Field Geologist/Engineer | us ca | 2026-08-12 | 1d old | 40 | [apply](https://conetec.bamboohr.com/careers/309/) | ok |
 | New grad 2027 | Dunn Solutions Group | Java Developer | minneapolis | 2026-08-12 | 1d old | 40 | [apply](https://jobs.smartrecruiters.com/DunnSolutionsGroup/88657218) | blocked |
 | New grad 2027 | Dunn Solutions Group | Java Developer | us il | 2026-08-12 | 1d old | 40 | [apply](https://jobs.smartrecruiters.com/DunnSolutionsGroup/88312248) | blocked |
@@ -211,7 +209,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
-| Composio | Fullstack and Product Engineering Internship - Fall 2026 & Winter 2027 | sf bay | 2026-08-14 | ~5h old | 74 | [apply](https://jobs.ashbyhq.com/composio/eea3c0be-8589-4e3d-a684-de29a9eada0d) | ok |
+| Composio | Fullstack and Product Engineering Internship - Fall 2026 & Winter 2027 | sf bay | 2026-08-14 | ~6h old | 74 | [apply](https://jobs.ashbyhq.com/composio/eea3c0be-8589-4e3d-a684-de29a9eada0d) | ok |
 | CCC Intelligent Solutions | R&D & Data Science Internship Fall 2026 | chicago | 2026-08-11 | ~3d old | 48 | [apply](https://cccis.wd1.myworkdayjobs.com/en-US/broadbean_external/job/Chicago-Green-St-IL/R-D---Data-Science-Internship-Fall-2026_0014841) | ok |
 | Cloudflare | Software Engineer Intern (Fall 2026) | unknown | 2026-08-10 | 3d old | 80 | [apply](https://boards.greenhouse.io/cloudflare/jobs/8118845?gh_jid=8118845) | ok |
 | Samsung AI Research Center | 2026 Fall Intern - Digital Health Algorithms | sf bay | 2026-08-07 | ~7d old | 60 | [apply](https://job-boards.greenhouse.io/samsungresearchamericainternship/jobs/8678880002) | ok |
@@ -227,7 +225,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
-| Notion | Software Engineer Intern (Winter 2027) | sf bay / remote | 2026-08-14 | just posted | 96 | [apply](https://jobs.ashbyhq.com/notion/e66c6658-9e65-4c58-8db2-844628b6e8f8) | ok |
+| Notion | Software Engineer Intern (Winter 2027) | sf bay / remote | 2026-08-14 | 1h old | 96 | [apply](https://jobs.ashbyhq.com/notion/e66c6658-9e65-4c58-8db2-844628b6e8f8) | ok |
 | Figma | Software Engineer Intern - Winter 2027 | sf bay | 2026-08-11 | ~3d old | 92 | [apply](https://boards.greenhouse.io/figma/jobs/6131089004?gh_jid=6131089004) | ok |
 | Figma | Software Engineer Intern (Winter 2027) | nyc | 2026-08-10 | 4d old | 86 | [apply](https://boards.greenhouse.io/figma/jobs/6131089004?gh_jid=6131089004) | ok |
 | Robinhood | Market Research Strategy Intern | singapore | 2026-08-04 | 10d old | 44 | [apply](https://boards.greenhouse.io/robinhood/jobs/8103727?t=gh_src=&gh_jid=8103727) | ok |
@@ -247,79 +245,79 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
-| Notion | Software Engineer, New Grad (Dec 2026) | sf bay / remote | 2026-08-14 | just posted | 88 | [apply](https://jobs.ashbyhq.com/notion/e32799d2-8ef8-4803-8189-c72514afa816) | ok |
-| NVIDIA | Software Engineer New Grad - Deep Learning Libraries | sf bay | 2026-08-14 | ~19h old | 74 | [apply](https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Software-Engineer--Deep-Learning-Libraries---New-College-Graduate-2026_JR2023252) | ok |
-| Clera | Software Engineer - AI & Data Systems | sf bay | 2026-08-14 | ~5h old | 74 | [apply](https://jobs.ashbyhq.com/clera/d1a632c6-648f-4457-bdff-8dd188e292ab) | ok |
+| Notion | Software Engineer, New Grad (Dec 2026) | sf bay / remote | 2026-08-14 | 1h old | 88 | [apply](https://jobs.ashbyhq.com/notion/e32799d2-8ef8-4803-8189-c72514afa816) | ok |
+| NVIDIA | Software Engineer New Grad - Deep Learning Libraries | sf bay | 2026-08-14 | ~20h old | 74 | [apply](https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Software-Engineer--Deep-Learning-Libraries---New-College-Graduate-2026_JR2023252) | ok |
+| Clera | Software Engineer - AI & Data Systems | sf bay | 2026-08-14 | ~6h old | 74 | [apply](https://jobs.ashbyhq.com/clera/d1a632c6-648f-4457-bdff-8dd188e292ab) | ok |
 | SpaceX | New Graduate Engineer, Software Security - '26/'27 (Starlink) | sf bay | 2026-08-14 | 3h old | 64 | [apply](https://boards.greenhouse.io/spacex/jobs/8696158002?gh_jid=8696158002) | ok |
-| Applied Intuition | Software Engineer | sf bay | 2026-08-14 | ~5h old | 64 | [apply](https://jobs.ashbyhq.com/applied/43286c63-937d-4384-a5ff-12cb31baa225) | ok |
+| Applied Intuition | Software Engineer | sf bay | 2026-08-14 | ~6h old | 64 | [apply](https://jobs.ashbyhq.com/applied/43286c63-937d-4384-a5ff-12cb31baa225) | ok |
 | SpaceX | New Graduate Engineer, Software - '26/'27 (Starlink) | sf bay | 2026-08-14 | 3h old | 64 | [apply](https://boards.greenhouse.io/spacex/jobs/8696080002?gh_jid=8696080002) | ok |
-| Fastly | Software Development Engineer | sf bay | 2026-08-14 | ~5h old | 64 | [apply](https://www.fastly.com/about/jobs/apply?gh_jid=8128535) | ok |
+| Fastly | Software Development Engineer | sf bay | 2026-08-14 | ~6h old | 64 | [apply](https://www.fastly.com/about/jobs/apply?gh_jid=8128535) | ok |
 | SpaceX | New Graduate Engineer, Software - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 62 | [apply](https://boards.greenhouse.io/spacex/jobs/8696058002?gh_jid=8696058002) | ok |
-| Clera | Founding Engineer - Full Stack | la | 2026-08-14 | ~5h old | 62 | [apply](https://jobs.ashbyhq.com/clera/e1ce387a-1f00-4b55-b2b6-0c0143d8028e) | ok |
+| Clera | Founding Engineer - Full Stack | la | 2026-08-14 | ~6h old | 62 | [apply](https://jobs.ashbyhq.com/clera/e1ce387a-1f00-4b55-b2b6-0c0143d8028e) | ok |
 | SpaceX | New Graduate Engineer, Software Security - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 62 | [apply](https://boards.greenhouse.io/spacex/jobs/8696143002?gh_jid=8696143002) | ok |
-| Andrew Morgan Consulting | OneStream Developer | remote / remote | 2026-08-14 | ~5h old | 54 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
+| Andrew Morgan Consulting | OneStream Developer | remote / remote | 2026-08-14 | ~6h old | 54 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
 | SpaceX | New Graduate Engineer, Software Security - '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8696156002?gh_jid=8696156002) | ok |
 | SpaceX | New Graduate Engineer, Silicon Engineering | orange county | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8706884002?gh_jid=8706884002) | ok |
 | SpaceX | New Graduate Engineer, Software  - '26/'27  (Starlink) | us tx | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8696097002?gh_jid=8696097002) | ok |
-| CVS Health | Associate Software Engineer | us tx | 2026-08-14 | ~19h old | 52 | [apply](https://cvshealth.wd1.myworkdayjobs.com/CVS_Health_Careers/job/TX---Farmers-Branch/Associate-Software-Development-Engineer_R1006749) | ok |
-| Esri | Software Development Engineer I | denver | 2026-08-14 | ~5h old | 52 | [apply](https://www.esri.com/careers/5209800007?gh_jid=5209800007) | ok |
-| SpaceX | Software Engineer - Starlink | us tx | 2026-08-14 | ~5h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8706510002?gh_jid=8706510002) | ok |
-| Esri | Software Development Engineer | us ca | 2026-08-14 | ~5h old | 52 | [apply](https://www.esri.com/careers/5210782007?gh_jid=5210782007) | ok |
+| CVS Health | Associate Software Engineer | us tx | 2026-08-14 | ~20h old | 52 | [apply](https://cvshealth.wd1.myworkdayjobs.com/CVS_Health_Careers/job/TX---Farmers-Branch/Associate-Software-Development-Engineer_R1006749) | ok |
+| Esri | Software Development Engineer I | denver | 2026-08-14 | ~6h old | 52 | [apply](https://www.esri.com/careers/5209800007?gh_jid=5209800007) | ok |
+| SpaceX | Software Engineer - Starlink | us tx | 2026-08-14 | ~6h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8706510002?gh_jid=8706510002) | ok |
+| Esri | Software Development Engineer | us ca | 2026-08-14 | ~6h old | 52 | [apply](https://www.esri.com/careers/5210782007?gh_jid=5210782007) | ok |
 | SpaceX | New Graduate Engineer, Silicon Engineering | sf bay | 2026-08-14 | 3h old | 52 | [apply](https://boards.greenhouse.io/spacex/jobs/8703552002?gh_jid=8703552002) | ok |
-| Esri | Software Development Engineer I - Applied Research & Prototyping | us ca | 2026-08-14 | ~5h old | 52 | [apply](https://www.esri.com/careers/5209466007?gh_jid=5209466007) | ok |
+| Esri | Software Development Engineer I - Applied Research & Prototyping | us ca | 2026-08-14 | ~6h old | 52 | [apply](https://www.esri.com/careers/5209466007?gh_jid=5209466007) | ok |
 | SpaceX | New Graduate Engineer, Silicon Engineering | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8706885002?gh_jid=8706885002) | ok |
 | SpaceX | New Graduate Engineer, Electrical - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8696490002?gh_jid=8696490002) | ok |
 | SpaceX | New Graduate Engineer, Mechanical - '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8696986002?gh_jid=8696986002) | ok |
 | SpaceX | New Graduate Engineer, GNC- '26/'27 (Starlink) | seattle | 2026-08-14 | 3h old | 50 | [apply](https://boards.greenhouse.io/spacex/jobs/8696105002?gh_jid=8696105002) | ok |
-| Squarepoint Capital | Quantitative Researcher - Volatility - II | nyc | 2026-08-14 | ~5h old | 46 | [apply](https://www.squarepoint-capital.com/open-opportunities?id=8122132&gh_jid=8122132) | ok |
+| Squarepoint Capital | Quantitative Researcher - Volatility - II | nyc | 2026-08-14 | ~6h old | 46 | [apply](https://www.squarepoint-capital.com/open-opportunities?id=8122132&gh_jid=8122132) | ok |
 | SpaceX | New Graduate Engineer, Mechanical - '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 40 | [apply](https://boards.greenhouse.io/spacex/jobs/8696952002?gh_jid=8696952002) | ok |
 | SpaceX | New Graduate Engineer, GNC- '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 40 | [apply](https://boards.greenhouse.io/spacex/jobs/8696124002?gh_jid=8696124002) | ok |
 | SpaceX | New Graduate Engineer, Electrical - '26/'27 (Starlink) | us tx | 2026-08-14 | 3h old | 40 | [apply](https://boards.greenhouse.io/spacex/jobs/8696469002?gh_jid=8696469002) | ok |
-| Micron Technology | AI Innovation Research Engineer New Grad | sf bay | 2026-08-14 | ~19h old | 0 | [apply](https://micron.wd1.myworkdayjobs.com/External/job/San-Jose-CA/New-College-Grad---AI-Innovation-Research-Engineer_JR108594) | ok |
+| Micron Technology | AI Innovation Research Engineer New Grad | sf bay | 2026-08-14 | ~20h old | 0 | [apply](https://micron.wd1.myworkdayjobs.com/External/job/San-Jose-CA/New-College-Grad---AI-Innovation-Research-Engineer_JR108594) | ok |
 | TikTok | Software Engineer Graduate - Recommendation Infrastructure | sf bay | 2026-08-13 | 1d old | 70 | [apply](https://lifeattiktok.com/search/7673284715407886597) | ok |
-| CTG | AI Vibe Coding Engineer | us in / remote | 2026-08-13 | 15h old | 66 | [apply](https://careers.ctg.com/jobs/17347?icims=1) | ok |
-| Composio | Fullstack Engineer New Grad - Product Team | sf bay | 2026-08-13 | 13h old | 66 | [apply](https://jobs.ashbyhq.com/composio/01e0e7ad-44a2-44e8-9340-64ca70eff491/application?embed=true) | ok |
+| CTG | AI Vibe Coding Engineer | us in / remote | 2026-08-13 | 16h old | 66 | [apply](https://careers.ctg.com/jobs/17347?icims=1) | ok |
+| Composio | Fullstack Engineer New Grad - Product Team | sf bay | 2026-08-13 | 14h old | 66 | [apply](https://jobs.ashbyhq.com/composio/01e0e7ad-44a2-44e8-9340-64ca70eff491/application?embed=true) | ok |
 | Roblox | Software Engineer - Account Authentication | sf bay | 2026-08-13 | ~1d old | 64 | [apply](https://careers.roblox.com/jobs/8097701?gh_jid=8097701) | blocked |
 | TikTok | Data Scientist Graduate - Multimedia | sf bay | 2026-08-13 | 1d old | 62 | [apply](https://lifeattiktok.com/search/7670288355678177589) | ok |
 | Kyndryl | Associate AI Engineer | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://kyndryl.wd5.myworkdayjobs.com/en-US/KyndrylProfessionalCareers/job/USDALFRI---Dallas-Frisco-AI-HUB-FRI/Early-Career-Consult-Program---Associate-AI-Engineer_R-66739-2) | ok |
 | Kyndryl | Associate AI Engineer - Early Career Consult Program | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://kyndryl.wd5.myworkdayjobs.com/KyndrylEarlyCareers/job/USDALFRI---Dallas-Frisco-AI-HUB-FRI/Early-Career-Consult-Program---Associate-AI-Engineer_R-66739) | ok |
 | Renesas Electronics | AI Compiler Engineer | dallas | 2026-08-13 | 1d old | 62 | [apply](https://jobs.smartrecruiters.com/RenesasElectronics/744000143317369) | blocked |
-| Johns Hopkins Applied Physics Laboratory | Synthetic Aperture Radar Machine Learning Engineer - Imaging Systems | us md | 2026-08-13 | 15h old | 62 | [apply](https://careers.jhuapl.edu/jobs/58971?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Synthetic Aperture Radar Machine Learning Engineer - Imaging Systems | us md | 2026-08-13 | 16h old | 62 | [apply](https://careers.jhuapl.edu/jobs/58971?icims=1) | ok |
 | Kyndryl | Early Career Consult Program - Associate AI Engineer | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://kyndryl.wd5.myworkdayjobs.com/en-US/kyndrylprofessionalcareers/job/USDALFRI---Dallas-Frisco-AI-HUB-FRI/Early-Career-Consult-Program---Associate-AI-Engineer_R-66739-2) | ok |
 | Microsoft | Software Engineer | seattle | 2026-08-13 | 21h old | 62 | [apply](https://apply.careers.microsoft.com/careers/job/1970393556960468) | blocked |
 | Bank of America | Software Engineer II - AI/ML | dallas | 2026-08-13 | ~1d old | 62 | [apply](https://ghr.wd1.myworkdayjobs.com/en-US/lateral-us/job/Plano/Software-Engineer-II--AI-ML-_26026987) | ok |
-| AppLovin | Data Scientist - Analytics | sf bay | 2026-08-13 | 15h old | 62 | [apply](https://boards.greenhouse.io/applovin/jobs/4705263006) | ok |
-| ITA International | Junior Power Platform Developer | us in / remote | 2026-08-13 | 15h old | 62 | [apply](https://careers-ita-intl.icims.com/jobs/4470/job?mobile=true&needsRedirect=false) | ok |
+| AppLovin | Data Scientist - Analytics | sf bay | 2026-08-13 | 16h old | 62 | [apply](https://boards.greenhouse.io/applovin/jobs/4705263006) | ok |
+| ITA International | Junior Power Platform Developer | us in / remote | 2026-08-13 | 16h old | 62 | [apply](https://careers-ita-intl.icims.com/jobs/4470/job?mobile=true&needsRedirect=false) | ok |
 | Jobgether | Junior Software & Systems Specialist - AI & Automation | us | 2026-08-13 | ~1d old | 62 | [apply](https://jobs.lever.co/jobgether/9deafdc3-55f7-4699-a420-b473364fde47) | ok |
 | General Matter | Software Engineer - New Grad | la | 2026-08-13 | ~1d old | 60 | [apply](https://job-boards.greenhouse.io/generalmatter/jobs/5375987008) | ok |
 | BlackRock | Associate Database Platform Developer | us de | 2026-08-13 | ~1d old | 58 | [apply](https://blackrock.wd1.myworkdayjobs.com/en-US/blackrock_professional/job/Wilmington-DE/Associate-Database-Platform-Developer_R266105) | ok |
-| Johns Hopkins Applied Physics Laboratory | Systems Engineer Graduate - Systems Engineer - Analyst | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59497?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Systems Engineer Graduate - Systems Engineer - Analyst | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59497?icims=1) | ok |
 | Uniswap Labs | Software Engineer - Early Career | nyc | 2026-08-13 | ~1d old | 58 | [apply](https://jobs.ashbyhq.com/uniswap/fb4d4137-f003-4669-beb7-2a5caca88012) | ok |
 | ASM | Systems Engineer I - Software - Robotics & Semiconductor Automation | phoenix | 2026-08-13 | ~1d old | 58 | [apply](https://www.asm.com/open-vacancies/?gh_jid=4948195101) | ok |
 | Book of the Month | Associate Software Engineer - Frontend | nyc | 2026-08-13 | ~1d old | 58 | [apply](http://bookofthemonth.applytojob.com/apply/ByZkWONsJH/Associate-Software-Engineer-Frontend) | ok |
-| M.C. Dean | Systems Specialist - Associate | atlanta | 2026-08-13 | 13h old | 58 | [apply](https://careers.mcdean.com/jobs/31987?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Navigation Systems Analyst/Engineer | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59337?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Intelligent Systems Development Engineer - Intelligent Combat Platforms Group | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/58080?icims=1) | ok |
-| M.C. Dean | Systems Specialist - Associate | us va | 2026-08-13 | 13h old | 58 | [apply](https://careers.mcdean.com/jobs/31986?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Computer Engineer New Grad - Shipboard Systems Team | us md | 2026-08-13 | 15h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59098?icims=1) | ok |
-| Shearers Foods | EDI Business Systems Analyst | us oh | 2026-08-13 | 15h old | 58 | [apply](https://careers.shearers.com/jobs/1996?icims=1) | ok |
+| M.C. Dean | Systems Specialist - Associate | atlanta | 2026-08-13 | 14h old | 58 | [apply](https://careers.mcdean.com/jobs/31987?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Navigation Systems Analyst/Engineer | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59337?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Intelligent Systems Development Engineer - Intelligent Combat Platforms Group | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/58080?icims=1) | ok |
+| M.C. Dean | Systems Specialist - Associate | us va | 2026-08-13 | 14h old | 58 | [apply](https://careers.mcdean.com/jobs/31986?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Computer Engineer New Grad - Shipboard Systems Team | us md | 2026-08-13 | 16h old | 58 | [apply](https://careers.jhuapl.edu/jobs/59098?icims=1) | ok |
+| Shearers Foods | EDI Business Systems Analyst | us oh | 2026-08-13 | 16h old | 58 | [apply](https://careers.shearers.com/jobs/1996?icims=1) | ok |
 | Dexcom | Software Development Engineer 1 | us in / remote | 2026-08-13 | ~1d old | 56 | [apply](https://dexcom.wd1.myworkdayjobs.com/Dexcom/job/Remote---United-States/Software-Development-Engineer-1_JR120540) | ok |
-| DecisionPoint Corporation | Entry-level Software Developer | us in / remote | 2026-08-13 | 15h old | 56 | [apply](https://careers-decisionpointcorp.icims.com/jobs/3685/job?mobile=true&needsRedirect=false) | ok |
+| DecisionPoint Corporation | Entry-level Software Developer | us in / remote | 2026-08-13 | 16h old | 56 | [apply](https://careers-decisionpointcorp.icims.com/jobs/3685/job?mobile=true&needsRedirect=false) | ok |
 | Berkshire Hathaway GUARD Insurance Companies | Full Stack Developer | atlanta | 2026-08-13 | 13h old | 54 | [apply](https://careers-guard.icims.com/jobs/5913/job?mobile=true&needsRedirect=false) | ok |
 | Associated Bank | Full-Stack Developer Associate | us mn | 2026-08-13 | ~1d old | 54 | [apply](https://associatedbank.wd1.myworkdayjobs.com/en-US/external_careers/job/US-WI-Remote/Full-Stack-Developer-Associate_JR106237) | ok |
 | Jobgether | Software Support Specialist | us | 2026-08-13 | ~1d old | 52 | [apply](https://jobs.lever.co/jobgether/4820d02b-4e3a-4a47-b007-a0f4359b4cd2) | ok |
 | New Relic | Software Engineer - Query Language | portland | 2026-08-13 | ~1d old | 52 | [apply](https://job-boards.greenhouse.io/newrelic/jobs/5387144008) | ok |
-| Composio | Forward Deployed Engineer New Grad | sf bay | 2026-08-13 | 13h old | 52 | [apply](https://jobs.ashbyhq.com/composio/f83a19a0-8188-4100-9dd5-b259efb342e6/application?embed=true) | ok |
-| VTG | Associate Software Engineer | us va | 2026-08-13 | 15h old | 52 | [apply](https://careers.vtgdefense.com/jobs/9425?icims=1) | - |
+| Composio | Forward Deployed Engineer New Grad | sf bay | 2026-08-13 | 14h old | 52 | [apply](https://jobs.ashbyhq.com/composio/f83a19a0-8188-4100-9dd5-b259efb342e6/application?embed=true) | ok |
+| VTG | Associate Software Engineer | us va | 2026-08-13 | 16h old | 52 | [apply](https://careers.vtgdefense.com/jobs/9425?icims=1) | - |
 | RTX | Software Engineer 1 | dc metro | 2026-08-13 | ~1d old | 52 | [apply](https://globalhr.wd5.myworkdayjobs.com/fr-CA/Private_Posting_No_TMP/job/US-MD-ANNAPOLIS-JUNCTION-339--306-Sentinel-Dr--339-BLDG/Software-Engineer-I--Onsite-_01866357) | ok |
 | Microsoft | Software Development Engineer - Azure PostgreSQL | us | 2026-08-13 | 15h old | 52 | [apply](https://apply.careers.microsoft.com/careers/job/1970393556959253) | blocked |
 | Honeywell | Software Engineer 1 | us va | 2026-08-13 | 16h old | 52 | [apply](https://ibqbjb.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/Honeywell/job/155664) | - |
-| Arcfield | Software Engineer / Electrical Engineer | us pa | 2026-08-13 | 15h old | 52 | [apply](https://careers.arcfield.com/jobs/8467?icims=1) | ok |
+| Arcfield | Software Engineer / Electrical Engineer | us pa | 2026-08-13 | 16h old | 52 | [apply](https://careers.arcfield.com/jobs/8467?icims=1) | ok |
 | Sonalysts | Junior Software Engineer | us ri | 2026-08-13 | ~1d old | 52 | [apply](https://careers-sonalysts.icims.com/jobs/2463/junior-software-engineer/job) | ok |
 | TikTok | Data Science Graduate - Advertisement Team - 2027 Start - PhD | sf bay | 2026-08-13 | ~1d old | 52 | [apply](https://lifeattiktok.com/search/7673232905797880069) | ok |
 | Pennsylvania State University | Software Research and Development Engineer - Applied Research Laboratory | us pa | 2026-08-13 | ~1d old | 52 | [apply](https://psu.wd1.myworkdayjobs.com/PSU_Staff/job/Penn-State-University-Park/Software-Research-and-Development-Engineer_REQ_0000080402-2) | ok |
 | Northrop Grumman | Associate Software Engineer/Software Engineer | us ca | 2026-08-13 | ~1d old | 52 | [apply](https://ngc.wd1.myworkdayjobs.com/Northrop_Grumman_External_Site/job/United-States-California-San-Diego/XMLNAME-2027-Associate-Software-Engineer-Software-Engineer_R10245648) | ok |
-| Urban Science | Associate Software Engineer - Serviceview | detroit | 2026-08-13 | 13h old | 52 | [apply](https://careers-urbanscience.icims.com/jobs/5181/job?mobile=true&needsRedirect=false) | ok |
+| Urban Science | Associate Software Engineer - Serviceview | detroit | 2026-08-13 | 14h old | 52 | [apply](https://careers-urbanscience.icims.com/jobs/5181/job?mobile=true&needsRedirect=false) | ok |
 | i3 Corps | COMPASS Associate Software Developer | us al | 2026-08-13 | ~1d old | 52 | [apply](https://careers-i3-corps.icims.com/jobs/5211/compass-associate-software-developer/job) | ok |
 | Autodesk | Software Developer | toronto | 2026-08-13 | ~1d old | 52 | [apply](https://autodesk.wd1.myworkdayjobs.com/Ext/job/Toronto-ON-CAN/Software-Developer_26WD100537) | - |
 | Leidos | Junior CEMA Software Engineer | us ok | 2026-08-13 | ~1d old | 52 | [apply](https://leidos.wd5.myworkdayjobs.com/en-US/external/job/Lawton-OK/Junior-CEMA-Software-Engineer_R-00189354) | ok |
@@ -330,52 +328,52 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Applied Materials | Software Engineer New Grad - DevOps | us ma | 2026-08-13 | ~1d old | 52 | [apply](https://amat.wd1.myworkdayjobs.com/External/job/GloucesterMA/XMLNAME-2027-Software-Engineer--DevOps---New-College-Grad---Bachelor-s--Gloucester--MA-_R2625762) | ok |
 | KBR | Junior Software Engineer | us co | 2026-08-13 | ~1d old | 52 | [apply](https://kbr.wd5.myworkdayjobs.com/en-US/kbr_careers/job/Colorado-Springs-Colorado/Junior-Software-Engineer_R2126608) | ok |
 | Leidos | Software Engineer | us md | 2026-08-13 | ~1d old | 52 | [apply](https://leidos.wd5.myworkdayjobs.com/External/job/Bowie-MD/Software-Engineer_R-00189564) | ok |
-| CPI Card Group | Software Developer 1 | norwich uk | 2026-08-13 | 15h old | 52 | [apply](https://careersuk-cpicardgroup.icims.com/jobs/11208/job?mobile=true&needsRedirect=false) | ok |
+| CPI Card Group | Software Developer 1 | norwich uk | 2026-08-13 | 16h old | 52 | [apply](https://careersuk-cpicardgroup.icims.com/jobs/11208/job?mobile=true&needsRedirect=false) | ok |
 | Quantum | Graduate Data Engineer | london | 2026-08-13 | 21h old | 50 | [apply](https://jobs.ashbyhq.com/quantum/4e81ce91-ecf2-4be2-8aba-bf3e80d1f8b6/application?embed=true) | ok |
-| International Motors, LLC | Supply Chain Analytics Data Scientist | us il | 2026-08-13 | 15h old | 50 | [apply](https://careers.navistar.com/jobs/59467?icims=1) | ok |
+| International Motors, LLC | Supply Chain Analytics Data Scientist | us il | 2026-08-13 | 16h old | 50 | [apply](https://careers.navistar.com/jobs/59467?icims=1) | ok |
 | Gartner | Associate Data Scientist | us ct | 2026-08-13 | ~1d old | 50 | [apply](https://gartner.wd5.myworkdayjobs.com/EXT/job/Irving-TX/Associate-Data-Scientist---Spring-2027-Master-s-level-graduates_113311) | ok |
 | Moffitt Cancer Center | Data Engineer 1 | us fl | 2026-08-13 | ~1d old | 50 | [apply](https://moffitt.wd108.myworkdayjobs.com/Moffitt/job/Moffitt-Business-Center/DATA-ENGINEER-I_R-2977) | ok |
-| Johns Hopkins Applied Physics Laboratory | Data Scientist New Grad - Data Science - System Performance Evaluation | us md | 2026-08-13 | 15h old | 50 | [apply](https://careers.jhuapl.edu/jobs/57653?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Data Scientist New Grad - Data Science - System Performance Evaluation | us md | 2026-08-13 | 16h old | 50 | [apply](https://careers.jhuapl.edu/jobs/57653?icims=1) | ok |
 | Loblaw Companies | Front-End Developer | toronto | 2026-08-13 | ~1d old | 46 | [apply](https://myview.wd3.myworkdayjobs.com/paradox_careers/job/500-Lake-Shore-Blvd-W-Toronto-ON/Front-End-Developer--DX-Studio---18-Month-Contract_R2000692440) | ok |
-| Andrew Morgan | OneStream Developer | us in / remote | 2026-08-13 | 20h old | 44 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
+| Andrew Morgan | OneStream Developer | us in / remote | 2026-08-13 | 21h old | 44 | [apply](https://andrew-morgan.com/current-openings/?gh_jid=5389586008) | ? |
 | Intropic | Quantitative Analyst - Client Solutions | london | 2026-08-13 | 21h old | 40 | [apply](https://jobs.lever.co/intropic/41cb2a0a-4c31-4fa8-a042-720adba0e03b/apply) | ok |
 | Esri | QA Product Engineer I - Developer Experience | portland | 2026-08-13 | ~1d old | 40 | [apply](https://www.esri.com/careers/5207197007?gh_jid=5207197007) | ok |
 | ManTech | Associate BI Analytics Engineer | dc metro | 2026-08-13 | 21h old | 40 | [apply](https://mantech.avature.net/en_US/careers/JobDetail/64747) | ok |
 | Bristol Myers Squibb | Veeva CRM Admin/Developer - Field Enablement | us | 2026-08-13 | ~1d old | 40 | [apply](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/bms/job/Princeton---NJ---US/Veeva-CRM-Admin-Developer---Field-Enablement_R1605331) | ok |
 | AIR Control Concepts | Application Engineer | us md | 2026-08-13 | 21h old | 40 | [apply](https://aircontrolconcepts.applytojob.com/apply/0mgWNmp2sM/Application-Engineer) | ok |
-| WorldQuant | Quantitative Developer - Portfolio Management Solutions | us ct | 2026-08-13 | 21h old | 40 | [apply](https://job-boards.greenhouse.io/worldquant/jobs/4700347006) | ok |
+| WorldQuant | Quantitative Developer - Portfolio Management Solutions | us ct | 2026-08-13 | 22h old | 40 | [apply](https://job-boards.greenhouse.io/worldquant/jobs/4700347006) | ok |
 | Wells Fargo | 2027 Quantitative Analytics Program Capital Markets - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 40 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program-Capital-Markets--Masters----Early-Careers_R-568263) | ok |
 | Wells Fargo | 2027 Quantitative Analytics Program - Risk Analytics and Decision Science - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 40 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program---Risk-Analytics-and-Decision-Science--Masters----Early-Careers_R-568204) | ok |
-| Trace Systems | Database Administrator 1 | us sc | 2026-08-13 | 15h old | 40 | [apply](https://careers.tracesystems.com/jobs/6269?icims=1) | ok |
-| M.C. Dean | Engineer 1 New Grad - Cis | us va | 2026-08-13 | 13h old | 40 | [apply](https://careers.mcdean.com/jobs/32119?icims=1) | ok |
+| Trace Systems | Database Administrator 1 | us sc | 2026-08-13 | 16h old | 40 | [apply](https://careers.tracesystems.com/jobs/6269?icims=1) | ok |
+| M.C. Dean | Engineer 1 New Grad - Cis | us va | 2026-08-13 | 14h old | 40 | [apply](https://careers.mcdean.com/jobs/32119?icims=1) | ok |
 | BlackRock | Application Engineer - Service Management Operations Group | us de | 2026-08-13 | ~1d old | 40 | [apply](https://blackrock.wd1.myworkdayjobs.com/en-US/BlackRock_Professional/job/Wilmington-DE/Analyst--Application-Engineer_R266106) | ok |
-| Johns Hopkins Applied Physics Laboratory | Engineer Graduate - Multi-Mission Planning Development | us md | 2026-08-13 | 15h old | 40 | [apply](https://careers.jhuapl.edu/jobs/58163?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Engineer Graduate - Multi-Mission Planning Development | us md | 2026-08-13 | 16h old | 40 | [apply](https://careers.jhuapl.edu/jobs/58163?icims=1) | ok |
 | Latham & Watkins | Conflicts Database Administrator | london | 2026-08-13 | 15h old | 40 | [apply](https://ukcareers-lw.icims.com/jobs/5152/job?mobile=true&needsRedirect=false) | ok |
-| Johns Hopkins Applied Physics Laboratory | Cyber Engineer - Capabilities Development | us md | 2026-08-13 | 15h old | 40 | [apply](https://careers.jhuapl.edu/jobs/57600?icims=1) | ok |
-| Dawn Meats | Graduate Business Intelligence Developer | waterford ireland | 2026-08-13 | 15h old | 40 | [apply](https://graduate-roi-dawnmeats.icims.com/jobs/5282/job?mobile=true&needsRedirect=false) | ok |
+| Johns Hopkins Applied Physics Laboratory | Cyber Engineer - Capabilities Development | us md | 2026-08-13 | 16h old | 40 | [apply](https://careers.jhuapl.edu/jobs/57600?icims=1) | ok |
+| Dawn Meats | Graduate Business Intelligence Developer | waterford ireland | 2026-08-13 | 16h old | 40 | [apply](https://graduate-roi-dawnmeats.icims.com/jobs/5282/job?mobile=true&needsRedirect=false) | ok |
 | Cigna Group | Technology Development Program New Grad - Data & Analytics Engineering Track | us nj | 2026-08-13 | ~1d old | 40 | [apply](https://cigna.wd5.myworkdayjobs.com/cignacareers/job/Bloomfield-CT/Technology-Development-Program--TECDP----Data---Analytics-Engineering-Track_26009518-1) | ok |
 | Cenovus Energy | Geologist-in-Training New Grad | calgary ab canada | 2026-08-13 | ~1d old | 40 | [apply](https://cenovus.wd3.myworkdayjobs.com/careers/job/CA-AB-Calgary/New-Grad--Geologist-in-Training--June-2027--Calgary-_R-410988) | ok |
 | Cenovus Energy | Geophysicist-in-Training New Grad | calgary ab canada | 2026-08-13 | ~1d old | 40 | [apply](https://cenovus.wd3.myworkdayjobs.com/careers/job/CA-AB-Calgary/New-Grad--Geophysicist-in-Training--June-2027--Calgary-_R-410991) | ok |
 | Jobgether | Research Associate Quantitative Analysis | us | 2026-08-13 | ~1d old | 40 | [apply](https://jobs.lever.co/jobgether/37485f0b-dc22-4490-bc4e-8654d0d0d633) | ok |
 | State of Nebraska | IT Applications Developer - Public Health | us ne | 2026-08-13 | ~1d old | 40 | [apply](https://son.wd108.myworkdayjobs.com/NebraskaStateCareers/job/Lincoln-NE/IT-Applications-Developer---Public-Health_JR2026-00028657) | ok |
-| M.C. Dean | Engineer 1 - New College Graduate | dc metro | 2026-08-13 | 13h old | 40 | [apply](https://careers.mcdean.com/jobs/32350?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Algorithm Researcher - Multiple Teams | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57698?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Computer Scientist New Grad - Tactical System Prototyping and Deployment | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59416?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Modeler and Data Analyst - PhD Graduate | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58102?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Applied Algorithms Engineer New Grad | us al | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59108?icims=1) | ok |
+| M.C. Dean | Engineer 1 - New College Graduate | dc metro | 2026-08-13 | 14h old | 40 | [apply](https://careers.mcdean.com/jobs/32350?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Algorithm Researcher - Multiple Teams | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57698?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Computer Scientist New Grad - Tactical System Prototyping and Deployment | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59416?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Modeler and Data Analyst - PhD Graduate | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58102?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Applied Algorithms Engineer New Grad | us al | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59108?icims=1) | ok |
 | Wells Fargo | Quantitative Analytics Program - Multiple Teams | us nc | 2026-08-13 | ~1d old | 0 | [apply](https://wd1.myworkdaysite.com/recruiting/wf/WellsFargoJobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program---Risk-Analytics-and-Decision-Science--Masters----Early-Careers_R-568204) | - |
-| Johns Hopkins Applied Physics Laboratory | Statistician New Grad - Statistics and Data Science | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59011?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Statistician New Grad - Statistics and Data Science | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59011?icims=1) | ok |
 | TikTok | Data Science Graduate - Advertisement Team | sf bay | 2026-08-13 | 1d old | 0 | [apply](https://lifeattiktok.com/search/7673232905797880069) | ok |
-| Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Engineer - Intelligent Autonomous Systems | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57438?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Systems Engineer/Analyst New Grad - Multi-Mission Planning Development | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58164?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Data Scientist / Computer Scientist PhD Graduate - Decision Systems | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57706?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Research Scientist - Artificial Intelligence and Machine Learning | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57812?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Machine Learning PhD New Grad - Artificial Intelligence | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59010?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Engineer - Intelligent Autonomous Systems | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57438?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Systems Engineer/Analyst New Grad - Multi-Mission Planning Development | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58164?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Data Scientist / Computer Scientist PhD Graduate - Decision Systems | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57706?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Artificial Intelligence Research Scientist - Artificial Intelligence and Machine Learning | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57812?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Machine Learning PhD New Grad - Artificial Intelligence | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59010?icims=1) | ok |
 | Wells Fargo | Quantitative Analytics Program - Risk Analytics and Decision Science | us nc | 2026-08-13 | ~1d old | 0 | [apply](https://wd1.myworkdaysite.com/recruiting/wf/WellsFargoJobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Program---Risk-Analytics-and-Decision-Science--PhD----Early-Careers_R-568247) | ok |
-| Johns Hopkins Applied Physics Laboratory | PhD Graduate - Distributed Tactical Awareness | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59533?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Artificial Intelligence and Complex Systems Postdoc Researcher | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58855?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | Software Engineering/ML/Data Scientist Graduate - Intelligence Systems | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57747?icims=1) | ok |
-| Johns Hopkins Applied Physics Laboratory | AI/ML Data Scientist/Engineer New Grad - Analytic Capabilities | us md | 2026-08-13 | 15h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57801?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | PhD Graduate - Distributed Tactical Awareness | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/59533?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Artificial Intelligence and Complex Systems Postdoc Researcher | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/58855?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | Software Engineering/ML/Data Scientist Graduate - Intelligence Systems | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57747?icims=1) | ok |
+| Johns Hopkins Applied Physics Laboratory | AI/ML Data Scientist/Engineer New Grad - Analytic Capabilities | us md | 2026-08-13 | 16h old | 0 | [apply](https://careers.jhuapl.edu/jobs/57801?icims=1) | ok |
 | TikTok | Machine Learning Engineer Graduate - TikTok Vertical Recommendation | sf bay | 2026-08-12 | 2d old | 74 | [apply](https://lifeattiktok.com/search/7672532275557583157) | ? |
 | Nuro | Software Engineer - ML Inference Platform | sf bay | 2026-08-12 | ~2d old | 74 | [apply](https://nuro.ai/careersitem?gh_jid=8122537) | ok |
 | TikTok | Machine Learning Engineer Graduate - E-Commerce Recommendation Mall | sf bay | 2026-08-12 | 2d old | 74 | [apply](https://lifeattiktok.com/search/7672915427278457141) | ok |
@@ -419,7 +417,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Resmed | Associate Software Engineer - Digital Product Engineering - Internet-of-Things | san diego | 2026-08-12 | ~2d old | 58 | [apply](https://resmed.wd3.myworkdayjobs.com/en-US/ResMed_External_Careers/job/San-Diego-CA-United-States/Associate-Software-Engineer_JR_053125) | ok |
 | ResMed | Associate Software Engineer | san diego | 2026-08-12 | ~2d old | 58 | [apply](https://resmed.wd3.myworkdayjobs.com/en-US/resmed_external_careers/job/San-Diego-CA-United-States/Associate-Software-Engineer_JR_053125) | ok |
 | PayPal | Software Engineer | nyc | 2026-08-12 | ~2d old | 58 | [apply](https://paypal.wd1.myworkdayjobs.com/en-US/jobs/job/New-York-City-New-York-United-States-of-America/Software-Engineer_R0137225) | ok |
-| Hawk-Eye Innovations | Football Tracking Systems Operator - Remote Operations Centre | basingstoke uk | 2026-08-12 | 1d old | 58 | [apply](https://jobs.ashbyhq.com/hawkeyeinnovations/8dda0b7b-5e67-450b-b281-76aa9949f460/application?embed=true) | ok |
+| Hawk-Eye Innovations | Football Tracking Systems Operator - Remote Operations Centre | basingstoke uk | 2026-08-12 | 2d old | 58 | [apply](https://jobs.ashbyhq.com/hawkeyeinnovations/8dda0b7b-5e67-450b-b281-76aa9949f460/application?embed=true) | ok |
 | Amentum | Risk Exchange and Infrastructure Support Developer | us va | 2026-08-12 | ~2d old | 58 | [apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/Risk-Exchange-and-Infrastructure-Support-Developer_R0168166-1) | ok |
 | Uniswap | Software Engineer - Early Career | nyc | 2026-08-12 | 1d old | 58 | [apply](https://jobs.ashbyhq.com/uniswap/fb4d4137-f003-4669-beb7-2a5caca88012/application?embed=true) | ok |
 | BlueCross BlueShield of Tennessee | Data Engineer | us tn / remote | 2026-08-12 | ~2d old | 54 | [apply](https://bcbst.wd1.myworkdayjobs.com/en-US/external/job/USA-TN-Chattanooga-Remote/Data-Engineer_R-50971) | ok |
@@ -452,7 +450,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Consumer Direct Care Network | Software Engineer 1 | us mt | 2026-08-12 | 1d old | 52 | [apply](https://cdcn.avature.net/careers/JobDetail/8611) | ok |
 | Amentum | Jr Software Developer | us va | 2026-08-12 | ~2d old | 52 | [apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/Jr-Software-Developer_R0168146) | ok |
 | Lennar Corporation | Software Engineer 1 | miami | 2026-08-12 | ~2d old | 52 | [apply](https://lennar.wd1.myworkdayjobs.com/Lennar_Jobs/job/Miami-FL-Job-Posting-Location/Software-Engineer-I_R26_0000003523) | ok |
-| Integration Innovation (i3) | Associate Software Developer - COMPASS | us al | 2026-08-12 | 1d old | 52 | [apply](https://careers-i3-corps.icims.com/jobs/5211/job?mobile=true&needsRedirect=false) | ok |
+| Integration Innovation (i3) | Associate Software Developer - COMPASS | us al | 2026-08-12 | 2d old | 52 | [apply](https://careers-i3-corps.icims.com/jobs/5211/job?mobile=true&needsRedirect=false) | ok |
 | ConeTec Group | Field Engineer/Field Geologist | seattle | 2026-08-12 | 1d old | 50 | [apply](https://conetec.bamboohr.com/careers/599/) | ok |
 | KnowBe4 | Graduate Data Scientist - Cyber Analytics | cheltenham uk | 2026-08-12 | 2d old | 50 | [apply](https://job-boards.greenhouse.io/knowbe4/jobs/8700231002) | ok |
 | RRS Group | Associate Data Scientist New Grad | london | 2026-08-12 | 1d old | 50 | [apply](https://jobs.smartrecruiters.com/RRSGroup/744000134688049) | blocked |
@@ -467,7 +465,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Radius Limited | Graduate Mobile Developer - Vehicle Telematics | crewe uk | 2026-08-12 | 2d old | 46 | [apply](https://jobs.smartrecruiters.com/RadiusLimited/744000143047509) | blocked |
 | Adidev Technologies Inc | Android Developer | dallas | 2026-08-12 | 1d old | 46 | [apply](https://adidev.bamboohr.com/careers/27/) | ok |
 | Guidehouse | DevSecOps Cloud Engineer | us tx / remote | 2026-08-12 | ~2d old | 44 | [apply](https://guidehouse.wd1.myworkdayjobs.com/en-US/external/job/US---TX-San-Antonio/DevSecOps-Cloud-Engineer_42321) | ok |
-| Blue Cross Blue Shield of Michigan | Analyst Trainee - Analyst Development Program | detroit | 2026-08-12 | 1d old | 40 | [apply](https://ejko.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3/job/14581) | ok |
+| Blue Cross Blue Shield of Michigan | Analyst Trainee - Analyst Development Program | detroit | 2026-08-12 | 2d old | 40 | [apply](https://ejko.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_3/job/14581) | ok |
 | ConeTec Group | Field Geologist/Engineer | us ca | 2026-08-12 | 1d old | 40 | [apply](https://conetec.bamboohr.com/careers/309/) | ok |
 | AQR | 2027 Quantitative Prediction Markets Research Summer Analyst | us ct | 2026-08-12 | ~2d old | 40 | [apply](https://careers.aqr.com/jobs?gh_jid=8122378&gh_jid=8122378) | ok |
 | Regions | Risk Quantitative Analyst | us al | 2026-08-12 | ~2d old | 40 | [apply](https://regions.wd5.myworkdayjobs.com/en-US/regions_careers/job/Birmingham-AL---Regions-Center/Risk-Quantitative-Analyst_R105160) | ok |
@@ -1030,7 +1028,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
-| Notion | Software Engineer Intern (Summer 2027) | sf bay / remote | 2026-08-14 | just posted | 60 | [apply](https://jobs.ashbyhq.com/notion/3fba1c39-c5cb-47d7-9ad2-1cec4d7e9d0c) | ok |
+| Notion | Software Engineer Intern (Summer 2027) | sf bay / remote | 2026-08-14 | 1h old | 60 | [apply](https://jobs.ashbyhq.com/notion/3fba1c39-c5cb-47d7-9ad2-1cec4d7e9d0c) | ok |
 | Teledyne | NHRC Software Engineering Internship - Summer 2027 | us al | 2026-08-13 | ~1d old | 24 | [apply](https://flir.wd1.myworkdayjobs.com/en-US/flircareers/job/US---Huntsville-AL/NHRC-Software-Engineering-Internship--Summer-2027-_REQ36193) | ok |
 | Wells Fargo | 2027 Quantitative Analytics Summer Internship Capital Markets - Masters - Early Careers | us nc | 2026-08-13 | ~1d old | 12 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Summer-Internship-Capital-Markets--Masters----Early-Careers_R-568270) | ok |
 | Wells Fargo | 2027 Quantitative Analytics Summer Internship Capital Markets - PhD - Early Careers | us nc | 2026-08-13 | ~1d old | 12 | [apply](https://wf.wd1.myworkdayjobs.com/en-US/wellsfargojobs/job/CHARLOTTE-NC/XMLNAME-2027-Quantitative-Analytics-Summer-Internship-Capital-Markets--PhD----Early-Careers_R-568279) | ok |
@@ -1128,11 +1126,12 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Susquehanna International Group | Quantitative Research Internship - PhD: Summer 2027 | nyc | 2026-06-29 | ~46d old | 10 | [apply](https://careers-sig.icims.com/jobs/10818/quantitative-research-internship---phd%3a-summer-2027/job) | ok |
 | Susquehanna International Group | Quantitative Research Internship - Master's: Summer 2027 | nyc | 2026-06-29 | ~46d old | 0 | [apply](https://careers-sig.icims.com/jobs/10820/quantitative-research-internship-%e2%80%93-master%27s%3a-summer-2027/job) | ok |
 
-## Term unknown (282)
+## Term unknown (283)
 
 | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|--:|---|---|
 | LangChain | Research Engineer, LangSmith Engine | nyc | 2026-08-14 | 2h old | 46 | [apply](https://jobs.ashbyhq.com/langchain/bdc96ffd-2a95-4d63-bf8f-193574961e00) | ok |
+| Twitch | Software Engineer I, Payments | sf bay | 2026-08-14 | just posted | 44 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8700578002) | ok |
 | Cohere | Member of Technical Staff, Agentic Environments | remote / remote | 2026-08-13 | 1d old | 54 | [apply](https://jobs.ashbyhq.com/cohere/8878b0d0-7d88-4ee9-bc17-b0dd237e39a0) | ok |
 | Metaphor | Software Engineer - Intern | sf bay | 2026-08-13 | ~1d old | 44 | [apply](https://jobs.ashbyhq.com/exa/a9e01521-66f1-481b-89da-ec01d4620f16) | ok |
 | Crowe | AI Engineering Intern | chicago | 2026-08-13 | ~1d old | 42 | [apply](https://crowe.wd12.myworkdayjobs.com/en-US/external_careers/job/Chicago-IL-USA/AI-Engineering-Intern_R-51782) | ok |
@@ -1207,7 +1206,7 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | TikTok | Software Engineer Intern - Foundation Platform - 2027 Summer | sf bay | 2026-08-05 | ~9d old | 50 | [apply](https://lifeattiktok.com/search/7670281449668905269) | ok |
 | Perplexity | Member of Technical Staff (Product Data Scientist, Search Quality) | belgrade | 2026-08-05 | 9d old | 50 | [apply](https://jobs.ashbyhq.com/perplexity/a805e14b-061d-469c-9136-b9e6a1855902) | ok |
 | TikTok | Backend Software Engineer Intern - Creation Platform - 2027 Summer | sf bay | 2026-08-05 | ~9d old | 50 | [apply](https://lifeattiktok.com/search/7670289874020993285) | ok |
-| Affirm | Software Engineer I, Fullstack (Servicing International) | remote / remote | 2026-08-05 | 9d old | 48 | [apply](https://job-boards.greenhouse.io/affirm/jobs/7809761003) | - |
+| Affirm | Software Engineer I, Fullstack (Servicing International) | remote / remote | 2026-08-05 | 9d old | 48 | [apply](https://job-boards.greenhouse.io/affirm/jobs/7809763003) | - |
 | TikTok | Software Engineer Intern - Media Engine - 2027 Summer | sf bay | 2026-08-05 | ~9d old | 44 | [apply](https://lifeattiktok.com/search/7670295535077427509) | ok |
 | Draper | Embedded Quality & Fielded Systems Intern | boston | 2026-08-05 | ~9d old | 43 | [apply](https://draper.wd5.myworkdayjobs.com/en-US/draper_careers/job/Cambridge-MA/Embedded-Quality---Fielded-Systems-Intern_JR002718) | ok |
 | TikTok | Data Scientist Intern - VOD Data - 2027 Summer | sf bay | 2026-08-05 | ~9d old | 42 | [apply](https://lifeattiktok.com/search/7670287013157095733) | ok |
@@ -1290,13 +1289,13 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Perplexity | Member of Technical Staff (Software Engineer, Data Platform) | sf bay | 2026-06-03 | 72d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/2e73bc78-684c-47c5-95df-e9973a10e0b6) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Storage Platform) | sf bay | 2026-06-03 | 72d old | 54 | [apply](https://jobs.ashbyhq.com/perplexity/b404e73c-5aff-4151-a1a8-6593fb6ccabf) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Enterprise Experience) | sf bay / remote | 2026-06-03 | 72d old | 52 | [apply](https://jobs.ashbyhq.com/perplexity/33a48d64-ba8c-444f-a41d-9c77c6c00320) | ok |
-| Perplexity | Member of Technical Staff (Software Engineer, Cloud Infrastructure) | london | 2026-06-03 | 71d old | 42 | [apply](https://jobs.ashbyhq.com/perplexity/e028e104-e070-4a62-85f2-ebcf982889ea) | ok |
+| Perplexity | Member of Technical Staff (Software Engineer, Cloud Infrastructure) | london | 2026-06-03 | 72d old | 42 | [apply](https://jobs.ashbyhq.com/perplexity/e028e104-e070-4a62-85f2-ebcf982889ea) | ok |
 | Anthropic | Research Scientist, Life Sciences | sf bay | 2026-06-02 | 72d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5239733008) | ok |
 | Waymo | Staff Research Scientist, Perception | sf bay | 2026-06-02 | 73d old | 56 | [apply](https://careers.withwaymo.com/jobs?gh_jid=7975025) | ok |
 | Jump Trading | Research Engineer, Pre-Training | nyc | 2026-06-02 | 72d old | 30 | [apply](https://www.jumptrading.com/hr/job?gh_jid=7977686) | ok |
 | Anduril Industries | Research Scientist | denver | 2026-05-29 | 77d old | 24 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5150299007?gh_jid=5150299007) | ok |
 | MongoDB | Staff Research Scientist | sf bay | 2026-05-28 | 78d old | 56 | [apply](https://www.mongodb.com/careers/job/?gh_jid=7956670) | ok |
-| Scale AI | Research Scientist, Safety Post Training | sf bay | 2026-05-18 | 87d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4696595005) | ok |
+| Scale AI | Research Scientist, Safety Post Training | sf bay | 2026-05-18 | 88d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4696595005) | ok |
 | Modal | Member of Technical Staff - Product (Growth) | nyc | 2026-05-18 | 87d old | 30 | [apply](https://jobs.ashbyhq.com/modal/9fe70d84-1d3a-42ab-87c8-df0266628c16) | ok |
 | Plus | Full Stack Engineer Intern | sf bay | 2026-05-15 | ~91d old | 30 | [apply](https://jobs.lever.co/plus-2/b69c9b6d-483f-41d4-b487-97c99332ca40) | ok |
 | Anthropic | Research Engineer, Model Evaluations | remote / remote | 2026-04-28 | 108d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198255008) | ok |
@@ -1317,8 +1316,8 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Perplexity | Member of Technical Staff (Offensive Security Engineer) | sf bay / remote | 2026-04-02 | 134d old | 40 | [apply](https://jobs.ashbyhq.com/perplexity/69fd6a56-0050-44f7-9ed2-2c3a7320908d) | ok |
 | Snowflake | Staff Research Scientist, AI Agents & LLMs | seattle / remote | 2026-03-26 | 140d old | 60 | [apply](https://jobs.ashbyhq.com/snowflake/deaebf03-4681-417b-a870-648d0d6a2a94) | ok |
 | Scale AI | Research Scientist, Frontier Risk Evaluations | sf bay | 2026-03-25 | 141d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4677657005) | ok |
-| Twitch | Software Engineer I, Commerce Engineering | sf bay | 2026-03-25 | 141d old | 28 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8457711002) | ok |
-| Twitch | Software Engineer I, Commerce Engineering | seattle | 2026-03-25 | 141d old | 26 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8459320002) | ok |
+| Twitch | Software Engineer I, Commerce Engineering | sf bay | 2026-03-25 | 142d old | 28 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8457711002) | ok |
+| Twitch | Software Engineer I, Commerce Engineering | seattle | 2026-03-25 | 142d old | 26 | [apply](https://job-boards.greenhouse.io/twitch/jobs/8459320002) | ok |
 | Anthropic | Research Engineer, Performance RL (Reinforcement Learning) | sf bay | 2026-03-23 | 144d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5160330008) | ok |
 | Baseten | Post-Training Research Engineer | sf bay / remote | 2026-03-23 | 143d old | 40 | [apply](https://jobs.ashbyhq.com/baseten/68328a94-f785-463b-a3d7-b0dfc11839b5) | ok |
 | Scale AI | Research Scientist, AI Controls and Monitoring | sf bay | 2026-03-20 | 147d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4675694005) | ok |
@@ -1405,10 +1404,10 @@ _69 of these carry a `~` age: the source states a whole day or a date, so member
 | Datadog | AI Research Scientist - Datadog AI Research (DAIR) | nyc | 2025-01-24 | 567d old | 52 | [apply](https://careers.datadoghq.com/detail/6572669/?gh_jid=6572669) | ok |
 | Cohere | Member of Technical Staff, Modeling | london / remote | 2024-11-01 | 651d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/3136a5a5-06fd-4c82-8b72-a43467e6b128) | ok |
 | Cohere | Member of Technical Staff, MLE (Korea) | remote / remote | 2024-10-31 | 652d old | 60 | [apply](https://jobs.ashbyhq.com/cohere/31c47498-0ccf-4d23-a418-0d2c616ba909) | ok |
-| Modal | Member of Technical Staff - Systems | nyc | 2024-10-23 | 659d old | 48 | [apply](https://jobs.ashbyhq.com/modal/9b33ebe7-e829-4f03-97ba-5c94dbd7daf6) | ok |
+| Modal | Member of Technical Staff - Systems | nyc | 2024-10-23 | 660d old | 48 | [apply](https://jobs.ashbyhq.com/modal/9b33ebe7-e829-4f03-97ba-5c94dbd7daf6) | ok |
 | Chroma | Member of Technical Staff | sf bay | 2024-09-09 | 704d old | 16 | [apply](https://jobs.ashbyhq.com/trychroma/9ed3aee8-07dd-44e3-9ca1-dd1a3020fb6f) | ok |
 | Jump Trading | Research Scientist/Research Engineer \| Deep Learning | nyc | 2024-07-23 | 752d old | 32 | [apply](https://www.jumptrading.com/hr/job?gh_jid=6032511) | ok |
-| Anthropic | Research Engineer, Knowledge Team | remote / remote | 2024-04-23 | 842d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4017331008) | ok |
+| Anthropic | Research Engineer, Knowledge Team | remote / remote | 2024-04-23 | 843d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4017331008) | ok |
 | OpenAI | Research Engineer, Retrieval & Search, Applied Engineering | sf bay | 2024-03-20 | 876d old | 56 | [apply](https://jobs.ashbyhq.com/openai/7322d344-9325-4a92-8445-0a2c4e9272f8) | ok |
 | Jump Trading | AI Research Scientist \| Research & Development | singapore | 2024-03-04 | 892d old | 26 | [apply](https://www.jumptrading.com/hr/job?gh_jid=4982814) | ok |
 | Together AI | Systems Research Engineer, GPU Programming | sf bay | 2024-01-16 | 941d old | 56 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/4188119007) | ok |
