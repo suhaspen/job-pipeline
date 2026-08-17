@@ -1,16 +1,16 @@
 {
-  "run_id": "20260817T155050Z",
-  "started_at": "2026-08-17T15:50:50.517639+00:00",
-  "duration_s": 171.97,
+  "run_id": "20260817T163000Z",
+  "started_at": "2026-08-17T16:30:00.702519+00:00",
+  "duration_s": 208.81,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
       "fetched": 1475,
       "raw_fetched": 2120,
-      "new": 3,
+      "new": 0,
       "errors": [],
-      "latency_ms": 290,
+      "latency_ms": 488,
       "not_modified": false,
       "filtered_out": 645,
       "baselined": 1011,
@@ -21,20 +21,18 @@
       "midnight": 191,
       "midnight_share": 0.129,
       "warnings": [
-        "18381 records, 15421 inactive, 840 off-category, 2120 kept"
+        "18382 records, 15421 inactive, 841 off-category, 2120 kept"
       ]
     },
     {
       "name": "speedyapply-swe",
-      "ok": false,
+      "ok": true,
       "fetched": 0,
       "raw_fetched": 0,
       "new": 0,
-      "errors": [
-        "NEW_GRAD_USA.md: 429 Client Error: Too Many Requests for url: https://raw.githubusercontent.com/speedyapply/2027-SWE-College-Jobs/main/NEW_GRAD_USA.md"
-      ],
-      "latency_ms": 61786,
-      "not_modified": false,
+      "errors": [],
+      "latency_ms": 231,
+      "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
       "term_unknown_rate": 0.0,
@@ -52,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 42840,
+      "latency_ms": 232,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -67,49 +65,49 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 319,
-      "raw_fetched": 13695,
-      "new": 0,
+      "fetched": 352,
+      "raw_fetched": 14436,
+      "new": 2,
       "errors": [],
-      "latency_ms": 18278,
+      "latency_ms": 61868,
       "not_modified": false,
-      "filtered_out": 13376,
-      "baselined": 167,
-      "term_unknown_rate": 0.63,
+      "filtered_out": 14084,
+      "baselined": 174,
+      "term_unknown_rate": 0.656,
       "responding": 71,
       "units": 71,
-      "dated": 319,
+      "dated": 352,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": []
     }
   ],
-  "deduped_out": 613,
+  "deduped_out": 640,
   "tiers": {
     "1": 0,
-    "2": 1,
+    "2": 0,
     "3": 2
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 1
+    "suppressed_backpressure": 0
   },
   "backlog_unapplied": 38,
   "warnings": [
-    "ats: term unknown for 63% of postings (>10%)"
+    "ats: term unknown for 66% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2492,
-  "excluded_recorded": 14021,
-  "suppressed_by_baseline": 1178,
+  "excluded_recorded": 14729,
+  "suppressed_by_baseline": 1185,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
     "blocked": 66,
-    "ok": 1138,
+    "ok": 1140,
     "unchecked": 84,
     "unreachable": 16,
     "redirected_to_index": 9,
@@ -118,7 +116,7 @@
   "links_by_source": {
     "ats": {
       "blocked": 2,
-      "ok": 244,
+      "ok": 246,
       "unchecked": 7,
       "unreachable": 1
     },
@@ -143,20 +141,20 @@
       "unreachable": 1
     }
   },
-  "url_upgrades": 58,
+  "url_upgrades": 57,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 3,
+    "heuristic_only": 2,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 13387,
-    "suppressions": 1101,
+    "exclusions": 14093,
+    "suppressions": 1108,
     "collapse_flags": 5
   },
   "export_changed": true,
