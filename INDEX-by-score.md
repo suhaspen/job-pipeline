@@ -1,6 +1,6 @@
 # Live postings by score
 
-1307 open · highest score first, newest as the tiebreak · regenerated every run · last updated 2026-08-17 19:16 UTC
+1307 open · highest score first, newest as the tiebreak · regenerated every run · last updated 2026-08-17 19:43 UTC
 
 Ordered by recency instead: [INDEX.md](INDEX.md)
 
@@ -16,20 +16,20 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 
 | Term | Company | Title | Location | Posted | Age | Score | Link | Status |
 |---|---|---|---|---|---|--:|---|---|
-| New grad 2027 | TikTok | Machine Learning Engineer Graduate - E-Commerce Governance | seattle | 2026-08-17 | 5h old | 72 | [apply](https://lifeattiktok.com/search/7674025781001062709) | ? |
-| New grad 2027 | Astera Institute | Research Scientist - All-Optical Working Memory | sf bay | 2026-08-17 | ~5h old | 72 | [apply](https://jobs.ashbyhq.com/astera/600f1aad-2c27-4b82-bf6c-c171713bcd22) | ok |
-| New grad 2027 | TikTok | Data Scientist Graduate - E-Commerce Governance | seattle | 2026-08-17 | 5h old | 60 | [apply](https://lifeattiktok.com/search/7674027218993154357) | ok |
+| New grad 2027 | TikTok | Machine Learning Engineer Graduate - E-Commerce Governance | seattle | 2026-08-17 | 6h old | 72 | [apply](https://lifeattiktok.com/search/7674025781001062709) | ? |
+| New grad 2027 | Astera Institute | Research Scientist - All-Optical Working Memory | sf bay | 2026-08-17 | ~6h old | 72 | [apply](https://jobs.ashbyhq.com/astera/600f1aad-2c27-4b82-bf6c-c171713bcd22) | ok |
+| New grad 2027 | TikTok | Data Scientist Graduate - E-Commerce Governance | seattle | 2026-08-17 | 6h old | 60 | [apply](https://lifeattiktok.com/search/7674027218993154357) | ok |
 | New grad 2027 | County of Kauai | Geographic Information Systems Analyst 1 - GIS | us hi | 2026-08-17 | ~19h old | 58 | [apply](https://kauai.wd1.myworkdayjobs.com/Kauai_External_Career_Site/job/Department-of-Finance-Real-Property-Assessments/Geographic-Information-Systems--GIS--Analyst-I_R-8117-1) | ok |
-| Term unknown | Datadog | Software Engineering Intern (Winter) | boston | 2026-08-17 | 4h old | 57 | [apply](https://careers.datadoghq.com/detail/8052095/?gh_jid=8052095) | ok |
+| Term unknown | Datadog | Software Engineering Intern (Winter) | boston | 2026-08-17 | 5h old | 57 | [apply](https://careers.datadoghq.com/detail/8052095/?gh_jid=8052095) | ok |
 | Winter 2027 (co-op) | Point72 | Quantitative Developer Intern | nyc | 2026-08-17 | 1h old | 54 | [apply](https://boards.greenhouse.io/point72/jobs/8721562002?gh_jid=8721562002) | ok |
 | New grad 2027 | Optiver | Graduate Software Engineer | london | 2026-08-17 | 4h old | 52 | [apply](https://www.optiver.com/join-us/jobs/8561859002/?gh_jid=8561859002) | ok |
-| New grad 2027 | L3Harris Technologies | Associate Software Engineer | dc metro | 2026-08-17 | 5h old | 52 | [apply](https://jobs.l3harris.com/job/Herndon-Associate,-Software-Engineer-(Herndon,-VA)-VA-20171/1419939200/?ats=successfactors) | ok |
+| New grad 2027 | L3Harris Technologies | Associate Software Engineer | dc metro | 2026-08-17 | 6h old | 52 | [apply](https://jobs.l3harris.com/job/Herndon-Associate,-Software-Engineer-(Herndon,-VA)-VA-20171/1419939200/?ats=successfactors) | ok |
 | New grad 2027 | General Dynamics Mission Systems | Software Engineer - Entry Level | phoenix | 2026-08-16 | 21h old | 52 | [apply](https://careers-gdms.icims.com/jobs/74274/job?mobile=true&needsRedirect=false) | ok |
-| New grad 2027 | Boom Supersonic | Software Engineer - Exceptional Talent | us co | 2026-08-16 | 19h old | 52 | [apply](https://ats.rippling.com/boom-supersonic/jobs/a6ea239b-70a4-4d72-b7d8-3ab1312568dc) | ok |
+| New grad 2027 | Boom Supersonic | Software Engineer - Exceptional Talent | us co | 2026-08-16 | 20h old | 52 | [apply](https://ats.rippling.com/boom-supersonic/jobs/a6ea239b-70a4-4d72-b7d8-3ab1312568dc) | ok |
 | Term unknown | Cohere | Member of Technical Staff - RL Environments | london / remote | 2026-08-17 | 3h old | 44 | [apply](https://jobs.ashbyhq.com/cohere/dc523c5b-9477-46c4-a122-4f3b2b8f4b67) | ok |
 | Term unknown | Cohere | Member of Technical Staff, Multilingual | london / remote | 2026-08-17 | 3h old | 44 | [apply](https://jobs.ashbyhq.com/cohere/a87be947-00f0-4a4c-a690-a4922f88f553) | ok |
 | New grad 2027 | General Dynamics Information Technology | Data Quality Monitoring Engineer | us ne | 2026-08-17 | ~19h old | 40 | [apply](https://gdit.wd5.myworkdayjobs.com/external_career_site/job/USA-NE-Offutt-AFB/Data-Quality-Monitoring-Engineer_RQ226071-2) | ok |
-| New grad 2027 | ASSYST | Junior .NET Developer | us va | 2026-08-17 | 5h old | 40 | [apply](https://job-boards.greenhouse.io/assystinc/jobs/4371586009) | ok |
+| New grad 2027 | ASSYST | Junior .NET Developer | us va | 2026-08-17 | 6h old | 40 | [apply](https://job-boards.greenhouse.io/assystinc/jobs/4371586009) | ok |
 | New grad 2027 | Optiver | Quantitative Researcher Graduate - 2027 Start | london | 2026-08-17 | 4h old | 40 | [apply](https://www.optiver.com/join-us/jobs/8585609002/?gh_jid=8585609002) | ok |
 | New grad 2027 | BJC HealthCare | EHR Application Analyst 1 - Epic Security | us mo | 2026-08-15 | 1d old | 40 | [apply](https://jobs.bjc.org/jobs/114939?icims=1) | ok |
 
@@ -45,7 +45,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Raytheon | Fall 2026 - Intern/Coop: Machine Learning Researcher | us ct | 2026-08-06 | ~11d old | 70 | [apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-CT-EAST-HARTFORD-RTRC-K--411-Silver-Ln--RTRC-K/Fall-2026--Intern-Coop--Machine-Learning-Researcher_01864471) | - |
 | Otter Products | AI Intern - Fall 2026 | us co | 2026-08-06 | ~11d old | 70 | [apply](https://careers-otterproducts.icims.com/jobs/6912/ai-intern-%28fall-2026%29/job) | ok |
 | General Motors | 2026 Fall Intern - Research & Development: AI/ML | us mi | 2026-07-30 | ~17d old | 66 | [apply](https://generalmotors.wd5.myworkdayjobs.com/en-US/careers_gm/job/Warren-Michigan-United-States-of-America/XMLNAME-2026-Fall-Intern---Research---Development--AI-ML_JR-202612795) | ok |
-| DoorDash USA | AI Research Fellowship, (Summer and Fall 2026) | sf bay | 2026-04-29 | 109d old | 66 | [apply](https://job-boards.greenhouse.io/doordashusa/jobs/7848317) | ok |
+| DoorDash USA | AI Research Fellowship, (Summer and Fall 2026) | sf bay | 2026-04-29 | 110d old | 66 | [apply](https://job-boards.greenhouse.io/doordashusa/jobs/7848317) | ok |
 | Samsung AI Research Center | 2026 Fall Intern - Digital Health Algorithms | sf bay | 2026-08-07 | ~10d old | 60 | [apply](https://job-boards.greenhouse.io/samsungresearchamericainternship/jobs/8678880002) | ok |
 | CCC Intelligent Solutions | R&D & Data Science Internship Fall 2026 | chicago | 2026-08-11 | ~6d old | 48 | [apply](https://cccis.wd1.myworkdayjobs.com/en-US/broadbean_external/job/Chicago-Green-St-IL/R-D---Data-Science-Internship-Fall-2026_0014841) | ok |
 | Red Bull | 2026 Internship - Fall - Data Science | us nj | 2026-07-23 | ~24d old | 40 | [apply](https://jobs.smartrecruiters.com/RedBull/744000139168339-2026-internship-fall-data-science?oga=true) | blocked |
@@ -110,8 +110,8 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | HP | AI Software Engineer - HP IQ | sf bay | 2026-08-06 | ~11d old | 74 | [apply](https://hp.wd5.myworkdayjobs.com/en-US/externalcareersite/job/San-Francisco-California-United-States-of-America/AI-Software-Engineer---HP-IQ_3163597-2) | - |
 | KLA | Artificial Intelligence Engineer | sf bay | 2026-08-05 | ~12d old | 74 | [apply](https://kla.wd1.myworkdayjobs.com/en-US/search/job/Milpitas-CA/Artificial-Intelligence-Engineer_2634759-1) | ok |
 | TikTok | Machine Learning Engineer Graduate - E-Commerce Recommendation/Search Alliance - 2027 Start - PhD | sf bay | 2026-08-04 | ~13d old | 74 | [apply](https://lifeattiktok.com/search/7669908897587824949) | ok |
-| TikTok | Machine Learning Engineer Graduate - E-Commerce Governance | seattle | 2026-08-17 | 5h old | 72 | [apply](https://lifeattiktok.com/search/7674025781001062709) | ? |
-| Astera Institute | Research Scientist - All-Optical Working Memory | sf bay | 2026-08-17 | ~5h old | 72 | [apply](https://jobs.ashbyhq.com/astera/600f1aad-2c27-4b82-bf6c-c171713bcd22) | ok |
+| TikTok | Machine Learning Engineer Graduate - E-Commerce Governance | seattle | 2026-08-17 | 6h old | 72 | [apply](https://lifeattiktok.com/search/7674025781001062709) | ? |
+| Astera Institute | Research Scientist - All-Optical Working Memory | sf bay | 2026-08-17 | ~6h old | 72 | [apply](https://jobs.ashbyhq.com/astera/600f1aad-2c27-4b82-bf6c-c171713bcd22) | ok |
 | TikTok | Machine Learning Engineer Graduate - E-Commerce Recommendation Mall | seattle | 2026-08-12 | 5d old | 72 | [apply](https://lifeattiktok.com/search/7672911151560296709) | ? |
 | Clera | Research Scientist / Research Engineer | sf bay | 2026-08-11 | ~6d old | 72 | [apply](https://jobs.ashbyhq.com/clera/5647b257-abc8-4d88-acd1-024f4ae982ab) | - |
 | ByteDance | Agent Evaluation and Evolution Machine Learning Engineer Graduate - Applied Machine Learning Ark | seattle | 2026-08-11 | 6d old | 72 | [apply](https://jobs.bytedance.com/en/position/7672391016194066693/detail) | ok |
@@ -287,7 +287,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Xfinity | Software Engineer 2 - AI - Hybrid - Reston - VA - Freewheel | dc metro | 2026-08-05 | ~12d old | 62 | [apply](https://comcast.wd5.myworkdayjobs.com/en-US/comcast_careers/job/VA---Reston-11951-Freedom-Dr-Ste-900/Software-Engineer-2--AI----Hybrid---Reston--VA---Freewheel_R442248) | ok |
 | BlueCross BlueShield of Tennessee | Associate Software Engineer II - Infrastructure & Automation | us tn / remote | 2026-08-05 | ~12d old | 62 | [apply](https://bcbst.wd1.myworkdayjobs.com/en-US/external/job/USA-TN-Chattanooga-Remote/Associate-Software-Engineer-II--Infrastructure---Automation-_R-50858) | ok |
 | Rainmaker | Machine Learning Fellow - Machine Learning | la | 2026-07-24 | 23d old | 62 | [apply](https://jobs.lever.co/make-rain/12553367-54eb-4fb8-8268-d52b3f05d86b/apply) | ok |
-| TikTok | Data Scientist Graduate - E-Commerce Governance | seattle | 2026-08-17 | 5h old | 60 | [apply](https://lifeattiktok.com/search/7674027218993154357) | ok |
+| TikTok | Data Scientist Graduate - E-Commerce Governance | seattle | 2026-08-17 | 6h old | 60 | [apply](https://lifeattiktok.com/search/7674027218993154357) | ok |
 | General Matter | Software Engineer - New Grad | la | 2026-08-13 | ~4d old | 60 | [apply](https://job-boards.greenhouse.io/generalmatter/jobs/5375987008) | ok |
 | Novartis | Research Scientist I or II - Oligonucleotide Chemistry | us | 2026-08-13 | ~4d old | 60 | [apply](https://novartis.wd3.myworkdayjobs.com/en-US/novartis_careers/job/Cambridge-USA/Research-Scientist-I-or-II--Oligonucleotide-Chemistry_REQ-10085156-1) | ok |
 | Walt Disney | Product Software Engineer I | la | 2026-08-12 | ~5d old | 60 | [apply](https://disney.wd5.myworkdayjobs.com/en-US/disneycareer/job/Glendale-CA-USA/Product-Software-Engineer-I_10151599) | ok |
@@ -408,9 +408,9 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Brillio | Frontline AI Engineer I | minneapolis | 2026-06-30 | ~48d old | 54 | [apply](https://jobs.lever.co/brillio-2/28e5ce0f-299f-48b5-9a3e-0d96a535060d) | ok |
 | Rivian | Systems Integration Engineer-Software Integration | sf bay | 2026-05-28 | ~81d old | 54 | [apply](https://jobs.ashbyhq.com/rivianvw.tech/2c209e52-8723-4c78-abf7-f0394f6537bc) | ok |
 | Optiver | Graduate Software Engineer | london | 2026-08-17 | 4h old | 52 | [apply](https://www.optiver.com/join-us/jobs/8561859002/?gh_jid=8561859002) | ok |
-| L3Harris Technologies | Associate Software Engineer | dc metro | 2026-08-17 | 5h old | 52 | [apply](https://jobs.l3harris.com/job/Herndon-Associate,-Software-Engineer-(Herndon,-VA)-VA-20171/1419939200/?ats=successfactors) | ok |
+| L3Harris Technologies | Associate Software Engineer | dc metro | 2026-08-17 | 6h old | 52 | [apply](https://jobs.l3harris.com/job/Herndon-Associate,-Software-Engineer-(Herndon,-VA)-VA-20171/1419939200/?ats=successfactors) | ok |
 | General Dynamics Mission Systems | Software Engineer - Entry Level | phoenix | 2026-08-16 | 21h old | 52 | [apply](https://careers-gdms.icims.com/jobs/74274/job?mobile=true&needsRedirect=false) | ok |
-| Boom Supersonic | Software Engineer - Exceptional Talent | us co | 2026-08-16 | 19h old | 52 | [apply](https://ats.rippling.com/boom-supersonic/jobs/a6ea239b-70a4-4d72-b7d8-3ab1312568dc) | ok |
+| Boom Supersonic | Software Engineer - Exceptional Talent | us co | 2026-08-16 | 20h old | 52 | [apply](https://ats.rippling.com/boom-supersonic/jobs/a6ea239b-70a4-4d72-b7d8-3ab1312568dc) | ok |
 | Bosch | Software Engineer - Vehicle Diagnostics | us mn | 2026-08-15 | ~2d old | 52 | [apply](https://jobs.smartrecruiters.com/BoschGroup/744000143562859-software-engineer-vehicle-diagnostics?oga=true) | blocked |
 | Fidelity Investments | Leap Software Engineer | us tx | 2026-08-14 | ~3d old | 52 | [apply](https://fmr.wd1.myworkdayjobs.com/targeted/job/Westlake-TX/July-2027---Leap-Software-Engineer_2133877) | - |
 | Fidelity Investments | April 2027 - Leap Software Engineer | us tx | 2026-08-14 | ~3d old | 52 | [apply](https://fmr.wd1.myworkdayjobs.com/en-US/targeted/job/Westlake-TX/April-2027---Leap-Software-Engineer_2133870) | ok |
@@ -723,7 +723,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Q2 | Software Engineer | austin | 2026-05-30 | 79d old | 41 | [apply](https://q2ebanking.wd5.myworkdayjobs.com/Q2/job/Austin-TX/Software-Engineer_REQ-12023) | ok |
 | Symbotic | Software Engineer New Grad | boston | 2026-05-19 | 89d old | 41 | [apply](https://symbotic.wd504.myworkdayjobs.com/Symbotic/job/USA-Wilmington--MA---HQ/New-Grad--Software-Engineer_R6770) | ok |
 | General Dynamics Information Technology | Data Quality Monitoring Engineer | us ne | 2026-08-17 | ~19h old | 40 | [apply](https://gdit.wd5.myworkdayjobs.com/external_career_site/job/USA-NE-Offutt-AFB/Data-Quality-Monitoring-Engineer_RQ226071-2) | ok |
-| ASSYST | Junior .NET Developer | us va | 2026-08-17 | 5h old | 40 | [apply](https://job-boards.greenhouse.io/assystinc/jobs/4371586009) | ok |
+| ASSYST | Junior .NET Developer | us va | 2026-08-17 | 6h old | 40 | [apply](https://job-boards.greenhouse.io/assystinc/jobs/4371586009) | ok |
 | Optiver | Quantitative Researcher Graduate - 2027 Start | london | 2026-08-17 | 4h old | 40 | [apply](https://www.optiver.com/join-us/jobs/8585609002/?gh_jid=8585609002) | ok |
 | Syncreon Consulting | .Net Developer with LINQ - ADO.Net - JQuery - W2 position | us ny | 2026-08-15 | ~2d old | 40 | [apply](https://jobs.smartrecruiters.com/SyncreonConsulting/744000143556539--net-developer-with-linq-ado-net-jquery-w2-position-?oga=true) | blocked |
 | BJC HealthCare | EHR Application Analyst 1 - Epic Security | us mo | 2026-08-15 | 1d old | 40 | [apply](https://jobs.bjc.org/jobs/114939?icims=1) | ok |
@@ -1111,9 +1111,9 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Perplexity | Member of Technical Staff (Software Engineer, Connector Platform) | sf bay / remote | 2026-06-14 | 63d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/daafcaba-cc39-487a-b941-d7a407753788) | ok |
 | Perplexity | Member of Technical Staff (ML Engineer, Recommendations & User Modeling) | sf bay | 2026-06-05 | 72d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/affd3040-91e4-4e0c-bd2f-4b022c613f91) | ok |
 | Anthropic | Research Engineer, Model Evaluations | remote / remote | 2026-04-28 | 111d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198255008) | ok |
-| Perplexity | Member of Technical Staff (AI Researcher) | sf bay | 2026-04-13 | 125d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/8fe61c73-0daf-4432-a47d-44714c1ef764) | ok |
-| Perplexity | Member of Technical Staff (AI Inference Engineer) | sf bay | 2026-04-13 | 125d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/8a976851-9bef-4b07-8d36-567fa9540aef) | ok |
-| Perplexity | Member of Technical Staff (AI Infrastructure Engineer) | sf bay | 2026-04-13 | 125d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/598e1f7d-b802-4de2-99ac-90eb2bc33315) | ok |
+| Perplexity | Member of Technical Staff (AI Researcher) | sf bay | 2026-04-13 | 126d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/8fe61c73-0daf-4432-a47d-44714c1ef764) | ok |
+| Perplexity | Member of Technical Staff (AI Inference Engineer) | sf bay | 2026-04-13 | 126d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/8a976851-9bef-4b07-8d36-567fa9540aef) | ok |
+| Perplexity | Member of Technical Staff (AI Infrastructure Engineer) | sf bay | 2026-04-13 | 126d old | 58 | [apply](https://jobs.ashbyhq.com/perplexity/598e1f7d-b802-4de2-99ac-90eb2bc33315) | ok |
 | Scale AI | Research Scientist, AI Controls and Monitoring | sf bay | 2026-03-20 | 150d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4675694005) | ok |
 | Together AI | Research Engineer, Core ML | sf bay | 2026-02-18 | 180d old | 58 | [apply](https://job-boards.greenhouse.io/togetherai/jobs/4384627007) | ok |
 | Reddit | Staff Research Engineer, Post-training & Evaluation | remote / remote | 2026-02-13 | 184d old | 58 | [apply](https://job-boards.greenhouse.io/reddit/jobs/7555007) | ok |
@@ -1129,7 +1129,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Anthropic | Research Engineer, Machine Learning (Reinforcement Learning) | sf bay | 2025-04-01 | 502d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4613568008) | ok |
 | Scale AI | ML Research Engineer, ML Systems | sf bay | 2025-03-10 | 525d old | 58 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4534631005) | ok |
 | Anthropic | Research Engineer, Knowledge Team | remote / remote | 2024-04-23 | 845d old | 58 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4017331008) | ok |
-| Datadog | Software Engineering Intern (Winter) | boston | 2026-08-17 | 4h old | 57 | [apply](https://careers.datadoghq.com/detail/8052095/?gh_jid=8052095) | ok |
+| Datadog | Software Engineering Intern (Winter) | boston | 2026-08-17 | 5h old | 57 | [apply](https://careers.datadoghq.com/detail/8052095/?gh_jid=8052095) | ok |
 | Cotiviti | Intern - Agentic AI Research | remote / remote | 2026-08-12 | ~5d old | 56 | [apply](https://careers-cotiviti.icims.com/jobs/19480/intern---agentic-ai-research/job) | ok |
 | Cohere | Research Scientist, Cohere Labs | london / remote | 2026-07-21 | 27d old | 56 | [apply](https://jobs.ashbyhq.com/cohere/7ec9eaf4-8cfc-4977-9041-86f73e7ab10b) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Integrations) | sf bay | 2026-07-09 | 38d old | 56 | [apply](https://jobs.ashbyhq.com/perplexity/ea87532c-69a0-497d-9cf3-04cc2a6c6410) | ok |
@@ -1139,7 +1139,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Anthropic | Research Engineer, Code RL (Reinforcement Learning) | sf bay | 2026-06-11 | 66d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5254364008) | ok |
 | Confluent | Staff Software Engineer I - Confluent Platform | remote / remote | 2026-06-08 | 70d old | 56 | [apply](https://jobs.ashbyhq.com/confluent/a93ac05b-0ba3-41a9-aa42-a6258c5c5584) | ok |
 | Anthropic | Research Scientist, Life Sciences | sf bay | 2026-06-02 | 75d old | 56 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5239733008) | ok |
-| Waymo | Staff Research Scientist, Perception | sf bay | 2026-06-02 | 75d old | 56 | [apply](https://careers.withwaymo.com/jobs?gh_jid=7975025) | ok |
+| Waymo | Staff Research Scientist, Perception | sf bay | 2026-06-02 | 76d old | 56 | [apply](https://careers.withwaymo.com/jobs?gh_jid=7975025) | ok |
 | MongoDB | Staff Research Scientist | sf bay | 2026-05-28 | 81d old | 56 | [apply](https://www.mongodb.com/careers/job/?gh_jid=7956670) | ok |
 | Scale AI | Research Scientist, Safety Post Training | sf bay | 2026-05-18 | 90d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4696595005) | ok |
 | Scale AI | Research Scientist, Frontier Risk Evaluations | sf bay | 2026-03-25 | 144d old | 56 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4677657005) | ok |
@@ -1199,13 +1199,13 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | TikTok | Backend Software Engineer Intern - Creation Platform - 2027 Summer | sf bay | 2026-08-05 | ~12d old | 50 | [apply](https://lifeattiktok.com/search/7670289874020993285) | ok |
 | DoorDash USA | Member of Technical Staff - Applied AI | sf bay | 2026-08-04 | 13d old | 50 | [apply](https://job-boards.greenhouse.io/doordashusa/jobs/8105894) | ok |
 | Cloudflare | Systems Engineer - Global Resource Management (Data Residency) | hybrid | 2026-07-01 | 47d old | 50 | [apply](https://boards.greenhouse.io/cloudflare/jobs/8015230?gh_jid=8015230) | ok |
-| Perplexity | Member of Technical Staff (AI Infrastructure Engineer) | london / remote | 2026-04-13 | 125d old | 50 | [apply](https://jobs.ashbyhq.com/perplexity/60deb376-51b5-46c6-9e17-55377a5ef34e) | ok |
+| Perplexity | Member of Technical Staff (AI Infrastructure Engineer) | london / remote | 2026-04-13 | 126d old | 50 | [apply](https://jobs.ashbyhq.com/perplexity/60deb376-51b5-46c6-9e17-55377a5ef34e) | ok |
 | Confluent | Staff Software Engineer I - SRE | remote / remote | 2026-02-15 | 182d old | 50 | [apply](https://jobs.ashbyhq.com/confluent/0b2a4106-7f01-4205-813d-81e4fa1abdb4) | ok |
 | Anthropic | Research Engineer, Visual Knowledge Work | nyc | 2026-01-16 | 212d old | 50 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5074217008) | ok |
 | Cohere | Member of Technical Staff - Sovereign AI | canada / remote | 2025-11-12 | 278d old | 50 | [apply](https://jobs.ashbyhq.com/cohere/b9306620-a110-46b5-b4c4-7363e1d03a8d) | ok |
 | Anthropic | Research Engineer / Research Scientist, Tokens | nyc | 2025-10-10 | 311d old | 50 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/4951814008) | ok |
 | Cohere | Member of Technical Staff, MLE (UK/EU) | london / remote | 2025-09-30 | 321d old | 50 | [apply](https://jobs.ashbyhq.com/cohere/876a2d31-e6c3-497b-9c8e-0b7d111fb4cd) | ok |
-| Affirm | Software Engineer I, Fullstack (Servicing International) | remote / remote | 2026-08-05 | 12d old | 48 | [apply](https://job-boards.greenhouse.io/affirm/jobs/7809761003) | - |
+| Affirm | Software Engineer I, Fullstack (Servicing International) | remote / remote | 2026-08-05 | 12d old | 48 | [apply](https://job-boards.greenhouse.io/affirm/jobs/7809763003) | - |
 | TikTok | Machine Learning Engineer Intern - Data-Global E-Commerce-Search - 2027 Summer | seattle | 2026-07-31 | ~17d old | 48 | [apply](https://lifeattiktok.com/search/7668396597746862341) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Computer Growth) | sf bay | 2026-06-04 | 74d old | 48 | [apply](https://jobs.ashbyhq.com/perplexity/e7ab0be5-68ba-4a2c-abb1-ee33886d955d) | ok |
 | Perplexity | Member of Technical Staff (Software Engineer, Monetization) | sf bay | 2026-04-23 | 115d old | 48 | [apply](https://jobs.ashbyhq.com/perplexity/043d6a58-87a1-4e3c-bf47-4dc351b94cf4) | ok |
@@ -1218,7 +1218,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | LangChain | Research Engineer, LangSmith Engine | nyc | 2026-08-14 | 3d old | 46 | [apply](https://jobs.ashbyhq.com/langchain/bdc96ffd-2a95-4d63-bf8f-193574961e00) | ok |
 | Postman | AI Engineer - Internship - Summer 2026 - Applications Open Now | sf bay | 2026-08-02 | ~15d old | 46 | [apply](https://job-boards.greenhouse.io/postman/jobs/7823417003) | ok |
 | Anthropic | Research Engineer, Machine Learning (RL Velocity) | london | 2026-04-23 | 116d old | 46 | [apply](https://job-boards.greenhouse.io/anthropic/jobs/5198074008) | ok |
-| Perplexity | Member of Technical Staff (AI Inference Engineer) | london | 2026-04-13 | 125d old | 46 | [apply](https://jobs.ashbyhq.com/perplexity/e4777627-ff8f-4257-8612-3a016bb58592) | ok |
+| Perplexity | Member of Technical Staff (AI Inference Engineer) | london | 2026-04-13 | 126d old | 46 | [apply](https://jobs.ashbyhq.com/perplexity/e4777627-ff8f-4257-8612-3a016bb58592) | ok |
 | Scale AI | Machine Learning Fellow - Human Frontier Collective (US) | us | 2026-02-12 | 185d old | 46 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4660340005) | ok |
 | Scale AI | Machine Learning Fellow - Human Frontier Collective (UK) | uk | 2026-02-12 | 185d old | 46 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4661647005) | ok |
 | Scale AI | Machine Learning Fellow - Human Frontier Collective (Canada) | canada | 2026-02-12 | 185d old | 46 | [apply](https://job-boards.greenhouse.io/scaleai/jobs/4661650005) | ok |
@@ -1275,11 +1275,11 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Gulf Management | Software Engineer & Business Systems Intern | us la | 2026-08-06 | ~11d old | 38 | [apply](http://gulfmanagement.applytojob.com/apply/pnJkrOYga9/Software-Engineer-Business-Systems-Intern) | ok |
 | TikTok | Software Engineer Intern - Global E-commerce-Search - 2027 Fall | seattle | 2026-08-06 | ~11d old | 38 | [apply](https://lifeattiktok.com/search/7670839752644233525) | ok |
 | TikTok | Data Engineering Project Intern - Ads Targeting - 2027 Start | sf bay | 2026-07-31 | ~17d old | 38 | [apply](https://lifeattiktok.com/search/7668533140146817333) | ok |
-| Modal | Member of Technical Staff - Research, Inference | nyc | 2026-07-05 | 42d old | 38 | [apply](https://jobs.ashbyhq.com/modal/73c97bbc-8e27-4c5d-b38b-90b3afdb0d93) | ok |
-| Modal | Member of Technical Staff - Research, Post-Training | nyc | 2026-07-05 | 42d old | 38 | [apply](https://jobs.ashbyhq.com/modal/7db771eb-e379-47fe-974f-765a8780dc10) | ok |
+| Modal | Member of Technical Staff - Research, Inference | nyc | 2026-07-05 | 43d old | 38 | [apply](https://jobs.ashbyhq.com/modal/73c97bbc-8e27-4c5d-b38b-90b3afdb0d93) | ok |
+| Modal | Member of Technical Staff - Research, Post-Training | nyc | 2026-07-05 | 43d old | 38 | [apply](https://jobs.ashbyhq.com/modal/7db771eb-e379-47fe-974f-765a8780dc10) | ok |
 | Nuro | ML Research Scientist, Prediction & Smart Agents | sf bay | 2026-02-18 | 179d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=7439020) | ok |
 | Anduril Industries | Machine Learning Research Engineer | orange county | 2025-12-05 | 255d old | 38 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/4998882007?gh_jid=4998882007) | ? |
-| Nuro | Machine Learning Research Scientist, Behavior Planning and Prediction | sf bay | 2023-11-03 | 1017d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=5434059) | ok |
+| Nuro | Machine Learning Research Scientist, Behavior Planning and Prediction | sf bay | 2023-11-03 | 1018d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=5434059) | ok |
 | Nuro | Machine Learning Research Scientist: Generative Modeling for Planning | sf bay | 2023-10-17 | 1034d old | 38 | [apply](https://nuro.ai/careersitem?gh_jid=5416913) | ok |
 | PathAI | Software Engineering Co-op: September - December 2026 | boston | 2026-08-12 | ~5d old | 37 | [apply](https://www.pathai.com/careers/8623056002?gh_jid=8623056002) | ok |
 | Anduril Industries | Research Scientist, Battlespace Awareness | boston | 2026-07-01 | 47d old | 37 | [apply](https://boards.greenhouse.io/andurilindustries/jobs/5178314007?gh_jid=5178314007) | ok |
@@ -1324,7 +1324,7 @@ _3 of these carry a `~` age: the source states a whole day or a date, so members
 | Cohere | Member of Technical Staff, Agent Code | london / remote | 2025-09-16 | 335d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/70a8dc77-ac84-4790-aff6-13b4dcd4554a) | ok |
 | Cohere | Member of Technical Staff, Pre-Training Data | toronto / remote | 2025-06-25 | 418d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/859e2e47-02fb-4afe-bb8a-e83bf4d8c265) | ok |
 | Cohere | Member of Technical Staff, Post-Training | london / remote | 2025-06-13 | 430d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/554a9380-ab50-4338-88a9-c6b8ab19d92e) | ok |
-| Cohere | Member of Technical Staff, Search | us / remote | 2025-05-23 | 450d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/d5cc437c-2397-4c1a-9d12-3a2bf64d98ea) | ok |
+| Cohere | Member of Technical Staff, Search | us / remote | 2025-05-23 | 451d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/d5cc437c-2397-4c1a-9d12-3a2bf64d98ea) | ok |
 | Cohere | Member of Technical Staff, Training Infra Engineer | paris / remote | 2025-02-20 | 543d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/a13207e7-dc82-473f-8ca4-e832452fe8c3) | ok |
 | Cohere | Member of Technical Staff, Training Performance Engineer | london / remote | 2025-02-20 | 543d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/d42f5fd4-1ffc-45b9-957c-f09862db6af6) | ok |
 | Cohere | Member of Technical Staff, Modeling | london / remote | 2024-11-01 | 654d old | 28 | [apply](https://jobs.ashbyhq.com/cohere/3136a5a5-06fd-4c82-8b72-a43467e6b128) | ok |
