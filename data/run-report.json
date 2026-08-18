@@ -1,7 +1,7 @@
 {
-  "run_id": "20260818T205113Z",
-  "started_at": "2026-08-18T20:51:13.630298+00:00",
-  "duration_s": 75.12,
+  "run_id": "20260818T212720Z",
+  "started_at": "2026-08-18T21:27:20.273016+00:00",
+  "duration_s": 102.59,
   "sources": [
     {
       "name": "simplify-newgrad",
@@ -10,7 +10,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 58,
+      "latency_ms": 37,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -29,7 +29,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 15,
+      "latency_ms": 44,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -63,24 +63,24 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 309,
-      "raw_fetched": 13076,
+      "fetched": 202,
+      "raw_fetched": 10034,
       "new": 0,
       "errors": [],
-      "latency_ms": 34489,
+      "latency_ms": 69590,
       "not_modified": false,
-      "filtered_out": 12767,
-      "baselined": 165,
-      "term_unknown_rate": 0.602,
+      "filtered_out": 9832,
+      "baselined": 97,
+      "term_unknown_rate": 0.668,
       "responding": 71,
       "units": 71,
-      "dated": 309,
+      "dated": 202,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": []
     }
   ],
-  "deduped_out": 144,
+  "deduped_out": 105,
   "tiers": {
     "1": 0,
     "2": 0,
@@ -94,12 +94,12 @@
   },
   "backlog_unapplied": 40,
   "warnings": [
-    "ats: term unknown for 60% of postings (>10%)"
+    "ats: term unknown for 67% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2486,
-  "excluded_recorded": 12767,
-  "suppressed_by_baseline": 165,
+  "excluded_recorded": 9832,
+  "suppressed_by_baseline": 97,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -139,7 +139,7 @@
       "unreachable": 1
     }
   },
-  "url_upgrades": 9,
+  "url_upgrades": 5,
   "scorer": {
     "calls": 0,
     "cached": 0,
@@ -151,9 +151,9 @@
   },
   "sheets": {},
   "audit": {
-    "exclusions": 12197,
-    "suppressions": 161,
-    "collapse_flags": 4
+    "exclusions": 9395,
+    "suppressions": 97,
+    "collapse_flags": 3
   },
   "export_changed": true,
   "scheduled_for": null,
