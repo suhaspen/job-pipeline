@@ -1,7 +1,7 @@
 {
-  "run_id": "20260819T165822Z",
-  "started_at": "2026-08-19T16:58:22.046063+00:00",
-  "duration_s": 83.56,
+  "run_id": "20260819T172831Z",
+  "started_at": "2026-08-19T17:28:31.666653+00:00",
+  "duration_s": 58.2,
   "sources": [
     {
       "name": "simplify-newgrad",
@@ -10,7 +10,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 46,
+      "latency_ms": 30,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -29,7 +29,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 15,
+      "latency_ms": 6,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -48,7 +48,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 97,
+      "latency_ms": 116,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -63,24 +63,24 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 319,
-      "raw_fetched": 13351,
+      "fetched": 307,
+      "raw_fetched": 12970,
       "new": 0,
       "errors": [],
-      "latency_ms": 41419,
+      "latency_ms": 18160,
       "not_modified": false,
-      "filtered_out": 13032,
-      "baselined": 156,
-      "term_unknown_rate": 0.63,
+      "filtered_out": 12663,
+      "baselined": 158,
+      "term_unknown_rate": 0.612,
       "responding": 71,
       "units": 71,
-      "dated": 319,
+      "dated": 307,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": []
     }
   ],
-  "deduped_out": 163,
+  "deduped_out": 149,
   "tiers": {
     "1": 0,
     "2": 0,
@@ -94,12 +94,12 @@
   },
   "backlog_unapplied": 40,
   "warnings": [
-    "ats: term unknown for 63% of postings (>10%)"
+    "ats: term unknown for 61% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2482,
-  "excluded_recorded": 13032,
-  "suppressed_by_baseline": 156,
+  "excluded_recorded": 12663,
+  "suppressed_by_baseline": 158,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -151,8 +151,8 @@
   },
   "sheets": {},
   "audit": {
-    "exclusions": 12468,
-    "suppressions": 152,
+    "exclusions": 12083,
+    "suppressions": 154,
     "collapse_flags": 4
   },
   "export_changed": true,
