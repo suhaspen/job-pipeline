@@ -1,7 +1,7 @@
 {
-  "run_id": "20260819T153453Z",
-  "started_at": "2026-08-19T15:34:53.813588+00:00",
-  "duration_s": 111.37,
+  "run_id": "20260819T160005Z",
+  "started_at": "2026-08-19T16:00:05.805117+00:00",
+  "duration_s": 87.94,
   "sources": [
     {
       "name": "simplify-newgrad",
@@ -10,7 +10,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 68,
+      "latency_ms": 88,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -29,7 +29,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 416,
+      "latency_ms": 529,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -48,7 +48,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 150,
+      "latency_ms": 157,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -63,24 +63,24 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 282,
-      "raw_fetched": 10859,
+      "fetched": 91,
+      "raw_fetched": 6656,
       "new": 0,
       "errors": [],
-      "latency_ms": 15696,
+      "latency_ms": 61980,
       "not_modified": false,
-      "filtered_out": 10577,
-      "baselined": 167,
-      "term_unknown_rate": 0.674,
+      "filtered_out": 6565,
+      "baselined": 44,
+      "term_unknown_rate": 0.253,
       "responding": 71,
       "units": 71,
-      "dated": 282,
+      "dated": 91,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": []
     }
   ],
-  "deduped_out": 115,
+  "deduped_out": 47,
   "tiers": {
     "1": 0,
     "2": 0,
@@ -94,12 +94,12 @@
   },
   "backlog_unapplied": 40,
   "warnings": [
-    "ats: term unknown for 67% of postings (>10%)"
+    "ats: term unknown for 25% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2482,
-  "excluded_recorded": 10577,
-  "suppressed_by_baseline": 167,
+  "excluded_recorded": 6565,
+  "suppressed_by_baseline": 44,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -139,7 +139,7 @@
       "unreachable": 1
     }
   },
-  "url_upgrades": 4,
+  "url_upgrades": 2,
   "scorer": {
     "calls": 0,
     "cached": 0,
@@ -151,8 +151,8 @@
   },
   "sheets": {},
   "audit": {
-    "exclusions": 10136,
-    "suppressions": 167,
+    "exclusions": 6313,
+    "suppressions": 43,
     "collapse_flags": 3
   },
   "export_changed": true,
