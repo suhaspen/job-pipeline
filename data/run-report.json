@@ -1,18 +1,18 @@
 {
-  "run_id": "20260821T215033Z",
-  "started_at": "2026-08-21T21:50:33.064070+00:00",
-  "duration_s": 96.28,
+  "run_id": "20260821T222757Z",
+  "started_at": "2026-08-21T22:27:57.672953+00:00",
+  "duration_s": 107.2,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
       "fetched": 1544,
-      "raw_fetched": 2243,
+      "raw_fetched": 2242,
       "new": 0,
       "errors": [],
-      "latency_ms": 238,
+      "latency_ms": 211,
       "not_modified": false,
-      "filtered_out": 699,
+      "filtered_out": 698,
       "baselined": 939,
       "term_unknown_rate": 0.0,
       "responding": null,
@@ -21,7 +21,7 @@
       "midnight": 227,
       "midnight_share": 0.147,
       "warnings": [
-        "18785 records, 15639 inactive, 903 off-category, 2243 kept"
+        "18785 records, 15642 inactive, 901 off-category, 2242 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 193,
+      "latency_ms": 286,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 238,
+      "latency_ms": 207,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -65,18 +65,18 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 336,
-      "raw_fetched": 13751,
+      "fetched": 337,
+      "raw_fetched": 14199,
       "new": 0,
       "errors": [],
-      "latency_ms": 48092,
+      "latency_ms": 57259,
       "not_modified": false,
-      "filtered_out": 13415,
-      "baselined": 155,
-      "term_unknown_rate": 0.637,
+      "filtered_out": 13862,
+      "baselined": 156,
+      "term_unknown_rate": 0.632,
       "responding": 71,
       "units": 71,
-      "dated": 336,
+      "dated": 337,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": []
@@ -96,12 +96,12 @@
   },
   "backlog_unapplied": 43,
   "warnings": [
-    "ats: term unknown for 64% of postings (>10%)"
+    "ats: term unknown for 63% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2475,
-  "excluded_recorded": 14114,
-  "suppressed_by_baseline": 1094,
+  "excluded_recorded": 14560,
+  "suppressed_by_baseline": 1095,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -141,7 +141,7 @@
       "unreachable": 4
     }
   },
-  "url_upgrades": 84,
+  "url_upgrades": 82,
   "scorer": {
     "calls": 0,
     "cached": 0,
@@ -153,8 +153,8 @@
   },
   "sheets": {},
   "audit": {
-    "exclusions": 13487,
-    "suppressions": 1018,
+    "exclusions": 13917,
+    "suppressions": 1019,
     "collapse_flags": 5
   },
   "export_changed": true,
