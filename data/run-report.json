@@ -1,26 +1,28 @@
 {
-  "run_id": "20260824T222942Z",
-  "started_at": "2026-08-24T22:29:42.445664+00:00",
-  "duration_s": 51.36,
+  "run_id": "20260824T225437Z",
+  "started_at": "2026-08-24T22:54:37.999370+00:00",
+  "duration_s": 69.32,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 0,
-      "raw_fetched": 0,
-      "new": 0,
+      "fetched": 1540,
+      "raw_fetched": 2231,
+      "new": 12,
       "errors": [],
-      "latency_ms": 39,
-      "not_modified": true,
-      "filtered_out": 0,
-      "baselined": 0,
+      "latency_ms": 889,
+      "not_modified": false,
+      "filtered_out": 691,
+      "baselined": 922,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 0,
-      "midnight": 0,
-      "midnight_share": null,
-      "warnings": []
+      "dated": 1540,
+      "midnight": 241,
+      "midnight_share": 0.156,
+      "warnings": [
+        "18892 records, 15743 inactive, 918 off-category, 2231 kept"
+      ]
     },
     {
       "name": "speedyapply-swe",
@@ -29,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 9,
+      "latency_ms": 95,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -48,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 9,
+      "latency_ms": 251,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -63,50 +65,50 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 171,
-      "raw_fetched": 10952,
+      "fetched": 331,
+      "raw_fetched": 13158,
       "new": 0,
       "errors": [],
-      "latency_ms": 15059,
+      "latency_ms": 20548,
       "not_modified": false,
-      "filtered_out": 10781,
-      "baselined": 53,
-      "term_unknown_rate": 0.509,
+      "filtered_out": 12827,
+      "baselined": 153,
+      "term_unknown_rate": 0.616,
       "responding": 71,
       "units": 71,
-      "dated": 171,
+      "dated": 331,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": []
     }
   ],
-  "deduped_out": 118,
+  "deduped_out": 784,
   "tiers": {
     "1": 0,
-    "2": 0,
-    "3": 0
+    "2": 4,
+    "3": 8
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 0
+    "suppressed_backpressure": 4
   },
   "backlog_unapplied": 43,
   "warnings": [
-    "ats: term unknown for 51% of postings (>10%)"
+    "ats: term unknown for 62% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2472,
-  "excluded_recorded": 10781,
-  "suppressed_by_baseline": 53,
+  "excluded_recorded": 13518,
+  "suppressed_by_baseline": 1075,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
-    "blocked": 96,
-    "ok": 1600,
-    "unchecked": 146,
+    "blocked": 97,
+    "ok": 1609,
+    "unchecked": 148,
     "unreachable": 24,
     "redirected_to_index": 7,
     "dead": 1
@@ -119,10 +121,10 @@
       "unreachable": 2
     },
     "simplify-newgrad": {
-      "blocked": 63,
-      "ok": 635,
+      "blocked": 64,
+      "ok": 644,
       "redirected_to_index": 7,
-      "unchecked": 61,
+      "unchecked": 63,
       "unreachable": 16
     },
     "speedyapply-ai": {
@@ -139,21 +141,21 @@
       "unreachable": 4
     }
   },
-  "url_upgrades": 5,
+  "url_upgrades": 78,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 0,
+    "heuristic_only": 10,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 10443,
-    "suppressions": 50,
-    "collapse_flags": 3
+    "exclusions": 12905,
+    "suppressions": 1000,
+    "collapse_flags": 5
   },
   "export_changed": true,
   "scheduled_for": null,
