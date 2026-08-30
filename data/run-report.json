@@ -1,27 +1,27 @@
 {
-  "run_id": "20260829T235850Z",
-  "started_at": "2026-08-29T23:58:50.934105+00:00",
-  "duration_s": 62.85,
+  "run_id": "20260830T080727Z",
+  "started_at": "2026-08-30T08:07:27.599443+00:00",
+  "duration_s": 61.72,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1597,
-      "raw_fetched": 2290,
+      "fetched": 1595,
+      "raw_fetched": 2288,
       "new": 0,
       "errors": [],
-      "latency_ms": 699,
+      "latency_ms": 188,
       "not_modified": false,
       "filtered_out": 693,
       "baselined": 859,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1597,
+      "dated": 1595,
       "midnight": 256,
-      "midnight_share": 0.16,
+      "midnight_share": 0.161,
       "warnings": [
-        "19247 records, 16005 inactive, 952 off-category, 2290 kept"
+        "19231 records, 15994 inactive, 949 off-category, 2288 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 295,
+      "latency_ms": 40,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 200,
+      "latency_ms": 82,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -66,12 +66,12 @@
       "name": "ats",
       "ok": true,
       "fetched": 326,
-      "raw_fetched": 12845,
+      "raw_fetched": 12840,
       "new": 0,
       "errors": [],
-      "latency_ms": 18434,
+      "latency_ms": 16004,
       "not_modified": false,
-      "filtered_out": 12519,
+      "filtered_out": 12514,
       "baselined": 145,
       "term_unknown_rate": 0.604,
       "responding": 70,
@@ -84,7 +84,7 @@
       ]
     }
   ],
-  "deduped_out": 919,
+  "deduped_out": 917,
   "tiers": {
     "1": 0,
     "2": 0,
@@ -102,15 +102,15 @@
   ],
   "dry_run": false,
   "baseline_size": 2440,
-  "excluded_recorded": 13212,
+  "excluded_recorded": 13207,
   "suppressed_by_baseline": 1004,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
     "blocked": 121,
-    "ok": 2072,
-    "unchecked": 194,
+    "ok": 2071,
+    "unchecked": 195,
     "unreachable": 26,
     "redirected_to_index": 8,
     "dead": 2
@@ -118,8 +118,8 @@
   "links_by_source": {
     "ats": {
       "blocked": 3,
-      "ok": 314,
-      "unchecked": 12,
+      "ok": 313,
+      "unchecked": 13,
       "unreachable": 2
     },
     "simplify-newgrad": {
@@ -145,7 +145,7 @@
       "unreachable": 4
     }
   },
-  "url_upgrades": 97,
+  "url_upgrades": 98,
   "scorer": {
     "calls": 0,
     "cached": 0,
@@ -157,7 +157,7 @@
   },
   "sheets": {},
   "audit": {
-    "exclusions": 12591,
+    "exclusions": 12585,
     "suppressions": 931,
     "collapse_flags": 5
   },
