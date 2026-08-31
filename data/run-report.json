@@ -1,27 +1,27 @@
 {
-  "run_id": "20260831T212146Z",
-  "started_at": "2026-08-31T21:21:46.319195+00:00",
-  "duration_s": 90.5,
+  "run_id": "20260831T233950Z",
+  "started_at": "2026-08-31T23:39:50.614031+00:00",
+  "duration_s": 133.95,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1592,
-      "raw_fetched": 2290,
-      "new": 17,
+      "fetched": 1590,
+      "raw_fetched": 2286,
+      "new": 9,
       "errors": [],
-      "latency_ms": 212,
+      "latency_ms": 919,
       "not_modified": false,
-      "filtered_out": 698,
-      "baselined": 848,
+      "filtered_out": 696,
+      "baselined": 844,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1592,
-      "midnight": 257,
-      "midnight_share": 0.161,
+      "dated": 1590,
+      "midnight": 258,
+      "midnight_share": 0.162,
       "warnings": [
-        "19238 records, 16006 inactive, 942 off-category, 2290 kept"
+        "19252 records, 16018 inactive, 948 off-category, 2286 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 166,
+      "latency_ms": 110,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 270,
+      "latency_ms": 120,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -65,18 +65,18 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 425,
-      "raw_fetched": 15261,
-      "new": 0,
+      "fetched": 377,
+      "raw_fetched": 14908,
+      "new": 11,
       "errors": [],
-      "latency_ms": 28290,
+      "latency_ms": 70331,
       "not_modified": false,
-      "filtered_out": 14836,
-      "baselined": 152,
-      "term_unknown_rate": 0.685,
+      "filtered_out": 14531,
+      "baselined": 149,
+      "term_unknown_rate": 0.615,
       "responding": 70,
       "units": 71,
-      "dated": 425,
+      "dated": 377,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": [
@@ -84,33 +84,33 @@
       ]
     }
   ],
-  "deduped_out": 1000,
+  "deduped_out": 954,
   "tiers": {
-    "1": 0,
-    "2": 3,
-    "3": 14
+    "1": 7,
+    "2": 5,
+    "3": 8
   },
   "notifications": {
-    "sent": 0,
-    "suppressed_rate_cap": 0,
+    "sent": 3,
+    "suppressed_rate_cap": 4,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 3
+    "suppressed_backpressure": 5
   },
   "backlog_unapplied": 47,
   "warnings": [
-    "ats: term unknown for 68% of postings (>10%)"
+    "ats: term unknown for 62% of postings (>10%)"
   ],
   "dry_run": false,
-  "baseline_size": 2440,
-  "excluded_recorded": 15534,
-  "suppressed_by_baseline": 1000,
+  "baseline_size": 2439,
+  "excluded_recorded": 15227,
+  "suppressed_by_baseline": 993,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
-    "blocked": 126,
-    "ok": 2161,
-    "unchecked": 206,
+    "blocked": 127,
+    "ok": 2178,
+    "unchecked": 208,
     "unreachable": 27,
     "redirected_to_index": 13,
     "dead": 2
@@ -118,15 +118,15 @@
   "links_by_source": {
     "ats": {
       "blocked": 3,
-      "ok": 317,
+      "ok": 328,
       "unchecked": 13,
       "unreachable": 3
     },
     "simplify-newgrad": {
-      "blocked": 76,
-      "ok": 842,
+      "blocked": 77,
+      "ok": 848,
       "redirected_to_index": 7,
-      "unchecked": 80,
+      "unchecked": 82,
       "unreachable": 18
     },
     "speedyapply-ai": {
@@ -145,20 +145,20 @@
       "unreachable": 4
     }
   },
-  "url_upgrades": 99,
+  "url_upgrades": 100,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 16,
+    "heuristic_only": 18,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 14882,
-    "suppressions": 928,
+    "exclusions": 14579,
+    "suppressions": 921,
     "collapse_flags": 5
   },
   "export_changed": true,
