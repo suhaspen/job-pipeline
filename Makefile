@@ -40,8 +40,12 @@ eval: ## Regenerate EVAL.md from the stored run reports
 	@$(PY) -m jobpipe.cli audit-suppressions --sample 15 2>/dev/null || true
 
 feedback: ## Print the FEEDBACK.md copy-paste block plus the latest EVAL summary
-	@awk '/^```$$/{n++; if(n%2==1){buf=""; next} else {last=buf; next}} \
-	      n%2==1{buf = buf $$0 "\n"} END{printf "%s", last}' FEEDBACK.md
+	@if [ -f FEEDBACK.md ]; then \
+		awk '/^```$$/{n++; if(n%2==1){buf=""; next} else {last=buf; next}} \
+		     n%2==1{buf = buf $$0 "\n"} END{printf "%s", last}' FEEDBACK.md; \
+	else \
+		echo "(FEEDBACK.md is a local working note and is not in the repo.)"; \
+	fi
 	@echo
 	@if [ -f EVAL.md ]; then \
 		echo "--- latest EVAL.md summary ---"; \

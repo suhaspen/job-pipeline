@@ -1,6 +1,10 @@
-# Resume — Suhas Pendekanti
+# Resume — <your name>
 
-> **TEMPLATE — fill this in.** Triage reads this file verbatim as the candidate
+> **TEMPLATE — copy to `profile/resume.md` and fill this in.** `resume.md`
+> is gitignored: it is the candidate side of the match and carries your
+> name, school and graduation date.
+>
+> **Original note.** Triage reads this file verbatim as the candidate
 > side of the match. Empty sections do not fail the run; they just make scoring
 > vaguer, and vague scoring is what pushes tier-1 precision below the 30% floor
 > that `EVAL.md` watches for.
@@ -11,11 +15,11 @@
 
 ## Basics
 
-- **School:** University of California, Irvine — B.S. Computer Science
-- **Graduation:** June 2027
-- **Location:** Irvine, CA (Orange County). US/Pacific.
+- **School:** <university> — <degree>
+- **Graduation:** <month year>
+- **Location:** <city, state>. <timezone>.
 - **Work authorization:** <!-- e.g. US citizen / permanent resident / F-1 requiring CPT+OPT / needs H-1B sponsorship later -->
-- **Availability:** Fall 2026, Winter 2027, Spring 2027 co-op terms; new grad starting mid-2027
+- **Availability:** <the terms you are hiring for; keep these consistent with profile/local.yml>
 
 ## Languages and tools
 

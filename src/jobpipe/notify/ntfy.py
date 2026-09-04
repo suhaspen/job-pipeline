@@ -15,8 +15,8 @@ a bearer secret, which has two consequences baked into this module:
 
 So only a `view` action ships here - it opens `apply_url` in a browser and
 carries zero credential surface. Mark-applied is a local CLI (`jobpipe applied
-<id>`) plus a bulk prompt in the digest. See FEEDBACK.md for the options for a
-phone-tappable version.
+<id>`) plus a bulk prompt in the digest. A phone-tappable version needs an
+ack topic the pipeline polls, which is why NTFY_ACK_TOPIC exists.
 """
 
 from __future__ import annotations

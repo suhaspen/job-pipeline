@@ -157,8 +157,8 @@ Build order is fixed and non-negotiable:
    Document the endpoint and response shape *here*.
 3. If no JSON endpoint is findable, **do not fall back to a headless browser.**
    Ship a stub returning `[]`, log `NEEDS_MANUAL_SETUP` in the run report, and
-   write up findings in `FEEDBACK.md` for a decision between DOM parsing and
-   their email-alert channel.
+   write up findings in `ASSUMPTIONS.md` for a decision between DOM parsing
+   and their email-alert channel.
 4. Rate limit to one request per source per hour, with a real `User-Agent`.
 
 **Aggregators are primarily a company-discovery channel.** Any company in

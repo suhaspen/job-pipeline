@@ -40,6 +40,7 @@ from jobpipe.models import (
     Posting, RawPosting, Status, Tier, is_midnight_utc, utcnow,
 )
 from jobpipe.notify import NotifyContext, NtfyClient, gate, ping_healthcheck, redact
+from jobpipe import scrub
 from jobpipe.sources import HttpClient, build_sources
 from jobpipe.store import SqliteStore
 from jobpipe.triage import discipline, prefilter
@@ -648,8 +649,14 @@ def _notify(
         except Exception as exc:
             # A failed push must not fail the run; the row stays `new` and is
             # retried next run rather than being silently marked notified.
-            log.error("notify.failed", posting=posting.id, error=str(exc))
-            report.warnings.append(f"push failed for {posting.id}: {exc}")
+            #
+            # Scrubbed before it is recorded. `requests` renders a failed POST
+            # as "... for url: https://ntfy.sh/<topic>", and both sinks below
+            # outlive the run: warnings are committed inside run-report.json on
+            # every run, and the log is uploaded as an artifact on failure.
+            detail = scrub.describe(exc, cfg)
+            log.error("notify.failed", posting=posting.id, error=detail)
+            report.warnings.append(f"push failed for {posting.id}: {detail}")
 
     report.notifications["sent"] = sent
     log.info(
@@ -691,8 +698,12 @@ def _sheets_read(cfg: Config, store: SqliteStore, report: RunReport, log: RunLog
     except Exception as exc:
         # `read_statuses` already handles SheetsError. Anything reaching here
         # is unexpected, and the mirror is still not worth a run.
-        report.warnings.append(f"sheets read failed: {type(exc).__name__}: {exc}")
-        log.error("sheets.read_failed", error=str(exc), traceback=traceback.format_exc())
+        # Scrubbed: a Sheets failure carries the request path, and the path
+        # contains GOOGLE_SHEET_ID.
+        detail = scrub.describe(exc, cfg)
+        report.warnings.append(f"sheets read failed: {detail}")
+        log.error("sheets.read_failed", error=detail,
+                  traceback=scrub.scrub(traceback.format_exc(), cfg))
         report.sheets = {"read": 0, "read_from": "error", "applied": 0}
         return {}
 
@@ -713,8 +724,10 @@ def _sheets_push(
         report.sheets = {**(report.sheets or {}), **counts}
         log.info("sheets.push", **counts)
     except Exception as exc:
-        report.warnings.append(f"sheets push failed: {type(exc).__name__}: {exc}")
-        log.error("sheets.push_failed", error=str(exc), traceback=traceback.format_exc())
+        detail = scrub.describe(exc, cfg)
+        report.warnings.append(f"sheets push failed: {detail}")
+        log.error("sheets.push_failed", error=detail,
+                  traceback=scrub.scrub(traceback.format_exc(), cfg))
 
 
 def _host(url: str) -> str:
