@@ -1,27 +1,27 @@
 {
-  "run_id": "20260921T074903Z",
-  "started_at": "2026-09-21T07:49:03.075216+00:00",
-  "duration_s": 70.24,
+  "run_id": "20260921T160404Z",
+  "started_at": "2026-09-21T16:04:04.405128+00:00",
+  "duration_s": 155.74,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1717,
-      "raw_fetched": 2410,
-      "new": 3,
+      "fetched": 1713,
+      "raw_fetched": 2405,
+      "new": 7,
       "errors": [],
-      "latency_ms": 187,
+      "latency_ms": 188,
       "not_modified": false,
-      "filtered_out": 693,
-      "baselined": 606,
+      "filtered_out": 692,
+      "baselined": 604,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1717,
-      "midnight": 338,
-      "midnight_share": 0.197,
+      "dated": 1713,
+      "midnight": 333,
+      "midnight_share": 0.194,
       "warnings": [
-        "19952 records, 16858 inactive, 684 off-category, 2410 kept"
+        "19949 records, 16861 inactive, 683 off-category, 2405 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 7,
+      "latency_ms": 9,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 6,
+      "latency_ms": 79,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -65,18 +65,18 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 275,
-      "raw_fetched": 11667,
-      "new": 0,
+      "fetched": 487,
+      "raw_fetched": 14900,
+      "new": 1,
       "errors": [],
-      "latency_ms": 29025,
+      "latency_ms": 102254,
       "not_modified": false,
-      "filtered_out": 11392,
-      "baselined": 71,
-      "term_unknown_rate": 0.422,
+      "filtered_out": 14413,
+      "baselined": 174,
+      "term_unknown_rate": 0.517,
       "responding": 70,
       "units": 71,
-      "dated": 275,
+      "dated": 487,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": [
@@ -84,35 +84,35 @@
       ]
     }
   ],
-  "deduped_out": 1312,
+  "deduped_out": 1414,
   "tiers": {
     "1": 0,
-    "2": 0,
-    "3": 3
+    "2": 4,
+    "3": 4
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 0
+    "suppressed_backpressure": 4
   },
   "backlog_unapplied": 81,
   "warnings": [
-    "ats: term unknown for 42% of postings (>10%)"
+    "ats: term unknown for 52% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2377,
-  "excluded_recorded": 12085,
-  "suppressed_by_baseline": 677,
+  "excluded_recorded": 15105,
+  "suppressed_by_baseline": 778,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
-    "blocked": 237,
+    "blocked": 238,
     "dead": 8,
-    "ok": 4007,
-    "unchecked": 451,
-    "unreachable": 43,
+    "ok": 4011,
+    "unchecked": 452,
+    "unreachable": 45,
     "redirected_to_index": 16
   },
   "links_by_source": {
@@ -121,14 +121,14 @@
       "dead": 3,
       "ok": 506,
       "unchecked": 21,
-      "unreachable": 11
+      "unreachable": 12
     },
     "simplify-newgrad": {
-      "blocked": 134,
-      "ok": 1449,
+      "blocked": 135,
+      "ok": 1453,
       "redirected_to_index": 10,
-      "unchecked": 158,
-      "unreachable": 23
+      "unchecked": 159,
+      "unreachable": 24
     },
     "speedyapply-ai": {
       "blocked": 26,
@@ -146,20 +146,20 @@
       "unreachable": 6
     }
   },
-  "url_upgrades": 156,
+  "url_upgrades": 157,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 3,
+    "heuristic_only": 7,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 11528,
-    "suppressions": 623,
+    "exclusions": 14478,
+    "suppressions": 725,
     "collapse_flags": 5
   },
   "export_changed": true,
