@@ -1,27 +1,27 @@
 {
-  "run_id": "20260926T073421Z",
-  "started_at": "2026-09-26T07:34:21.482350+00:00",
-  "duration_s": 46.69,
+  "run_id": "20260926T102722Z",
+  "started_at": "2026-09-26T10:27:22.270340+00:00",
+  "duration_s": 28.32,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1735,
-      "raw_fetched": 2411,
-      "new": 1,
+      "fetched": 1733,
+      "raw_fetched": 2405,
+      "new": 0,
       "errors": [],
-      "latency_ms": 179,
+      "latency_ms": 309,
       "not_modified": false,
-      "filtered_out": 676,
+      "filtered_out": 672,
       "baselined": 586,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1735,
+      "dated": 1733,
       "midnight": 331,
       "midnight_share": 0.191,
       "warnings": [
-        "19887 records, 16784 inactive, 692 off-category, 2411 kept"
+        "19885 records, 16789 inactive, 691 off-category, 2405 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 7,
+      "latency_ms": 176,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 7,
+      "latency_ms": 73,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -65,30 +65,30 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 145,
-      "raw_fetched": 7117,
+      "fetched": 0,
+      "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 11166,
+      "latency_ms": 6973,
       "not_modified": false,
-      "filtered_out": 6972,
-      "baselined": 31,
-      "term_unknown_rate": 0.297,
+      "filtered_out": 0,
+      "baselined": 0,
+      "term_unknown_rate": 0.0,
       "responding": 70,
       "units": 71,
-      "dated": 145,
+      "dated": 0,
       "midnight": 0,
-      "midnight_share": 0.0,
+      "midnight_share": null,
       "warnings": [
         "1 board(s) returned 404/403 - token likely wrong or the company moved ATS: Plaid (lever:plaid)"
       ]
     }
   ],
-  "deduped_out": 1262,
+  "deduped_out": 1147,
   "tiers": {
     "1": 0,
     "2": 0,
-    "3": 1
+    "3": 0
   },
   "notifications": {
     "sent": 0,
@@ -97,13 +97,11 @@
     "suppressed_backpressure": 0
   },
   "backlog_unapplied": 89,
-  "warnings": [
-    "ats: term unknown for 30% of postings (>10%)"
-  ],
+  "warnings": [],
   "dry_run": false,
   "baseline_size": 2362,
-  "excluded_recorded": 7648,
-  "suppressed_by_baseline": 617,
+  "excluded_recorded": 672,
+  "suppressed_by_baseline": 586,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
@@ -147,7 +145,7 @@
       "unreachable": 10
     }
   },
-  "url_upgrades": 158,
+  "url_upgrades": 146,
   "scorer": {
     "calls": 0,
     "cached": 0,
@@ -159,8 +157,8 @@
   },
   "sheets": {},
   "audit": {
-    "exclusions": 7190,
-    "suppressions": 564,
+    "exclusions": 604,
+    "suppressions": 533,
     "collapse_flags": 5
   },
   "export_changed": true,
