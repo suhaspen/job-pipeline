@@ -1,18 +1,18 @@
 {
-  "run_id": "20261002T181605Z",
-  "started_at": "2026-10-02T18:16:05.691991+00:00",
-  "duration_s": 98.98,
+  "run_id": "20261002T202635Z",
+  "started_at": "2026-10-02T20:26:35.831166+00:00",
+  "duration_s": 89.49,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
       "fetched": 1686,
-      "raw_fetched": 2321,
-      "new": 3,
+      "raw_fetched": 2320,
+      "new": 0,
       "errors": [],
-      "latency_ms": 239,
+      "latency_ms": 285,
       "not_modified": false,
-      "filtered_out": 635,
+      "filtered_out": 634,
       "baselined": 543,
       "term_unknown_rate": 0.0,
       "responding": null,
@@ -21,62 +21,62 @@
       "midnight": 311,
       "midnight_share": 0.184,
       "warnings": [
-        "19597 records, 16557 inactive, 719 off-category, 2321 kept"
+        "19597 records, 16559 inactive, 718 off-category, 2320 kept"
       ]
     },
     {
       "name": "speedyapply-swe",
       "ok": true,
-      "fetched": 1482,
-      "raw_fetched": 1495,
-      "new": 54,
+      "fetched": 0,
+      "raw_fetched": 0,
+      "new": 0,
       "errors": [],
-      "latency_ms": 33,
-      "not_modified": false,
-      "filtered_out": 13,
-      "baselined": 190,
-      "term_unknown_rate": 0.277,
+      "latency_ms": 115,
+      "not_modified": true,
+      "filtered_out": 0,
+      "baselined": 0,
+      "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1482,
+      "dated": 0,
       "midnight": 0,
-      "midnight_share": 0.0,
+      "midnight_share": null,
       "warnings": []
     },
     {
       "name": "speedyapply-ai",
       "ok": true,
-      "fetched": 980,
-      "raw_fetched": 1079,
-      "new": 23,
+      "fetched": 0,
+      "raw_fetched": 0,
+      "new": 0,
       "errors": [],
-      "latency_ms": 49,
-      "not_modified": false,
-      "filtered_out": 99,
-      "baselined": 175,
-      "term_unknown_rate": 0.369,
+      "latency_ms": 139,
+      "not_modified": true,
+      "filtered_out": 0,
+      "baselined": 0,
+      "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 980,
+      "dated": 0,
       "midnight": 0,
-      "midnight_share": 0.0,
+      "midnight_share": null,
       "warnings": []
     },
     {
       "name": "ats",
       "ok": true,
-      "fetched": 585,
-      "raw_fetched": 16727,
-      "new": 6,
+      "fetched": 480,
+      "raw_fetched": 15342,
+      "new": 4,
       "errors": [],
-      "latency_ms": 33764,
+      "latency_ms": 30551,
       "not_modified": false,
-      "filtered_out": 16142,
-      "baselined": 123,
+      "filtered_out": 14862,
+      "baselined": 59,
       "term_unknown_rate": 0.506,
       "responding": 69,
       "units": 71,
-      "dated": 585,
+      "dated": 480,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": [
@@ -84,35 +84,33 @@
       ]
     }
   ],
-  "deduped_out": 3616,
+  "deduped_out": 1560,
   "tiers": {
     "1": 0,
-    "2": 16,
-    "3": 70
+    "2": 1,
+    "3": 3
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 16
+    "suppressed_backpressure": 1
   },
   "backlog_unapplied": 94,
   "warnings": [
-    "speedyapply-swe: term unknown for 28% of postings (>10%)",
-    "speedyapply-ai: term unknown for 37% of postings (>10%)",
     "ats: term unknown for 51% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2348,
-  "excluded_recorded": 16889,
-  "suppressed_by_baseline": 1031,
+  "excluded_recorded": 15496,
+  "suppressed_by_baseline": 602,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
     "blocked": 281,
     "dead": 15,
-    "ok": 4813,
+    "ok": 4817,
     "unchecked": 623,
     "unreachable": 55,
     "redirected_to_index": 22
@@ -121,7 +119,7 @@
     "ats": {
       "blocked": 3,
       "dead": 5,
-      "ok": 627,
+      "ok": 631,
       "unchecked": 31,
       "unreachable": 13
     },
@@ -149,20 +147,20 @@
       "unreachable": 14
     }
   },
-  "url_upgrades": 372,
+  "url_upgrades": 155,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 86,
+    "heuristic_only": 4,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 16174,
-    "suppressions": 967,
+    "exclusions": 14867,
+    "suppressions": 549,
     "collapse_flags": 5
   },
   "export_changed": true,
