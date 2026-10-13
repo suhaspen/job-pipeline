@@ -1,26 +1,28 @@
 {
-  "run_id": "20261013T210145Z",
-  "started_at": "2026-10-13T21:01:45.738105+00:00",
-  "duration_s": 68.46,
+  "run_id": "20261013T233900Z",
+  "started_at": "2026-10-13T23:39:00.070841+00:00",
+  "duration_s": 59.39,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 0,
-      "raw_fetched": 0,
-      "new": 0,
+      "fetched": 1753,
+      "raw_fetched": 2317,
+      "new": 22,
       "errors": [],
-      "latency_ms": 76,
-      "not_modified": true,
-      "filtered_out": 0,
-      "baselined": 0,
+      "latency_ms": 244,
+      "not_modified": false,
+      "filtered_out": 564,
+      "baselined": 497,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 0,
-      "midnight": 0,
-      "midnight_share": null,
-      "warnings": []
+      "dated": 1753,
+      "midnight": 328,
+      "midnight_share": 0.187,
+      "warnings": [
+        "19601 records, 16470 inactive, 814 off-category, 2317 kept"
+      ]
     },
     {
       "name": "speedyapply-swe",
@@ -29,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 31,
+      "latency_ms": 27,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -48,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 31,
+      "latency_ms": 27,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -63,18 +65,18 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 561,
-      "raw_fetched": 16198,
-      "new": 0,
+      "fetched": 576,
+      "raw_fetched": 14805,
+      "new": 5,
       "errors": [],
-      "latency_ms": 30789,
+      "latency_ms": 16257,
       "not_modified": false,
-      "filtered_out": 15637,
-      "baselined": 124,
-      "term_unknown_rate": 0.467,
+      "filtered_out": 14229,
+      "baselined": 101,
+      "term_unknown_rate": 0.524,
       "responding": 69,
       "units": 71,
-      "dated": 561,
+      "dated": 576,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": [
@@ -82,34 +84,34 @@
       ]
     }
   ],
-  "deduped_out": 437,
+  "deduped_out": 1704,
   "tiers": {
     "1": 0,
-    "2": 0,
-    "3": 0
+    "2": 13,
+    "3": 14
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 0
+    "suppressed_backpressure": 13
   },
   "backlog_unapplied": 103,
   "warnings": [
-    "ats: term unknown for 47% of postings (>10%)"
+    "ats: term unknown for 52% of postings (>10%)"
   ],
   "dry_run": false,
-  "baseline_size": 2332,
-  "excluded_recorded": 15637,
-  "suppressed_by_baseline": 124,
+  "baseline_size": 2331,
+  "excluded_recorded": 14793,
+  "suppressed_by_baseline": 598,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
-    "blocked": 336,
+    "blocked": 338,
     "dead": 19,
-    "ok": 5665,
-    "unchecked": 750,
+    "ok": 5689,
+    "unchecked": 751,
     "unreachable": 62,
     "redirected_to_index": 26
   },
@@ -117,15 +119,15 @@
     "ats": {
       "blocked": 6,
       "dead": 6,
-      "ok": 716,
+      "ok": 721,
       "unchecked": 33,
       "unreachable": 13
     },
     "simplify-newgrad": {
-      "blocked": 160,
-      "ok": 1922,
+      "blocked": 162,
+      "ok": 1941,
       "redirected_to_index": 11,
-      "unchecked": 224,
+      "unchecked": 225,
       "unreachable": 26
     },
     "speedyapply-ai": {
@@ -145,21 +147,21 @@
       "unreachable": 14
     }
   },
-  "url_upgrades": 17,
+  "url_upgrades": 198,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 0,
+    "heuristic_only": 27,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 15006,
-    "suppressions": 124,
-    "collapse_flags": 4
+    "exclusions": 14186,
+    "suppressions": 547,
+    "collapse_flags": 5
   },
   "export_changed": true,
   "scheduled_for": null,
