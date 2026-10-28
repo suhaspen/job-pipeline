@@ -1,27 +1,27 @@
 {
-  "run_id": "20261027T233802Z",
-  "started_at": "2026-10-27T23:38:02.829893+00:00",
-  "duration_s": 78.37,
+  "run_id": "20261028T044606Z",
+  "started_at": "2026-10-28T04:46:06.922017+00:00",
+  "duration_s": 73.1,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1682,
-      "raw_fetched": 2129,
-      "new": 22,
+      "fetched": 1694,
+      "raw_fetched": 2145,
+      "new": 20,
       "errors": [],
-      "latency_ms": 180,
+      "latency_ms": 197,
       "not_modified": false,
-      "filtered_out": 447,
-      "baselined": 406,
+      "filtered_out": 451,
+      "baselined": 407,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1682,
-      "midnight": 392,
-      "midnight_share": 0.233,
+      "dated": 1694,
+      "midnight": 403,
+      "midnight_share": 0.238,
       "warnings": [
-        "19100 records, 16121 inactive, 850 off-category, 2129 kept"
+        "19132 records, 16134 inactive, 853 off-category, 2145 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 12,
+      "latency_ms": 8,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 10,
+      "latency_ms": 92,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -65,18 +65,18 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 492,
-      "raw_fetched": 15578,
+      "fetched": 566,
+      "raw_fetched": 13681,
       "new": 1,
       "errors": [],
-      "latency_ms": 22140,
+      "latency_ms": 17756,
       "not_modified": false,
-      "filtered_out": 15086,
-      "baselined": 55,
-      "term_unknown_rate": 0.415,
+      "filtered_out": 13115,
+      "baselined": 111,
+      "term_unknown_rate": 0.516,
       "responding": 69,
       "units": 71,
-      "dated": 492,
+      "dated": 566,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": [
@@ -84,51 +84,51 @@
       ]
     }
   ],
-  "deduped_out": 1690,
+  "deduped_out": 1721,
   "tiers": {
-    "1": 1,
-    "2": 8,
-    "3": 14
+    "1": 0,
+    "2": 6,
+    "3": 15
   },
   "notifications": {
-    "sent": 1,
+    "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 8
+    "suppressed_backpressure": 6
   },
-  "backlog_unapplied": 117,
+  "backlog_unapplied": 118,
   "warnings": [
-    "ats: term unknown for 41% of postings (>10%)"
+    "ats: term unknown for 52% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2311,
-  "excluded_recorded": 15533,
-  "suppressed_by_baseline": 461,
+  "excluded_recorded": 13566,
+  "suppressed_by_baseline": 518,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
     "blocked": 499,
     "dead": 30,
-    "ok": 6716,
-    "unchecked": 935,
-    "unreachable": 73,
+    "ok": 6734,
+    "unchecked": 937,
+    "unreachable": 74,
     "redirected_to_index": 30
   },
   "links_by_source": {
     "ats": {
       "blocked": 6,
       "dead": 6,
-      "ok": 825,
+      "ok": 826,
       "unchecked": 38,
       "unreachable": 16
     },
     "simplify-newgrad": {
       "blocked": 186,
-      "ok": 2242,
+      "ok": 2259,
       "redirected_to_index": 11,
-      "unchecked": 286,
-      "unreachable": 31
+      "unchecked": 288,
+      "unreachable": 32
     },
     "speedyapply-ai": {
       "blocked": 131,
@@ -147,20 +147,20 @@
       "unreachable": 15
     }
   },
-  "url_upgrades": 214,
+  "url_upgrades": 209,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 23,
+    "heuristic_only": 20,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 14875,
-    "suppressions": 417,
+    "exclusions": 12990,
+    "suppressions": 473,
     "collapse_flags": 5
   },
   "export_changed": true,
