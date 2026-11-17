@@ -1,27 +1,27 @@
 {
-  "run_id": "20261117T114150Z",
-  "started_at": "2026-11-17T11:41:50.365799+00:00",
-  "duration_s": 175.18,
+  "run_id": "20261117T163305Z",
+  "started_at": "2026-11-17T16:33:05.723328+00:00",
+  "duration_s": 96.61,
   "sources": [
     {
       "name": "simplify-newgrad",
       "ok": true,
-      "fetched": 1790,
-      "raw_fetched": 2279,
-      "new": 12,
+      "fetched": 1786,
+      "raw_fetched": 2275,
+      "new": 1,
       "errors": [],
-      "latency_ms": 171,
+      "latency_ms": 268,
       "not_modified": false,
       "filtered_out": 489,
-      "baselined": 373,
+      "baselined": 369,
       "term_unknown_rate": 0.0,
       "responding": null,
       "units": null,
-      "dated": 1790,
-      "midnight": 444,
-      "midnight_share": 0.248,
+      "dated": 1786,
+      "midnight": 442,
+      "midnight_share": 0.247,
       "warnings": [
-        "18663 records, 15491 inactive, 893 off-category, 2279 kept"
+        "18666 records, 15501 inactive, 890 off-category, 2275 kept"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 9,
+      "latency_ms": 40,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -50,7 +50,7 @@
       "raw_fetched": 0,
       "new": 0,
       "errors": [],
-      "latency_ms": 7,
+      "latency_ms": 109,
       "not_modified": true,
       "filtered_out": 0,
       "baselined": 0,
@@ -65,58 +65,53 @@
     {
       "name": "ats",
       "ok": true,
-      "fetched": 555,
-      "raw_fetched": 13891,
-      "new": 1,
-      "errors": [
-        "Plaid: HTTP 502",
-        "Palantir: HTTP 500",
-        "Zoox: HTTP 502",
-        "Wealthfront: HTTP 504"
-      ],
-      "latency_ms": 122938,
+      "fetched": 558,
+      "raw_fetched": 15686,
+      "new": 0,
+      "errors": [],
+      "latency_ms": 44756,
       "not_modified": false,
-      "filtered_out": 13336,
-      "baselined": 82,
-      "term_unknown_rate": 0.499,
-      "responding": 66,
+      "filtered_out": 15128,
+      "baselined": 51,
+      "term_unknown_rate": 0.477,
+      "responding": 69,
       "units": 71,
-      "dated": 555,
+      "dated": 558,
       "midnight": 0,
       "midnight_share": 0.0,
       "warnings": [
-        "1 board(s) returned 404/403 - token likely wrong or the company moved ATS: Amplitude (greenhouse:amplitude)"
+        "2 board(s) returned 404/403 - token likely wrong or the company moved ATS: Amplitude (greenhouse:amplitude), Plaid (lever:plaid)"
       ]
     }
   ],
-  "deduped_out": 1877,
+  "deduped_out": 1923,
   "tiers": {
     "1": 0,
-    "2": 3,
-    "3": 10
+    "2": 1,
+    "3": 0
   },
   "notifications": {
     "sent": 0,
     "suppressed_rate_cap": 0,
     "suppressed_quiet_hours": 0,
-    "suppressed_backpressure": 3
+    "suppressed_backpressure": 1
   },
   "backlog_unapplied": 124,
   "warnings": [
-    "ats: term unknown for 50% of postings (>10%)"
+    "ats: term unknown for 48% of postings (>10%)"
   ],
   "dry_run": false,
   "baseline_size": 2281,
-  "excluded_recorded": 13825,
-  "suppressed_by_baseline": 455,
+  "excluded_recorded": 15617,
+  "suppressed_by_baseline": 420,
   "expired": 0,
   "retired": 0,
   "healthcheck_ok": true,
   "links": {
     "blocked": 722,
     "dead": 37,
-    "ok": 7970,
-    "unchecked": 1284,
+    "ok": 7968,
+    "unchecked": 1287,
     "unreachable": 85,
     "redirected_to_index": 27
   },
@@ -130,9 +125,9 @@
     },
     "simplify-newgrad": {
       "blocked": 215,
-      "ok": 2669,
+      "ok": 2667,
       "redirected_to_index": 8,
-      "unchecked": 361,
+      "unchecked": 364,
       "unreachable": 35
     },
     "speedyapply-ai": {
@@ -152,20 +147,20 @@
       "unreachable": 17
     }
   },
-  "url_upgrades": 231,
+  "url_upgrades": 234,
   "scorer": {
     "calls": 0,
     "cached": 0,
     "fallbacks": 0,
-    "heuristic_only": 13,
+    "heuristic_only": 1,
     "latency_ms_total": 0,
     "latency_ms_mean": 0,
     "errors": []
   },
   "sheets": {},
   "audit": {
-    "exclusions": 13185,
-    "suppressions": 402,
+    "exclusions": 14911,
+    "suppressions": 367,
     "collapse_flags": 5
   },
   "export_changed": true,
